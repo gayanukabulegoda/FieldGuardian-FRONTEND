@@ -187,6 +187,11 @@ body {
   color: var(--white);
 }
 
+.btn-verify:focus {
+  outline: none;
+  box-shadow: 0 0 5px var(--text-field-focus);
+}
+
 .signin-prompt {
   text-align: center;
   font-size: 13px;

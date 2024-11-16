@@ -181,6 +181,11 @@ body {
   color: var(--white);
 }
 
+.btn-signup:focus {
+  outline: none;
+  box-shadow: 0 0 5px var(--text-field-focus);
+}
+
 .signin-prompt {
   text-align: center;
   font-size: 13px;

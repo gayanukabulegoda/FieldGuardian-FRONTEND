@@ -1,11 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Field Guardian Dashboard</title>
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <link rel="stylesheet" href="/assets/css/updatePasswordPopup.css" />
+    <link rel="stylesheet" href="/assets/css/myProfilePopUp.css" />
+    <link rel="stylesheet" href="/assets/css/homePage.css" />
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <!-- Logo Section -->
+        <div class="logo-section">
+          <div class="logo-container">
+            <div class="logo-box">
+              <img
+                src="/assets/images/fieldguardian-logo-green.png"
+                alt="fieldguardian-logo-green"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation Menu -->
+        <nav class="nav-menu">
+          <button
+            class="nav-item active"
+            data-page="\components\pages\section\dashboardSection.html"
+          >
+            Dashboard
+          </button>
+          <button
+            class="nav-item"
+            data-page="\components\pages\section\staffSection.html"
+          >
+            Staff
+          </button>
+          <button
+            class="nav-item"
+            data-page="\components\pages\section\fieldSection.html"
+          >
+            Field
+          </button>
+          <button
+            class="nav-item"
+            data-page="\components\pages\section\cropSection.html"
+          >
+            Crop
+          </button>
+          <button
+            class="nav-item"
+            data-page="\components\pages\section\equipmentSection.html"
+          >
+            Equipment
+          </button>
+          <button
+            class="nav-item"
+            data-page="\components\pages\section\vehicleSection.html"
+          >
+            Vehicle
+          </button>
+          <button
+            class="nav-item"
+            data-page="\components\pages\section\monitoringLogSection.html"
+          >
+            Monitoring Log
+          </button>
+        </nav>
+
+        <!-- User Profile Section -->
+        <div class="user-profile">
+          <div class="profile-image">
+            <img
+              src="/assets/images/default_male_user_profile_pic.jpg"
+              alt="Profile-Image"
+            />
+          </div>
+          <div class="profile-info">
+            <h5 class="profile-name">Gayanuka Bulegoda</h5>
+            <p class="profile-email">grbulegoda@gmail.com</p>
+          </div>
+          <div class="profile-actions">
+            <button class="action-btn" id="settingsBtn">
+              <img src="/assets/icons/settings-icon.svg" alt="settings-icon" />
+            </button>
+            <button class="action-btn" id="logoutBtn">
+              <img src="/assets/icons/logout-icon.svg" alt="logout-icon" />
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+          <div class="header-welcome">
+            <h1>Hello, <span class="user-name">Gayanuka</span></h1>
+            <p class="current-date">Today is Monday, 12 November 2024</p>
+          </div>
+          <div class="header-profile" id="headerProfileBtn">
+            <img
+              src="/assets/images/default_male_user_profile_pic.jpg"
+              alt="profile-image"
+            />
+          </div>
+        </header>
+
+        <!-- Content Frame -->
+        <div class="content-frame">
+          <iframe
+            id="contentFrame"
+            src="/components/pages/section/dashboardSection.html"
+            frameborder="0"
+          ></iframe>
+        </div>
+      </main>
+    </div>
+
+    <!-- My Profile Popup -->
+    <div class="profile-popup" id="profilePopup">
+      <div class="popup-content">
+        <div class="profile-card">
+          <div class="profile-image">
+            <img
+              src="/assets/images/default_male_user_profile_pic.jpg"
+              alt="profile-image"
+              class="rounded-circle"
+            />
+          </div>
+          <div class="profile-info">
+            <h2 class="profile-name" id="userName">Gayanuka Bulegoda</h2>
+            <p class="profile-email" id="userEmail">grbulegoda@gmail.com</p>
+          </div>
+          <div class="role-badge">
+            <div class="role-border"></div>
+            <span class="role-text" id="userRole">ADMINISTRATIVE</span>
+            <div class="role-border"></div>
+          </div>
+          <button class="close-btn" id="closeBtn">
+            <img
+              src="/assets/icons/close-icon-black.svg"
+              alt="close-icon"
+              class="close-icon"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Update Password Popup -->
+    <div class="update-password-popup" id="updatePasswordPopup">
+      <div class="popup-header">
+        <div class="header-content">
+          <div class="header-icon">
+            <img
+              src="/assets/icons/settings-icon-green.svg"
+              alt="settings-icon"
+            />
+          </div>
+          <h1 class="header-title">Update Password</h1>
+        </div>
+        <button class="close-btn" id="closeBtn">
+          <img
+            src="/assets/icons/close-icon-black.svg"
+            alt="close-icon"
+            class="close-icon"
+          />
+        </button>
+      </div>
+      <div class="popup-content">
+        <div class="profile-card">
+          <div class="profile-info">
+            <div class="profile-image">
+              <img
+                src="/assets/images/default_male_user_profile_pic.jpg"
+                alt="profile-image"
+                class="rounded-circle"
+              />
+            </div>
+            <h2 class="profile-name" id="userName">Gayanuka Bulegoda</h2>
+            <p class="profile-email" id="userEmail">grbulegoda@gmail.com</p>
+          </div>
+          <div class="password-form">
+            <div class="form-group">
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                placeholder="New Password"
+              />
+              <button class="toggle-password">
+                <img
+                  src="/assets/icons/password-eye-close.svg"
+                  alt="password-eye-close"
+                />
+              </button>
+            </div>
+            <div class="form-group">
+              <input
+                type="password"
+                class="form-control"
+                id="confirmPassword"
+                placeholder="Confirm Password"
+              />
+              <button class="toggle-password">
+                <img
+                  src="/assets/icons/password-eye-close.svg"
+                  alt="password-eye-close"
+                />
+              </button>
+            </div>
+            <button class="update-btn" id="updatePasswordBtn">
+              UPDATE PASSWORD
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="/assets/jquery/jquery-3.7.1.min.js"></script>
+    <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/controllers/HomePageController.js"></script>
+  </body>
 </html>

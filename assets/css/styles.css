@@ -3,9 +3,19 @@
 :root {
   --primary-green: #2e7d32;
   --secondary-green: #4caf50;
+  --dark-green: #548957;
+  --light-green: #e7f0d6;
+  --lighter-green: #d0f2d9;
+  --light-green-popup-bg: #ddf1d7;
   --primary-btn-bg: #4bae4f;
+  --neutral-bg: #f2f3f1;
   --text-gray: #727374;
   --text-dark: #3d3e3e;
   --white: #ffffff;
   --text-field-focus: #2e7d3280;
+  --hover-red: #ffe1e1;
+
+  /* home page styles */
+  --sidebar-width: 240px;
+  --header-height: 85px;
 }
