@@ -1,16 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<style>
-    body {
-        background-color: rgb(64, 197, 190);
-    }
-</style>
-<body>
-    
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Staff Section</title>
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <link rel="stylesheet" href="/components/css/section/staffSection.css" />
+  </head>
+  <body>
+    <div class="staff-container">
+      <div class="staff-header">
+        <h1 class="page-title">Staff Members</h1>
+        <div class="header-buttons">
+          <button class="btn btn-popup-action" id="usersBtn">Users</button>
+          <button class="btn btn-popup-action" id="addBtn">Add</button>
+        </div>
+      </div>
+
+      <div class="search-section">
+        <div class="search-input">
+          <input type="text" placeholder="Search by name" id="searchName" />
+          <img
+            src="/assets/icons/search-icon.svg"
+            alt="search-icon"
+            class="search-icon"
+          />
+        </div>
+
+        <select class="filter-select" id="designationFilter">
+          <option value="" disabled selected hidden>
+            Filter by Designation
+          </option>
+        </select>
+
+        <select class="filter-select" id="genderFilter">
+          <option value="" disabled selected hidden>Filter by Gender</option>
+          <option value="male">MALE</option>
+          <option value="female">FEMALE</option>
+          <option value="other">OTHER</option>
+        </select>
+
+        <button class="search-btn" id="searchBtn">Search</button>
+      </div>
+
+      <div class="table-container">
+        <div class="table-header">
+          <div class="th-name">Name</div>
+          <div class="th-designation">Designation</div>
+          <div class="th-contact">Contact No</div>
+          <div class="th-email">Email</div>
+          <div class="th-action">Action</div>
+        </div>
+
+        <div class="table-body" id="staffTableBody">
+          <!-- Table rows will be dynamically added here -->
+        </div>
+      </div>
+    </div>
+
+    <script src="/assets/jquery/jquery-3.7.1.min.js"></script>
+    <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/components/js/section/StaffSection.js"></script>
+  </body>
 </html>

@@ -3,14 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Crop Section</title>
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/components/css/section/cropSection.css">
 </head>
-<style>
-    body {
-        background-color: blueviolet;
-    }
-</style>
 <body>
-    
+    <div class="crop-container">
+        <div class="crop-header">
+            <h1 class="page-title">Crop Details</h1>
+            <div class="header-buttons">
+                <button class="btn btn-popup-action" id="addBtn">Add</button>
+            </div>
+        </div>
+
+        <div class="search-section">
+            <div class="search-input">
+                <input type="text" placeholder="Search by name" id="searchName">
+                <img src="/assets/icons/search-icon.svg" alt="search-icon" class="search-icon">
+            </div>
+
+            <select class="filter-select" id="fieldFilter">
+                <option value="" disabled selected hidden>Field</option>
+            </select>
+
+            <button class="search-btn" id="searchBtn">Search</button>
+        </div>
+
+        <div class="table-container">
+            <div class="table-header">
+                <div class="th-common">Common Name</div>
+                <div class="th-scientific">Scientific Name</div>
+                <div class="th-category">Category</div>
+                <div class="th-season">Season</div>
+                <div class="th-action">Action</div>
+            </div>
+
+            <div class="table-body" id="cropTableBody">
+                <!-- Table rows will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="/assets/jquery/jquery-3.7.1.min.js"></script>
+    <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/components/js/section/CropSection.js"></script>
 </body>
 </html>

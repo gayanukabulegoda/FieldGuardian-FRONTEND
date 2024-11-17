@@ -1,16 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<style>
-    body {
-        background-color: rgb(55, 22, 85);
-    }
-</style>
-<body>
-    
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Equipment Section</title>
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="/components/css/section/equipmentSection.css"
+    />
+  </head>
+  <body>
+    <div class="equipment-container">
+      <div class="equipment-header">
+        <h1 class="page-title">Equipment Details</h1>
+        <div class="header-buttons">
+          <button class="btn btn-popup-action" id="addBtn">Add</button>
+        </div>
+      </div>
+
+      <div class="search-section">
+        <div class="search-input">
+          <input type="text" placeholder="Search by name" id="searchName" />
+          <img
+            src="/assets/icons/search-icon.svg"
+            alt="search-icon"
+            class="search-icon"
+          />
+        </div>
+
+        <select class="filter-select" id="statusFilter">
+          <option value="" disabled selected hidden>Status</option>
+          <option value="AVAILABLE">Available</option>
+          <option value="IN_USE">In Use</option>
+          <option value="UNDER_MAINTENANCE">Under Maintenance</option>
+        </select>
+
+        <button class="search-btn" id="searchBtn">Search</button>
+      </div>
+
+      <div class="table-container">
+        <div class="table-header">
+          <div class="th-name">Name</div>
+          <div class="th-type">Type</div>
+          <div class="th-status">Status</div>
+          <div class="th-field">Field</div>
+          <div class="th-action">Action</div>
+        </div>
+
+        <div class="table-body" id="equipmentTableBody">
+          <!-- Table rows will be dynamically added here -->
+        </div>
+      </div>
+    </div>
+
+    <script src="/assets/jquery/jquery-3.7.1.min.js"></script>
+    <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/components/js/section/EquipmentSection.js"></script>
+  </body>
 </html>

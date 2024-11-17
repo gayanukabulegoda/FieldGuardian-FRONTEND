@@ -224,7 +224,11 @@ body {
 /* --- Content Frame --- */
 .content-frame {
   flex: 1;
-  background: var(--white);
+  background: linear-gradient(
+    288deg,
+    var(--lighter-green) 39%,
+    var(--light-green) 85%
+  );
   border-radius: 15px;
   overflow: hidden;
 }
@@ -234,11 +238,6 @@ body {
   height: 100%;
   border: none;
 }
-
-/* Modal Customization */
-/* .modal-content {
-  border-radius: 15px;
-} */
 
 .modal-header {
   background: var(--light-green);

@@ -1,16 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<style>
-    body {
-        background-color: rgb(101, 99, 104);
-    }
-</style>
-<body>
-    
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Field Section</title>
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <link rel="stylesheet" href="/components/css/section/fieldSection.css" />
+  </head>
+  <body>
+    <div class="field-container">
+      <div class="field-header">
+        <h1 class="page-title">Field Details</h1>
+        <div class="header-buttons">
+          <button class="btn btn-popup-action" id="addBtn">Add</button>
+        </div>
+      </div>
+
+      <div class="search-section">
+        <div class="search-input">
+          <input type="text" placeholder="Search by name" id="searchName" />
+          <img
+            src="/assets/icons/search-icon.svg"
+            alt="search-icon"
+            class="search-icon"
+          />
+        </div>
+
+        <select class="filter-select" id="landSizeFilter">
+          <option value="" disabled selected hidden>Land Size</option>
+          <option value="SMALL">Small (< 50 sq. m)</option>
+          <option value="MEDIUM">Medium (50-150 sq. m)</option>
+          <option value="LARGE">Large (> 150 sq. m)</option>
+        </select>
+
+        <button class="search-btn" id="searchBtn">Search</button>
+      </div>
+
+      <div class="table-container">
+        <div class="table-header">
+          <div class="th-image">
+            <img src="/assets/icons/image-icon.svg" alt="image-icon" />
+          </div>
+          <div class="th-name">Name</div>
+          <div class="th-location">Location</div>
+          <div class="th-extent">Extent size (sq. m)</div>
+          <div class="th-action">Action</div>
+        </div>
+
+        <div class="table-body" id="fieldTableBody">
+          <!-- Table rows will be dynamically added here -->
+        </div>
+      </div>
+    </div>
+
+    <script src="/assets/jquery/jquery-3.7.1.min.js"></script>
+    <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/components/js/section/fieldSection.js"></script>
+  </body>
 </html>

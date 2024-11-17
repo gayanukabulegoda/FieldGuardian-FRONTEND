@@ -1,16 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<style>
-    body {
-        background-color: rgb(226, 153, 43);
-    }
-</style>
-<body>
-    
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vehicle Section</title>
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <link rel="stylesheet" href="/components/css/section/vehicleSection.css" />
+  </head>
+  <body>
+    <div class="vehicle-container">
+      <div class="vehicle-header">
+        <h1 class="page-title">Vehicle Details</h1>
+        <div class="header-buttons">
+          <button class="btn btn-popup-action" id="addBtn">Add</button>
+        </div>
+      </div>
+
+      <div class="search-section">
+        <div class="search-input">
+          <input type="text" placeholder="Search by name" id="searchName" />
+          <img
+            src="/assets/icons/search-icon.svg"
+            alt="search-icon"
+            class="search-icon"
+          />
+        </div>
+
+        <select class="filter-select" id="categoryFilter">
+          <option value="" disabled selected hidden>Category</option>
+          <option value="TRUCK">Truck</option>
+          <option value="VAN">Van</option>
+          <option value="CAR">Car</option>
+        </select>
+
+        <select class="filter-select" id="statusFilter">
+          <option value="" disabled selected hidden>Status</option>
+          <option value="AVAILABLE">Available</option>
+          <option value="IN_USE">In Use</option>
+          <option value="OUT_OF_SERVICE">Out of Service</option>
+        </select>
+
+        <button class="search-btn" id="searchBtn">Search</button>
+      </div>
+
+      <div class="table-container">
+        <div class="table-header">
+          <div class="th-plate">License Plate No</div>
+          <div class="th-category">Category</div>
+          <div class="th-status">Status</div>
+          <div class="th-fuel">Fuel Type</div>
+          <div class="th-action">Action</div>
+        </div>
+
+        <div class="table-body" id="vehicleTableBody">
+          <!-- Table rows will be dynamically added here -->
+        </div>
+      </div>
+    </div>
+
+    <script src="/assets/jquery/jquery-3.7.1.min.js"></script>
+    <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/components/js/section/VehicleSection.js"></script>
+  </body>
 </html>
