@@ -10,7 +10,7 @@
   padding: 15px;
   background: var(--white);
   border-radius: 20px;
-   box-shadow: 0px 4px 18.3px rgba(0, 0, 0, 0.25);
+  box-shadow: 0px 4px 18.3px rgba(0, 0, 0, 0.25);
   display: none;
 }
 
@@ -95,7 +95,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s ease;
 }
 
 #profilePopup .close-btn:hover {

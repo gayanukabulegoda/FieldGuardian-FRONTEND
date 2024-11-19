@@ -6,6 +6,12 @@
     <title>Staff Section</title>
     <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/assets/css/styles.css" />
+    <link rel="stylesheet" href="/components/css/popup/addOrUpdateStaffPopup.css" />
+    <link rel="stylesheet" href="/components/css/popup/systemUsersPopup.css" />
+    <link
+      rel="stylesheet"
+      href="/components/css/popup/deleteConfirmationPopup.css"
+    />
     <link rel="stylesheet" href="/components/css/section/staffSection.css" />
   </head>
   <body>
@@ -59,8 +65,211 @@
       </div>
     </div>
 
+    <!-- System users popup -->
+    <div class="system-users-popup">
+      <div class="popup-container">
+        <div class="popup-header">
+          <h2 class="popup-title">System Users</h2>
+          <button class="close-btn" id="closeBtn">
+            <img src="/assets/icons/close-icon-black.svg" alt="close-icon" />
+          </button>
+        </div>
+
+        <div class="table-container">
+          <div class="users-table">
+            <div class="table-header">
+              <div class="th-name">Name</div>
+              <div class="th-role">Role</div>
+              <div class="th-email">Email</div>
+              <div class="th-action">Action</div>
+            </div>
+
+            <div class="table-body" id="usersTableBody">
+              <!-- Table rows will be dynamically added here -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Delete confirmation popup for system users popup -->
+      <div class="delete-popup" id="deleteConfirmationSystemUsersPopup">
+        <div class="popup-header">
+          <div class="header-content">
+            <div class="header-icon">
+              <img
+                src="/assets/icons/delete-confirmation-popup-icon.svg"
+                alt="delete-icon"
+              />
+            </div>
+            <h1 class="header-title">Delete Confirmation</h1>
+          </div>
+          <button class="close-btn" id="closeSystemUsersDeletePopupBtn">
+            <img
+              src="/assets/icons/close-icon-black.svg"
+              alt="close-icon"
+              class="close-icon"
+            />
+          </button>
+        </div>
+        <div class="popup-content">
+          <p class="confirmation-text">
+            Do you really want to delete these records?<br />
+            This process cannot be undone.
+          </p>
+          <button class="confirm-btn" id="confirmSystemUsersDeleteBtn">
+            CONFIRM
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete confirmation popup for staff section -->
+    <div class="delete-popup" id="deleteConfirmationPopup">
+      <div class="popup-header">
+        <div class="header-content">
+          <div class="header-icon">
+            <img
+              src="/assets/icons/delete-confirmation-popup-icon.svg"
+              alt="delete-icon"
+            />
+          </div>
+          <h1 class="header-title">Delete Confirmation</h1>
+        </div>
+        <button class="close-btn" id="closeDeletePopupBtn">
+          <img
+            src="/assets/icons/close-icon-black.svg"
+            alt="close-icon"
+            class="close-icon"
+          />
+        </button>
+      </div>
+      <div class="popup-content">
+        <p class="confirmation-text">
+          Do you really want to delete these records?<br />
+          This process cannot be undone.
+        </p>
+        <button class="confirm-btn" id="confirmDeleteBtn">CONFIRM</button>
+      </div>
+    </div>
+
+    <!-- Add/Update staff popup -->
+    <div class="add-staff-popup" id="addStaffPopup">
+      <div class="popup-header">
+        <div class="header-content">
+          <div class="header-icon">
+            <img src="/assets/icons/staff-popup-icon.svg" alt="staff-icon" />
+          </div>
+          <h1 class="header-title" id="popupTitle">Add Staff</h1>
+        </div>
+        <button class="close-btn" id="closeBtn">
+          <img
+            src="/assets/icons/close-icon-black.svg"
+            alt="close-icon"
+            class="close-icon"
+          />
+        </button>
+      </div>
+      <div class="popup-content">
+        <form id="addStaffForm" class="staff-form">
+          <input type="hidden" id="actionType" value="add" />
+          <div class="form-row">
+            <div class="form-group">
+              <input
+                type="text"
+                id="firstName"
+                placeholder="First name"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <input
+                type="tel"
+                id="contactNumber"
+                placeholder="Contact number"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <input
+                type="text"
+                id="lastName"
+                placeholder="Last name"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <input type="email" id="email" placeholder="Email" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <input type="date" id="dateOfBirth" placeholder="Date of birth" required />
+              <img
+                src="/assets/icons/calendar-icon.svg"
+                alt="calendar"
+                class="input-icon calendar-icon"
+              />
+            </div>
+            <div class="form-group">
+              <input type="date" id="joinedDate" placeholder="Joined date" required />
+              <img
+                src="/assets/icons/calendar-icon.svg"
+                alt="calendar"
+                class="input-icon calendar-icon"
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <input type="text" id="address" placeholder="Address" required />
+            </div>
+            <div class="form-group">
+              <select id="gender" required>
+                <option value="" disabled selected hidden>Gender</option>
+                <option value="MALE">Male</option>
+                <option value="FEMALE">Female</option>
+                <option value="OTHER">Other</option>
+              </select>
+              <img
+                src="/assets/icons/drop-down-icon.svg"
+                alt="dropdown"
+                class="input-icon dropdown-icon"
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <input
+                type="text"
+                id="postalCode"
+                placeholder="Postal code"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <select id="designation" required>
+                <option value="" disabled selected hidden>Designation</option>
+              </select>
+              <img
+                src="/assets/icons/drop-down-icon.svg"
+                alt="dropdown"
+                class="input-icon dropdown-icon"
+              />
+            </div>
+          </div>
+          <div class="save-btn-container">
+            <button type="submit" class="save-btn" id="saveBtn">SAVE</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <script src="/assets/jquery/jquery-3.7.1.min.js"></script>
     <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/components/js/popup/AddOrUpdateStaffPopup.js"></script>
+    <script src="/components/js/popup/SystemUsersPopup.js"></script>
     <script src="/components/js/section/StaffSection.js"></script>
   </body>
 </html>

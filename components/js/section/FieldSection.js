@@ -76,7 +76,7 @@ $(document).ready(function () {
 
   // Action button handlers
   $(document).on("click", ".action-btn.delete", function () {
-    console.log("Delete clicked");
+    showDeleteConfirmationPopup();
   });
 
   $(document).on("click", ".action-btn.edit", function () {
@@ -86,6 +86,27 @@ $(document).ready(function () {
   $(document).on("click", ".action-btn.view", function () {
     console.log("View clicked");
   });
+
+  // Delete confirmation popup ----------------------------------------------
+
+  $("#closeDeletePopupBtn").on("click", function () {
+    hideDeleteConfirmationPopup();
+  });
+
+  // Confirm delete button handler
+  $("#confirmDeleteBtn").on("click", function () {
+    hideDeleteConfirmationPopup();
+  });
+
+  // Show delete confirmation popup
+  function showDeleteConfirmationPopup() {
+    $("#deleteConfirmationPopup").fadeIn(300);
+  }
+
+  // Hide delete confirmation popup
+  function hideDeleteConfirmationPopup() {
+    $("#deleteConfirmationPopup").fadeOut(300);
+  }
 
   // Initialize page
   loadFieldData();

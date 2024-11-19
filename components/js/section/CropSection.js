@@ -58,7 +58,8 @@ $(document).ready(function () {
       },
       {
         commonName: "WheatAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-        scientificName: "Triticum aestivumAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        scientificName:
+          "Triticum aestivumAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
         category: "CerealAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
         season: "WinterAAAAAAAAAAAAAAAAAAAAAAAAAAA",
       },
@@ -146,8 +147,7 @@ $(document).ready(function () {
 
   // Action button handlers
   $(document).on("click", ".action-btn.delete", function () {
-    // Implement delete functionality
-    console.log("Delete clicked");
+    showDeleteConfirmationPopup();
   });
 
   $(document).on("click", ".action-btn.edit", function () {
@@ -159,6 +159,27 @@ $(document).ready(function () {
     // Implement view functionality
     console.log("View clicked");
   });
+
+  // Delete confirmation popup ----------------------------------------------
+
+  $("#closeDeletePopupBtn").on("click", function () {
+    hideDeleteConfirmationPopup();
+  });
+
+  // Confirm delete button handler
+  $("#confirmDeleteBtn").on("click", function () {
+    hideDeleteConfirmationPopup();
+  });
+
+  // Show delete confirmation popup
+  function showDeleteConfirmationPopup() {
+    $("#deleteConfirmationPopup").fadeIn(300);
+  }
+
+  // Hide delete confirmation popup
+  function hideDeleteConfirmationPopup() {
+    $("#deleteConfirmationPopup").fadeOut(300);
+  }
 
   // Initialize page
   loadFields();

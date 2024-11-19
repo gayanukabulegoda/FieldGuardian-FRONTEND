@@ -15,9 +15,12 @@
   --text-dark: #3d3e3e;
   --white: #ffffff;
   --text-field-focus: #2e7d3280;
+  --primary-red: #ff3b30;
+  --light-red-bg: #fff1f0;
   --hover-red: #ffe1e1;
+  --hover-dark-red: #e0352b;
+}
 
-  /* home page styles */
-  --sidebar-width: 240px;
-  --header-height: 85px;
+* {
+  font-family: "Poppins", sans-serif;
 }

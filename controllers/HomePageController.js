@@ -1,64 +1,71 @@
-// Current user data (simulate backend data)
-let currentUser = {
-  name: "Gayanuka Bulegoda",
-  email: "grbulegoda@gmail.com",
-  role: "ADMINISTRATIVE",
-};
+$(document).ready(function () {
+  // Current user data (simulate backend data)
+  let currentUser = {
+    name: "Gayanuka BulegodaAAAAAQQ",
+    email: "grbulegoda@gmail.comAQQAAWWWWWRR",
+    role: "ADMINISTRATIVE",
+  };
 
-// Update date in header
-function updateDate() {
-  const days = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
+  // Truncate text to a specific character limit
+  function truncateText(text, limit) {
+    if (text.length > limit) {
+      return text.substring(0, limit) + "...";
+    }
+    return text;
+  }
 
-  const now = new Date();
-  const dateString = `Today is ${days[now.getDay()]}, ${now.getDate()} ${
-    months[now.getMonth()]
-  } ${now.getFullYear()}`;
-  $(".current-date").text(dateString);
-}
+  // Update date in header
+  function updateDate() {
+    const days = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
 
-// Navigation handling
-$(".nav-item").click(function () {
-  $(".nav-item").removeClass("active");
-  $(this).addClass("active");
-  $("#contentFrame").attr("src", $(this).data("page"));
-});
+    const now = new Date();
+    const dateString = `Today is ${days[now.getDay()]}, ${now.getDate()} ${
+      months[now.getMonth()]
+    } ${now.getFullYear()}`;
+    $(".current-date").text(dateString);
+  }
 
-// Logout handling
-$("#logoutBtn").click(() => {
-  window.location.href = "/index.html";
-});
+  // Navigation handling
+  $(".nav-item").click(function () {
+    $(".nav-item").removeClass("active");
+    $(this).addClass("active");
+    $("#contentFrame").attr("src", $(this).data("page"));
+  });
 
-// Initialize
-$(document).ready(() => {
+  // Logout handling
+  $("#logoutBtn").click(() => {
+    window.location.href = "/index.html";
+  });
+
   updateDate();
   setInterval(updateDate, 60000); // Update date every minute
 
   // Set initial user data
   $(".user-name").text(currentUser.name.split(" ")[0]);
-  $(".profile-name").text(currentUser.name);
-  $(".profile-email").text(currentUser.email);
+  $(".profile-name").text(truncateText(currentUser.name, 18));
+  $(".profile-email").text(truncateText(currentUser.email, 24));
 
   // PopUps -------------------
 
@@ -118,6 +125,28 @@ $(document).ready(() => {
     $("#password, #confirmPassword").val("");
   });
 
+  // Reusable function to close popups when clicking outside the iframe
+  function closePopupOutsideIframe(popupSelector) {
+    $(document).on("click", function (event) {
+      const iframe = document.getElementById("contentFrame");
+      const iframeRect = iframe.getBoundingClientRect();
+      const isInIframe =
+        event.clientX >= iframeRect.left &&
+        event.clientX <= iframeRect.right &&
+        event.clientY >= iframeRect.top &&
+        event.clientY <= iframeRect.bottom;
+
+      if (!isInIframe) {
+        const iframeDocument =
+          iframe.contentDocument || iframe.contentWindow.document;
+        if ($(iframeDocument).find(popupSelector).is(":visible")) {
+          $(iframeDocument).find(popupSelector).fadeOut();
+          iframe.contentWindow.enableButtonsAndInputs(); // Call the function from the iframe
+        }
+      }
+    });
+  }
+
   // Close popups when clicking outside
   closePopupOnClickOutside("#profilePopup", "#headerProfileBtn");
   closePopupOnClickOutside("#updatePasswordPopup", "#settingsBtn");
@@ -127,105 +156,116 @@ $(document).ready(() => {
     "#profilePopup",
     "#updatePasswordPopup",
   ]);
-});
 
-// Show profile popup
-function showMyProfilePopup() {
-  setMyProiflePopupData(currentUser);
-  $("#updatePasswordPopup").fadeOut(300);
-  $("#profilePopup").fadeIn(300);
-}
+  // Close system users popup when clicking outside the iframe
+  closePopupOutsideIframe(".system-users-popup");
+  closePopupOutsideIframe(".delete-popup");
+  closePopupOutsideIframe(".add-staff-popup");
 
-function setMyProiflePopupData(currentUser) {
-  $("#profilePopup #userName").text(currentUser.name);
-  $("#profilePopup #userEmail").text(currentUser.email);
-  $("#profilePopup #userRole").text(currentUser.role);
-}
+  // Show profile popup
+  function showMyProfilePopup() {
+    setMyProiflePopupData(currentUser);
+    $("#updatePasswordPopup").fadeOut(300);
+    $("#profilePopup").fadeIn(300);
+  }
 
-function showUpdatePasswordPopup() {
-  setMyProiflePopupData(currentUser);
-  $("#profilePopup").fadeOut(300);
-  $("#updatePasswordPopup").fadeIn(300);
-}
+  function setMyProiflePopupData(currentUser) {
+    $("#profilePopup #userName").text(truncateText(currentUser.name, 18));
+    $("#profilePopup #userEmail").text(truncateText(currentUser.email, 24));
+    $("#profilePopup #userRole").text(currentUser.role);
+  }
 
-function setUpdatePasswordPopupData(currentUser) {
-  $("#updatePasswordPopup #userName").text(currentUser.name);
-  $("#updatePasswordPopup #userEmail").text(currentUser.email);
-}
+  function showUpdatePasswordPopup() {
+    setMyProiflePopupData(currentUser);
+    $("#profilePopup").fadeOut(300);
+    $("#updatePasswordPopup").fadeIn(300);
+  }
 
-function togglePasswordVisibility(toggleButton) {
-  const passwordInput = toggleButton.siblings("input");
-  const type = passwordInput.attr("type") === "password" ? "text" : "password";
-  passwordInput.attr("type", type);
+  function setUpdatePasswordPopupData(currentUser) {
+    $("#updatePasswordPopup #userName").text(
+      truncateText(currentUser.name, 23)
+    );
+    $("#updatePasswordPopup #userEmail").text(
+      truncateText(currentUser.email, 30)
+    );
+  }
 
-  // Toggle eye icon
-  const img = toggleButton.find("img");
-  const currentSrc = img.attr("src");
-  img.attr(
-    "src",
-    currentSrc.includes("/assets/icons/password-eye-close.svg")
-      ? "/assets/icons/password-eye-open.svg"
-      : "/assets/icons/password-eye-close.svg"
-  );
-}
+  function togglePasswordVisibility(toggleButton) {
+    const passwordInput = toggleButton.siblings("input");
+    const type =
+      passwordInput.attr("type") === "password" ? "text" : "password";
+    passwordInput.attr("type", type);
 
-function moveToNextInputOnEnter(inputSelector, buttonSelector) {
-  $(inputSelector).keypress(function (e) {
-    if (e.which === 13) {
-      // Enter key pressed
-      e.preventDefault();
-      const nextInput = $(this)
-        .closest(".form-group")
-        .next(".form-group")
-        .find("input");
-      if (nextInput.length) {
-        nextInput.focus();
-      } else {
-        $(buttonSelector).focus(); // Focus the button if no more input fields
+    // Toggle eye icon
+    const img = toggleButton.find("img");
+    const currentSrc = img.attr("src");
+    img.attr(
+      "src",
+      currentSrc.includes("/assets/icons/password-eye-close.svg")
+        ? "/assets/icons/password-eye-open.svg"
+        : "/assets/icons/password-eye-close.svg"
+    );
+  }
+
+  function moveToNextInputOnEnter(inputSelector, buttonSelector) {
+    $(inputSelector).keypress(function (e) {
+      if (e.which === 13) {
+        // Enter key pressed
+        e.preventDefault();
+        const nextInput = $(this)
+          .closest(".form-group")
+          .next(".form-group")
+          .find("input");
+        if (nextInput.length) {
+          nextInput.focus();
+        } else {
+          $(buttonSelector).focus(); // Focus the button if no more input fields
+        }
       }
-    }
-  });
-}
+    });
+  }
 
-function closePopupOnClickOutside(popupSelector, triggerSelector) {
-  $(document).on("click", function (event) {
-    if (
-      !$(event.target).closest(popupSelector + ", " + triggerSelector).length &&
-      $(popupSelector).is(":visible")
-    ) {
-      $(popupSelector).fadeOut(300);
-    }
-  });
-}
+  function closePopupOnClickOutside(popupSelector, triggerSelector) {
+    $(document).on("click", function (event) {
+      if (
+        !$(event.target).closest(popupSelector + ", " + triggerSelector)
+          .length &&
+        $(popupSelector).is(":visible")
+      ) {
+        $(popupSelector).fadeOut(300);
+      }
+    });
+  }
 
-function closePopupOnClickInsideIframe(iframeSelector, popupSelectors) {
-  const iframe = $(iframeSelector);
-  iframe.on("load", function () {
-    $(this)
-      .contents()
-      .on("click", function () {
-        popupSelectors.forEach((popupSelector) => {
-          if ($(popupSelector).is(":visible")) {
-            $(popupSelector).fadeOut(300);
-          }
+  function closePopupOnClickInsideIframe(iframeSelector, popupSelectors) {
+    const iframe = $(iframeSelector);
+    iframe.on("load", function () {
+      $(this)
+        .contents()
+        .on("click", function () {
+          popupSelectors.forEach((popupSelector) => {
+            if ($(popupSelector).is(":visible")) {
+              $(popupSelector).fadeOut(300);
+            }
+          });
         });
-      });
-  });
-}
+    });
+  }
 
-// Password validation
-function validatePassword(password) {
-  const minLength = 8;
-  const hasUpperCase = /[A-Z]/.test(password);
-  const hasLowerCase = /[a-z]/.test(password);
-  const hasNumbers = /\d/.test(password);
-  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+  // Password validation
+  function validatePassword(password) {
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
-  return (
-    password.length >= minLength &&
-    hasUpperCase &&
-    hasLowerCase &&
-    hasNumbers &&
-    hasSpecialChar
-  );
-}
+    return (
+      password.length >= minLength &&
+      hasUpperCase &&
+      hasLowerCase &&
+      hasNumbers &&
+      hasSpecialChar
+    );
+  }
+});

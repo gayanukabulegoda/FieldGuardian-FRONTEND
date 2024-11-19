@@ -6,6 +6,10 @@
     <title>Field Section</title>
     <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/assets/css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="/components/css/popup/deleteConfirmationPopup.css"
+    />
     <link rel="stylesheet" href="/components/css/section/fieldSection.css" />
   </head>
   <body>
@@ -51,6 +55,32 @@
         <div class="table-body" id="fieldTableBody">
           <!-- Table rows will be dynamically added here -->
         </div>
+      </div>
+    </div>
+
+    <!-- Delete confirmation popup -->
+    <div class="delete-popup" id="deleteConfirmationPopup">
+      <div class="popup-header">
+        <div class="header-content">
+          <div class="header-icon">
+            <img src="/assets/icons/delete-confirmation-popup-icon.svg" alt="delete-icon" />
+          </div>
+          <h1 class="header-title">Delete Confirmation</h1>
+        </div>
+        <button class="close-btn" id="closeDeletePopupBtn">
+          <img
+            src="/assets/icons/close-icon-black.svg"
+            alt="close-icon"
+            class="close-icon"
+          />
+        </button>
+      </div>
+      <div class="popup-content">
+        <p class="confirmation-text">
+          Do you really want to delete these records?<br />
+          This process cannot be undone.
+        </p>
+        <button class="confirm-btn" id="confirmDeleteBtn">CONFIRM</button>
       </div>
     </div>
 
