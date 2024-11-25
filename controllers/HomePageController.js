@@ -141,7 +141,12 @@ $(document).ready(function () {
           iframe.contentDocument || iframe.contentWindow.document;
         if ($(iframeDocument).find(popupSelector).is(":visible")) {
           $(iframeDocument).find(popupSelector).fadeOut();
-          iframe.contentWindow.enableButtonsAndInputs(); // Call the function from the iframe
+          if (iframe.contentWindow.enableStaffButtonsAndInputs) {
+            iframe.contentWindow.enableStaffButtonsAndInputs();
+          }
+          if (iframe.contentWindow.enableEquipmentButtonsAndInputs) {
+            iframe.contentWindow.enableEquipmentButtonsAndInputs();
+          }
         }
       }
     });
@@ -161,6 +166,8 @@ $(document).ready(function () {
   closePopupOutsideIframe(".system-users-popup");
   closePopupOutsideIframe(".delete-popup");
   closePopupOutsideIframe(".add-staff-popup");
+  closePopupOutsideIframe(".view-staff-popup");
+  closePopupOutsideIframe(".equipment-popup");
 
   // Show profile popup
   function showMyProfilePopup() {

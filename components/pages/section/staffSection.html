@@ -6,6 +6,7 @@
     <title>Staff Section</title>
     <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/assets/css/styles.css" />
+    <link rel="stylesheet" href="/components/css/popup/viewStaffPopup.css">
     <link rel="stylesheet" href="/components/css/popup/addOrUpdateStaffPopup.css" />
     <link rel="stylesheet" href="/components/css/popup/systemUsersPopup.css" />
     <link
@@ -263,6 +264,78 @@
             <button type="submit" class="save-btn" id="saveBtn">SAVE</button>
           </div>
         </form>
+      </div>
+    </div>
+
+    <!-- View staff popup -->
+    <div class="view-staff-popup" id="viewStaffPopup">
+      <div class="popup-header">
+        <div class="header-content">
+          <div class="header-icon">
+            <img src="/assets/icons/staff-popup-icon.svg" alt="staff-icon" />
+          </div>
+          <h1 class="header-title">View Staff</h1>
+        </div>
+        <button class="close-btn" id="closeViewBtn">
+          <img src="/assets/icons/close-icon-black.svg" alt="close-icon" class="close-icon" />
+        </button>
+      </div>
+      <div class="popup-content">
+        <div class="staff-details">
+          <div class="details-row">
+            <div class="detail-group">
+              <label>First name :</label>
+              <span id="viewFirstName"></span>
+            </div>
+            <div class="detail-group">
+              <label>Contact no :</label>
+              <span id="viewContactNumber"></span>
+            </div>
+          </div>
+          <div class="details-row">
+            <div class="detail-group">
+              <label>Last name :</label>
+              <span id="viewLastName"></span>
+            </div>
+            <div class="detail-group">
+              <label>Email :</label>
+              <span id="viewEmail"></span>
+            </div>
+          </div>
+          <div class="details-row">
+            <div class="detail-group">
+              <label>Date of birth :</label>
+              <span id="viewDateOfBirth"></span>
+            </div>
+            <div class="detail-group">
+              <label>Joined date :</label>
+              <span id="viewJoinedDate"></span>
+            </div>
+          </div>
+          <div class="details-row">
+            <div class="detail-group">
+              <label>Address :</label>
+              <span id="viewAddress"></span>
+            </div>
+            <div class="detail-group">
+              <label>Gender :</label>
+              <span id="viewGender"></span>
+            </div>
+          </div>
+          <div class="details-row">
+            <div class="detail-group">
+              <label>Postal code :</label>
+              <span id="viewPostalCode"></span>
+            </div>
+            <div class="detail-group">
+              <label>Designation :</label>
+              <span id="viewDesignation"></span>
+            </div>
+          </div>
+          <div class="button-container">
+            <button class="close-button" id="closeButton">CLOSE</button>
+          </div>
+        </div>
       </div>
     </div>
 

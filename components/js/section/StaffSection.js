@@ -19,12 +19,12 @@ $(document).ready(function () {
     // Simulated API call - replace with actual backend call
     const staffData = [
       {
-        name: "Xavier De Gunasekara",
+        id: "111-111",
         designation: "SENIOR ASSISTANT MANAGER",
-        contact: "071 234 5678",
+        contactNo: "071 234 5678",
         email: "xavierdegk999@gmail.com",
         firstName: "Xavier",
-        lastName: "De Gunasekara",
+        lastName: "De GunasekaraA",
         dateOfBirth: "1990-01-01",
         address: "123 Main St",
         postalCode: "12345",
@@ -32,12 +32,12 @@ $(document).ready(function () {
         gender: "MALE",
       },
       {
-        name: "Xavier De Gunasekara",
+        id: "222-222",
         designation: "SENIOR ASSISTANT MANAGER",
-        contact: "071 234 5678",
+        contactNo: "071 234 5678",
         email: "xavierdegk999@gmail.com",
         firstName: "Xavier",
-        lastName: "De Gunasekara",
+        lastName: "De GunasekaraX",
         dateOfBirth: "1990-01-01",
         address: "123 Main St",
         postalCode: "12345",
@@ -45,12 +45,12 @@ $(document).ready(function () {
         gender: "MALE",
       },
       {
-        name: "Xavier De Gunasekara",
+        id: "333-333",
         designation: "SENIOR ASSISTANT MANAGER",
-        contact: "071 234 5678",
+        contactNo: "071 234 5678",
         email: "xavierdegk999@gmail.com",
         firstName: "Xavier",
-        lastName: "De Gunasekara",
+        lastName: "De GunasekaraY",
         dateOfBirth: "1990-01-01",
         address: "123 Main St",
         postalCode: "12345",
@@ -77,14 +77,17 @@ $(document).ready(function () {
     $tableBody.empty();
 
     data.forEach((staff) => {
+      const name = `${staff.firstName} ${staff.lastName}`;
       const row = `
-                <div class="table-row">
-                    <div>${truncateText(staff.name, 28)}</div>
+                <div class="table-row" data-staff='${JSON.stringify(staff)}'>
+                    <div>${truncateText(name, 28)}</div>
                     <div>${truncateText(staff.designation, 24)}</div>
-                    <div>${truncateText(staff.contact, 12)}</div>
+                    <div>${truncateText(staff.contactNo, 12)}</div>
                     <div>${truncateText(staff.email, 28)}</div>
                     <div class="action-buttons">
-                        <button class="action-btn delete" title="Delete">
+                        <button class="action-btn delete" title="Delete" data-id="${
+                          staff.id
+                        }">
                             <img src="/assets/icons/delete-icon-silver.svg" alt="delete-icon" class="delete-icon">
                         </button>
                         <button class="action-btn edit" title="Edit">
@@ -112,35 +115,88 @@ $(document).ready(function () {
 
   // Action button handlers
   $(document).on("click", ".action-btn.delete", function () {
-    showDeleteConfirmationPopup();
-    disableButtonsAndInputs();
+    const staffId = $(this).data("id");
+    showDeleteConfirmationPopup(staffId);
+    disableStaffButtonsAndInputs();
   });
 
   $(document).on("click", ".action-btn.edit", function () {
-    const staffData = {
-      firstName: "Xavier",
-      lastName: "De Gunasekara",
-      dateOfBirth: "1990-01-01",
-      address: "123 Main St",
-      postalCode: "12345",
-      contactNumber: "071 234 5678",
-      email: "xavierdegk999@gmail.com",
-      joinedDate: "2020-01-01",
-      gender: "MALE",
-      designation: "MANAGER",
-    };
+    const staffData = $(this).closest(".table-row").data("staff");
     showUpdateStaffPopup(staffData);
   });
 
   $(document).on("click", ".action-btn.view", function () {
-    // Implement view functionality
-    console.log("View clicked");
+    const staffData = $(this).closest(".table-row").data("staff");
+    showViewStaffPopup(staffData);
+  });
+
+  // view staff popup --------------------------------------------------------
+
+  // Populate staff details with tooltips for full text
+  function populateStaffDetails(staffData) {
+    $("#viewFirstName")
+      .text(truncateText(staffData.firstName, 26))
+      .attr("data-full-text", staffData.firstName);
+    $("#viewLastName")
+      .text(truncateText(staffData.lastName, 26))
+      .attr("data-full-text", staffData.lastName);
+    $("#viewDateOfBirth")
+      .text(formatDate(staffData.dateOfBirth))
+      .attr("data-full-text", formatDate(staffData.dateOfBirth));
+    $("#viewAddress")
+      .text(truncateText(staffData.address, 26))
+      .attr("data-full-text", staffData.address);
+    $("#viewPostalCode")
+      .text(staffData.postalCode)
+      .attr("data-full-text", staffData.postalCode);
+    $("#viewContactNumber")
+      .text(staffData.contactNo)
+      .attr("data-full-text", staffData.contactNo);
+    $("#viewEmail")
+      .text(truncateText(staffData.email, 26))
+      .attr("data-full-text", staffData.email);
+    $("#viewJoinedDate")
+      .text(formatDate(staffData.joinedDate))
+      .attr("data-full-text", formatDate(staffData.joinedDate));
+    $("#viewGender")
+      .text(staffData.gender)
+      .attr("data-full-text", staffData.gender);
+    $("#viewDesignation")
+      .text(staffData.designation)
+      .attr("data-full-text", staffData.designation);
+  }
+
+  // Format date for display
+  function formatDate(dateString) {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+  }
+
+  function showViewStaffPopup(staffData) {
+    populateStaffDetails(staffData);
+    $("#viewStaffPopup").fadeIn(300);
+    disableStaffButtonsAndInputs();
+  }
+
+  function hideViewStaffPopup() {
+    $("#viewStaffPopup").fadeOut();
+    enableStaffButtonsAndInputs();
+  }
+
+  // Close button handlers
+  $("#closeViewBtn, #closeButton").on("click", function () {
+    hideViewStaffPopup();
   });
 
   // Show system users popup
   $("#usersBtn").on("click", function () {
     $(".system-users-popup").fadeIn();
-    disableButtonsAndInputs();
+    disableStaffButtonsAndInputs();
   });
 
   // Delete confirmation popup ----------------------------------------------
@@ -155,33 +211,36 @@ $(document).ready(function () {
   });
 
   // Show delete confirmation popup
-  function showDeleteConfirmationPopup() {
+  function showDeleteConfirmationPopup(staffId) {
+    $("#confirmDeleteBtn").data("id", staffId);
     $("#deleteConfirmationPopup").fadeIn(300);
-    disableButtonsAndInputs();
+    disableStaffButtonsAndInputs();
   }
 
   // Hide delete confirmation popup
   function hideDeleteConfirmationPopup() {
     $("#deleteConfirmationPopup").fadeOut(300);
-    enableButtonsAndInputs();
+    enableStaffButtonsAndInputs();
   }
 
   // Add staff popup --------------------------------------------------------
 
   const $addStaffPopup = $("#addStaffPopup");
+  const $addStaffForm = $("#addStaffForm");
   const $popupTitle = $("#popupTitle");
   const $saveBtn = $("#saveBtn");
   const $actionType = $("#actionType");
 
   // Show add staff popup function
   function showAddStaffPopup() {
+    $addStaffForm[0].reset();
     $popupTitle.text("Add Staff");
     $saveBtn.text("SAVE");
     $actionType.val("add");
     formatDateInputs();
     loadDesignationsForStaffPopup();
     $addStaffPopup.fadeIn(300);
-    disableButtonsAndInputs();
+    disableStaffButtonsAndInputs();
   }
 
   // Show update staff popup function
@@ -193,7 +252,7 @@ $(document).ready(function () {
     loadDesignationsForStaffPopup();
     fillFormWithStaffData(staffData);
     $addStaffPopup.fadeIn(300);
-    disableButtonsAndInputs();
+    disableStaffButtonsAndInputs();
   }
 
   function loadDesignationsForStaffPopup() {
@@ -220,7 +279,7 @@ $(document).ready(function () {
     $("#dateOfBirth").val(data.dateOfBirth);
     $("#address").val(data.address);
     $("#postalCode").val(data.postalCode);
-    $("#contactNumber").val(data.contactNumber);
+    $("#contactNumber").val(data.contactNo);
     $("#email").val(data.email);
     $("#joinedDate").val(data.joinedDate);
     $("#gender").val(data.gender);
@@ -241,7 +300,7 @@ $(document).ready(function () {
         $(popupSelector).is(":visible")
       ) {
         $(popupSelector).fadeOut();
-        enableButtonsAndInputs();
+        enableStaffButtonsAndInputs();
       }
     });
   }
@@ -269,21 +328,21 @@ $(document).ready(function () {
   }
 
   // Function to disable buttons and inputs
-  function disableButtonsAndInputs() {
+  function disableStaffButtonsAndInputs() {
     $(
       ".action-btn, #searchBtn, #searchName, #designationFilter, #genderFilter, #usersBtn, #addBtn"
     ).css("pointer-events", "none");
   }
 
   // Function to enable buttons and inputs
-  function enableButtonsAndInputs() {
+  function enableStaffButtonsAndInputs() {
     $(
       ".action-btn, #searchBtn, #searchName, #designationFilter, #genderFilter, #usersBtn, #addBtn"
     ).css("pointer-events", "auto");
   }
 
-  // Expose enableButtonsAndInputs globally
-  window.enableButtonsAndInputs = enableButtonsAndInputs;
+  // Expose enableStaffButtonsAndInputs globally
+  window.enableStaffButtonsAndInputs = enableStaffButtonsAndInputs;
 
   // Initialize page
   loadDesignations();

@@ -107,7 +107,7 @@ $(document).ready(function () {
   // Hide delete confirmation popup
   function hideDeleteConfirmationPopup() {
     $("#deleteConfirmationSystemUsersPopup").fadeOut(300);
-    enableButtonsAndInputs(); 
+    enableStaffButtonsAndInputs(); 
   }
 
   // Initialize popup

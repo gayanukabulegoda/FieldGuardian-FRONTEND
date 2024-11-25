@@ -8,6 +8,14 @@
     <link rel="stylesheet" href="/assets/css/styles.css" />
     <link
       rel="stylesheet"
+      href="/components/css/popup/viewEquipmentPopup.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/components/css/popup/addOrUpdateEquipmentPopup.css"
+    />
+    <link
+      rel="stylesheet"
       href="/components/css/popup/deleteConfirmationPopup.css"
     />
     <link
@@ -64,7 +72,10 @@
       <div class="popup-header">
         <div class="header-content">
           <div class="header-icon">
-            <img src="/assets/icons/delete-confirmation-popup-icon.svg" alt="delete-icon" />
+            <img
+              src="/assets/icons/delete-confirmation-popup-icon.svg"
+              alt="delete-icon"
+            />
           </div>
           <h1 class="header-title">Delete Confirmation</h1>
         </div>
@@ -85,8 +96,127 @@
       </div>
     </div>
 
+    <!-- Add/Update equipment popup -->
+    <div class="add-equipment-popup" id="addEquipmentPopup">
+      <div class="popup-header">
+        <div class="header-content">
+          <div class="header-icon">
+            <img
+              src="/assets/icons/equipment-popup-icon.svg"
+              alt="equipment-icon"
+            />
+          </div>
+          <h1 class="header-title" id="popupTitle">Add Equipment</h1>
+        </div>
+        <button class="close-btn" id="closeBtn">
+          <img
+            src="/assets/icons/close-icon-black.svg"
+            alt="close-icon"
+            class="close-icon"
+          />
+        </button>
+      </div>
+      <div class="popup-content">
+        <form id="equipmentForm" class="equipment-form">
+          <input type="hidden" id="actionType" value="add" />
+          <div class="form-group">
+            <input type="text" id="name" placeholder="Name" required />
+          </div>
+          <div class="form-group">
+            <select id="type" required>
+              <option value="" disabled selected hidden>Type</option>
+              <option value="Agricultural">Agricultural</option>
+              <option value="Harvester">Harvester</option>
+              <option value="Sprayer">Sprayer</option>
+              <option value="Plow">Plow</option>
+            </select>
+            <img
+              src="/assets/icons/drop-down-icon.svg"
+              alt="dropdown"
+              class="input-icon dropdown-icon"
+            />
+          </div>
+          <div class="form-group">
+            <select id="status" class="optional">
+              <option value="" disabled selected hidden>Status</option>
+            </select>
+            <img
+              src="/assets/icons/drop-down-icon.svg"
+              alt="dropdown"
+              class="input-icon dropdown-icon"
+            />
+          </div>
+          <div class="form-group">
+            <select id="staff" class="optional">
+              <option value="" disabled selected hidden>
+                Staff (Optional)
+              </option>
+            </select>
+            <img
+              src="/assets/icons/drop-down-icon.svg"
+              alt="dropdown"
+              class="input-icon dropdown-icon"
+            />
+          </div>
+          <div class="save-btn-container">
+            <button type="submit" class="save-btn" id="saveBtn">SAVE</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- View equipment popup -->
+    <div class="view-equipment-popup" id="viewEquipmentPopup">
+      <div class="popup-header">
+        <div class="header-content">
+          <div class="header-icon">
+            <img
+              src="/assets/icons/equipment-popup-icon.svg"
+              alt="equipment-icon"
+            />
+          </div>
+          <h1 class="header-title">View Equipment</h1>
+        </div>
+        <button class="close-btn" id="closeViewBtn">
+          <img
+            src="/assets/icons/close-icon-black.svg"
+            alt="close-icon"
+            class="close-icon"
+          />
+        </button>
+      </div>
+      <div class="popup-content">
+        <div class="equipment-details">
+          <div class="details-row">
+            <label>Name :</label>
+            <span id="viewName"></span>
+          </div>
+          <div class="details-row">
+            <label>Type :</label>
+            <span id="viewType"></span>
+          </div>
+          <div class="details-row">
+            <label>Status :</label>
+            <span id="viewStatus"></span>
+          </div>
+          <div class="details-row">
+            <label>Staff :</label>
+            <span id="viewStaff"></span>
+          </div>
+          <div class="details-row">
+            <label>Field :</label>
+            <span id="viewField"></span>
+          </div>
+          <div class="button-container">
+            <button class="close-button" id="closeButton">CLOSE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="/assets/jquery/jquery-3.7.1.min.js"></script>
     <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/components/js/popup/AddOrUpdateEquipmentPopup.js"></script>
     <script src="/components/js/section/EquipmentSection.js"></script>
   </body>
 </html>

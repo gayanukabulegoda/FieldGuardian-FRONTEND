@@ -5,10 +5,10 @@ $(document).ready(function () {
   function hideAddStaffPopup() {
     $("#addStaffPopup").fadeOut();
     $addStaffForm[0].reset();
-    enableButtonsAndInputs();
+    enableStaffButtonsAndInputs();
   }
 
-  // Close button handler for system users popup
+  // Close button handler
   $("#addStaffPopup #closeBtn").on("click", function () {
     hideAddStaffPopup();
   });
