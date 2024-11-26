@@ -280,17 +280,12 @@ $(document).ready(function () {
       $("#imagePreview").attr("src", crop.image);
       $("#previewContainer").show();
     } else {
-      resetImageUpload();
+       $("#imagePreview").attr("src", "/assets/images/default_no_pic_image");
+       $("#previewContainer").show();
     }
   };
 
-  function resetImageUpload() {
-    $("#viewCropImage").val("");
-    $("#previewContainer").hide();
-    $("#imagePreview").attr("src", "");
-  }
-
-  // Show add staff popup
+  // Show add crop popup
   $("#addBtn").on("click", function () {
     showAddCropPopup();
   });

@@ -150,6 +150,9 @@ $(document).ready(function () {
           if (iframe.contentWindow.enableCropButtonsAndInputs) {
             iframe.contentWindow.enableCropButtonsAndInputs();
           }
+          if (iframe.contentWindow.enableFieldButtonsAndInputs) {
+            iframe.contentWindow.enableFieldButtonsAndInputs();
+          }
         }
       }
     });
@@ -174,6 +177,8 @@ $(document).ready(function () {
   closePopupOutsideIframe(".view-equipment-popup");
   closePopupOutsideIframe(".add-crop-popup");
   closePopupOutsideIframe(".view-crop-popup");
+  closePopupOutsideIframe(".add-field-popup");
+  closePopupOutsideIframe(".view-field-popup");
 
   // Show profile popup
   function showMyProfilePopup() {
