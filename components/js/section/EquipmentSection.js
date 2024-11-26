@@ -5,11 +5,11 @@ $(document).ready(function () {
     const equipmentData = [
       {
         id: "111 - 111",
-        name: "Tractor",
-        type: "Agricultural",
+        name: "TractorRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+        type: "AgriculturalRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
         status: "UNDER_MAINTENANCE",
         staffId: 1,
-        field: "Evergreen Plains",
+        field: "Evergreen PlainsRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
       },
       {
         id: "222 - 222",
@@ -112,7 +112,6 @@ $(document).ready(function () {
   $(document).on("click", ".action-btn.delete", function () {
     const equipmentId = $(this).data("id");
     showDeleteConfirmationPopup(equipmentId);
-    disableEquipmentButtonsAndInputs();
   });
 
   $(document).on("click", ".action-btn.edit", function () {
@@ -133,7 +132,7 @@ $(document).ready(function () {
       .text(truncateText(equipmentData.name, 30))
       .attr("data-full-text", equipmentData.name);
     $("#viewType")
-      .text(equipmentData.type)
+      .text(truncateText(equipmentData.type, 30))
       .attr("data-full-text", equipmentData.type);
     $("#viewStatus")
       .text(formatStatusText(equipmentData.status))

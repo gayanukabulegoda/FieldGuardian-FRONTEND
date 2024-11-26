@@ -147,6 +147,9 @@ $(document).ready(function () {
           if (iframe.contentWindow.enableEquipmentButtonsAndInputs) {
             iframe.contentWindow.enableEquipmentButtonsAndInputs();
           }
+          if (iframe.contentWindow.enableCropButtonsAndInputs) {
+            iframe.contentWindow.enableCropButtonsAndInputs();
+          }
         }
       }
     });
@@ -167,7 +170,10 @@ $(document).ready(function () {
   closePopupOutsideIframe(".delete-popup");
   closePopupOutsideIframe(".add-staff-popup");
   closePopupOutsideIframe(".view-staff-popup");
-  closePopupOutsideIframe(".equipment-popup");
+  closePopupOutsideIframe(".add-equipment-popup");
+  closePopupOutsideIframe(".view-equipment-popup");
+  closePopupOutsideIframe(".add-crop-popup");
+  closePopupOutsideIframe(".view-crop-popup");
 
   // Show profile popup
   function showMyProfilePopup() {

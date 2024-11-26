@@ -117,7 +117,6 @@ $(document).ready(function () {
   $(document).on("click", ".action-btn.delete", function () {
     const staffId = $(this).data("id");
     showDeleteConfirmationPopup(staffId);
-    disableStaffButtonsAndInputs();
   });
 
   $(document).on("click", ".action-btn.edit", function () {
