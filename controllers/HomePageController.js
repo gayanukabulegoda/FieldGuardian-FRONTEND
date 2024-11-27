@@ -153,6 +153,9 @@ $(document).ready(function () {
           if (iframe.contentWindow.enableFieldButtonsAndInputs) {
             iframe.contentWindow.enableFieldButtonsAndInputs();
           }
+          if (iframe.contentWindow.enableMonitoringLogButtonsAndInputs) {
+            iframe.contentWindow.enableMonitoringLogButtonsAndInputs();
+          }
         }
       }
     });
@@ -179,6 +182,8 @@ $(document).ready(function () {
   closePopupOutsideIframe(".view-crop-popup");
   closePopupOutsideIframe(".add-field-popup");
   closePopupOutsideIframe(".view-field-popup");
+  closePopupOutsideIframe(".add-monitoring-popup");
+  closePopupOutsideIframe(".view-monitoring-popup");
 
   // Show profile popup
   function showMyProfilePopup() {

@@ -6,7 +6,7 @@
     <title>Field Section</title>
     <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/assets/css/styles.css" />
-    <link rel="stylesheet" href="/components/css/popup/viewFieldPopup.css">
+    <link rel="stylesheet" href="/components/css/popup/viewFieldPopup.css" />
     <link
       rel="stylesheet"
       href="/components/css/popup/addOrUpdateFieldPopup.css"
@@ -38,9 +38,9 @@
 
         <select class="filter-select" id="landSizeFilter">
           <option value="" disabled selected hidden>Land Size</option>
-          <option value="SMALL">Small (< 50 sq. m)</option>
+          <option value="SMALL">Small (&lt; 50 sq. m)</option>
           <option value="MEDIUM">Medium (50-150 sq. m)</option>
-          <option value="LARGE">Large (> 150 sq. m)</option>
+          <option value="LARGE">Large (&gt; 150 sq. m)</option>
         </select>
 
         <button class="search-btn" id="searchBtn">Search</button>
@@ -93,7 +93,7 @@
     </div>
 
     <!-- Add or update field popup -->
-      <div class="add-field-popup" id="addFieldPopup">
+    <div class="add-field-popup" id="addFieldPopup">
       <div class="popup-header">
         <div class="header-content">
           <div class="header-icon">
@@ -102,7 +102,11 @@
           <h1 class="header-title" id="popupTitle">Add Field</h1>
         </div>
         <button class="close-btn" id="closeBtn">
-          <img src="/assets/icons/close-icon-black.svg" alt="close-icon" class="close-icon" />
+          <img
+            src="/assets/icons/close-icon-black.svg"
+            alt="close-icon"
+            class="close-icon"
+          />
         </button>
       </div>
       <div class="popup-content">
@@ -114,17 +118,36 @@
                 <input type="text" id="name" placeholder="Name" required />
               </div>
               <div class="form-group">
-                <input type="number" id="extentSize" placeholder="Extent size (sq. m)" required />
+                <input
+                  type="number"
+                  id="extentSize"
+                  placeholder="Extent size (sq. m)"
+                  required
+                />
               </div>
               <div class="form-group">
-                <input type="text" id="location" placeholder="Location (Paste google map url)" required />
+                <input
+                  type="text"
+                  id="location"
+                  placeholder="Location (Paste google map url)"
+                  required
+                />
               </div>
               <div class="image-upload-section">
                 <div class="image-upload-container">
-                  <input type="file" id="fieldImage1" accept=".png,.jpg,.jpeg" class="file-input" />
+                  <input
+                    type="file"
+                    id="fieldImage1"
+                    accept=".png,.jpg,.jpeg"
+                    class="file-input"
+                  />
                   <div class="upload-area" id="uploadArea1">
                     <div class="upload-content">
-                      <img src="/assets/icons/add-image-icon.svg" alt="add-image" class="upload-icon" />
+                      <img
+                        src="/assets/icons/add-image-icon.svg"
+                        alt="add-image"
+                        class="upload-icon"
+                      />
                       <p class="upload-text">Select your file</p>
                       <p class="upload-subtext">png, jpg, jpeg accepted</p>
                       <p class="upload-size">(Maximum file size : 10MB)</p>
@@ -135,10 +158,19 @@
                   </div>
                 </div>
                 <div class="image-upload-container">
-                  <input type="file" id="fieldImage2" accept=".png,.jpg,.jpeg" class="file-input" />
+                  <input
+                    type="file"
+                    id="fieldImage2"
+                    accept=".png,.jpg,.jpeg"
+                    class="file-input"
+                  />
                   <div class="upload-area" id="uploadArea2">
                     <div class="upload-content">
-                      <img src="/assets/icons/add-image-icon.svg" alt="add-image" class="upload-icon" />
+                      <img
+                        src="/assets/icons/add-image-icon.svg"
+                        alt="add-image"
+                        class="upload-icon"
+                      />
                       <p class="upload-text">Select your file</p>
                       <p class="upload-subtext">png, jpg, jpeg accepted</p>
                       <p class="upload-size">(Maximum file size : 10MB)</p>
@@ -152,13 +184,17 @@
             </div>
             <div class="selection-fields">
               <div class="selection-section">
-                <h2 class="section-title" id="staffSelectionTitle">Select Staff (Optional)</h2>
+                <h2 class="section-title" id="staffSelectionTitle">
+                  Select Staff (Optional)
+                </h2>
                 <div class="selection-container" id="staffContainer">
                   <!-- Staff rows will be dynamically added here -->
                 </div>
               </div>
               <div class="selection-section">
-                <h2 class="section-title" id="equipmentSelectionTitle">Select Equipments (Optional)</h2>
+                <h2 class="section-title" id="equipmentSelectionTitle">
+                  Select Equipments (Optional)
+                </h2>
                 <div class="selection-container" id="equipmentContainer">
                   <!-- Equipment rows will be dynamically added here -->
                 </div>
@@ -173,7 +209,7 @@
     </div>
 
     <!-- View field popoup -->
-         <div class="view-field-popup" id="viewFieldPopup">
+    <div class="view-field-popup" id="viewFieldPopup">
       <div class="popup-header">
         <div class="header-content">
           <div class="header-icon">
@@ -182,7 +218,11 @@
           <h1 class="header-title">View Field</h1>
         </div>
         <button class="close-btn" id="closeViewBtn">
-          <img src="/assets/icons/close-icon-black.svg" alt="close-icon" class="close-icon" />
+          <img
+            src="/assets/icons/close-icon-black.svg"
+            alt="close-icon"
+            class="close-icon"
+          />
         </button>
       </div>
       <div class="popup-content">
@@ -199,7 +239,13 @@
               </div>
               <div class="details-row">
                 <label>Location :</label>
-                <a href="#" id="viewLocation" target="_blank" class="location-link">Click to open in map ↗</a>
+                <a
+                  href="#"
+                  id="viewLocation"
+                  target="_blank"
+                  class="location-link"
+                  >Click to open in map ↗</a
+                >
               </div>
               <div class="image-section">
                 <div class="preview-container" id="previewViewContainer1">
