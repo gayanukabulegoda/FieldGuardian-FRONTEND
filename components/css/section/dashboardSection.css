@@ -1,0 +1,268 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.dashboard-container {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    288deg,
+    var(--lighter-green) 39%,
+    var(--light-green) 85%
+  );
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+/* ------- Left Column - Stats Cards ------- */
+.stats-column {
+  flex: 1.3;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.stat-card {
+  background: var(--white);
+  border-radius: 10px;
+  padding: 10px 8px 10px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-left: 6px solid var(--primary-green);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  flex: 1;
+}
+
+.stat-info {
+  flex: 1;
+  margin-right: 5px;
+}
+
+.stat-title {
+  color: var(--primary-green);
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.stat-subtitle {
+  color: var(--text-gray);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.stat-value {
+  background: var(--light-green);
+  padding: 10px 20px;
+  border-radius: 10px;
+  color: var(--primary-green);
+  font-size: 24px;
+  font-weight: 500;
+}
+
+/* ------- Middle Column - Pie Chart ------- */
+.chart-section {
+  flex: 1.5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--white);
+  border-radius: 10px;
+  padding: 30px 10px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.chart-title {
+  color: var(--primary-green);
+  font-size: 24px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.chart-outer-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--light-green);
+  border-radius: 8px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.chart-container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.chart-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+}
+
+.chart-legend {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px 25px;
+  margin-top: 12%;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.legend-text {
+  color: var(--text-gray);
+  font-size: 14px;
+}
+
+/* ------- Right Column ------- */
+.right-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.cultivation-areas {
+  background: var(--white);
+  border-radius: 15px;
+  padding: 10px;
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.areas-title {
+  color: var(--primary-green);
+  text-align: center;
+  font-size: 20px;
+  margin: 8px 0 20px;
+}
+
+.areas-list {
+  max-height: calc(61vh - 60px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.area-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 10px;
+  background: var(--gray-bg);
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.area-item:hover {
+  background: var(--light-green);
+}
+
+.area-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.area-info {
+  flex: 1;
+}
+
+.area-name {
+  color: var(--text-dark);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.area-extent {
+  color: var(--text-gray);
+  font-size: 14px;
+}
+
+/* ------- Quote Section ------- */
+.quote-section {
+  background: var(--white);
+  padding: 8px;
+  border-radius: 10px;
+  border-left: 6px solid var(--primary-green);
+  flex: 0 0 auto;
+}
+
+.quote-container {
+  background: var(--light-green);
+  border-radius: 9px;
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.quote-logo {
+  width: 60px;
+}
+
+.quote-text {
+  color: var(--primary-green);
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.right-column .quote-section {
+  border: none;
+}
+
+.right-column .quote-container {
+  flex-direction: column-reverse;
+}
+
+/* ------- Scrollbar Styling ------- */
+.areas-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.areas-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.areas-list::-webkit-scrollbar-thumb {
+  background: var(--text-gray);
+  border-radius: 10px;
+}
+
+.areas-list::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-green);
+}
