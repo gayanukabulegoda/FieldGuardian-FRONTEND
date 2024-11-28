@@ -156,6 +156,9 @@ $(document).ready(function () {
           if (iframe.contentWindow.enableMonitoringLogButtonsAndInputs) {
             iframe.contentWindow.enableMonitoringLogButtonsAndInputs();
           }
+          if (iframe.contentWindow.enableVehicleButtonsAndInputs) {
+            iframe.contentWindow.enableVehicleButtonsAndInputs();
+          }
         }
       }
     });
@@ -184,6 +187,8 @@ $(document).ready(function () {
   closePopupOutsideIframe(".view-field-popup");
   closePopupOutsideIframe(".add-monitoring-popup");
   closePopupOutsideIframe(".view-monitoring-popup");
+  closePopupOutsideIframe(".add-vehicle-popup");
+  closePopupOutsideIframe(".view-vehicle-popup");
 
   // Show profile popup
   function showMyProfilePopup() {

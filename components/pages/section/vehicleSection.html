@@ -6,6 +6,11 @@
     <title>Vehicle Section</title>
     <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/assets/css/styles.css" />
+    <link rel="stylesheet" href="/components/css/popup/viewVehiclePopup.css" />
+    <link
+      rel="stylesheet"
+      href="/components/css/popup/addOrUpdateVehiclePopup.css"
+    />
     <link
       rel="stylesheet"
       href="/components/css/popup/deleteConfirmationPopup.css"
@@ -68,7 +73,10 @@
       <div class="popup-header">
         <div class="header-content">
           <div class="header-icon">
-            <img src="/assets/icons/delete-confirmation-popup-icon.svg" alt="delete-icon" />
+            <img
+              src="/assets/icons/delete-confirmation-popup-icon.svg"
+              alt="delete-icon"
+            />
           </div>
           <h1 class="header-title">Delete Confirmation</h1>
         </div>
@@ -89,8 +97,158 @@
       </div>
     </div>
 
+    <!-- Add or update vehicle popup -->
+    <div class="add-vehicle-popup" id="addVehiclePopup">
+      <div class="popup-header">
+        <div class="header-content">
+          <div class="header-icon">
+            <img
+              src="/assets/icons/vehicle-popup-icon.svg"
+              alt="vehicle-icon"
+            />
+          </div>
+          <h1 class="header-title" id="popupTitle">Add Vehicle</h1>
+        </div>
+        <button class="close-btn" id="closeBtn">
+          <img
+            src="/assets/icons/close-icon-black.svg"
+            alt="close-icon"
+            class="close-icon"
+          />
+        </button>
+      </div>
+      <div class="popup-content">
+        <form id="addVehicleForm" class="vehicle-form">
+          <input type="hidden" id="actionType" value="add" />
+          <div class="form-container">
+            <div class="form-fields">
+              <div class="form-group">
+                <input
+                  type="text"
+                  id="licensePlateNumber"
+                  placeholder="License plate number"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <select id="category" required>
+                  <option value="" disabled selected hidden>Category</option>
+                  <option value="TRUCK">Truck</option>
+                  <option value="VAN">Van</option>
+                  <option value="LORRY">Lorry</option>
+                </select>
+                <img
+                  src="/assets/icons/drop-down-icon.svg"
+                  alt="dropdown"
+                  class="input-icon dropdown-icon"
+                />
+              </div>
+              <div class="form-group">
+                <select id="fuelType" required>
+                  <option value="" disabled selected hidden>Fuel type</option>
+                  <option value="PETROL">Petrol</option>
+                  <option value="DIESEL">Diesel</option>
+                </select>
+                <img
+                  src="/assets/icons/drop-down-icon.svg"
+                  alt="dropdown"
+                  class="input-icon dropdown-icon"
+                />
+              </div>
+              <div class="form-group">
+                <textarea
+                  id="remark"
+                  placeholder="Add your remark..."
+                  maxlength="300"
+                  required
+                ></textarea>
+                <div class="char-count">
+                  <span id="currentCount">0</span>/300
+                </div>
+              </div>
+            </div>
+            <div class="selection-fields">
+              <div class="selection-section">
+                <h2 class="section-title" id="staffSelectionTitle">
+                  Select Staff (Optional)
+                </h2>
+                <div class="selection-container" id="staffContainer">
+                  <!-- Staff rows will be dynamically added here -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="save-btn-container">
+            <button type="submit" class="save-btn" id="saveBtn">SAVE</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- View vehicle popup -->
+    <div class="view-vehicle-popup" id="viewVehiclePopup">
+      <div class="popup-header">
+        <div class="header-content">
+          <div class="header-icon">
+            <img
+              src="/assets/icons/vehicle-popup-icon.svg"
+              alt="vehicle-icon"
+            />
+          </div>
+          <h1 class="header-title">View Vehicle</h1>
+        </div>
+        <button class="close-btn" id="closeViewBtn">
+          <img
+            src="/assets/icons/close-icon-black.svg"
+            alt="close-icon"
+            class="close-icon"
+          />
+        </button>
+      </div>
+      <div class="popup-content">
+        <div class="vehicle-details">
+          <div class="details-container">
+            <div class="details-section">
+              <div class="details-row">
+                <label>License plate no :</label>
+                <span id="viewLicensePlateNumber"></span>
+              </div>
+              <div class="details-row">
+                <label>Category :</label>
+                <span id="viewCategory"></span>
+              </div>
+              <div class="details-row">
+                <label>Fuel type :</label>
+                <span id="viewFuelType"></span>
+              </div>
+              <div class="details-row remark-row">
+                <label>Remark :</label>
+                <textarea
+                  id="viewRemark"
+                  placeholder="No remark recorded..."
+                  readonly
+                ></textarea>
+              </div>
+            </div>
+            <div class="selection-section">
+              <div class="selection-group">
+                <h2 class="section-title">Staff Members</h2>
+                <div class="selection-container" id="staffViewContainer">
+                  <!-- Staff rows will be dynamically added here -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="button-container">
+            <button class="close-button" id="closeButton">CLOSE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="/assets/jquery/jquery-3.7.1.min.js"></script>
     <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/components/js/popup/AddOrUpdateVehiclePopup.js"></script>
     <script src="/components/js/section/VehicleSection.js"></script>
   </body>
 </html>
