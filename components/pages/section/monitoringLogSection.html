@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Monitoring Logs</title>
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="/components/css/popup/viewMonitoringLogPopup.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/components/css/popup/addOrUpdateMonitoringLogPopup.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/components/css/section/monitoringLogSection.css"
+    />
+  </head>
+  <body>
+    <div class="monitoring-container">
+      <div class="monitoring-header">
+        <h1 class="page-title">Monitoring Logs</h1>
+        <div class="header-buttons">
+          <button class="btn btn-popup-action" id="addBtn">Add</button>
+        </div>
+      </div>
+
+      <div class="search-section">
+        <div class="search-input">
+          <input type="text" placeholder="Search by field" id="searchField" />
+          <img
+            src="/assets/icons/search-icon.svg"
+            alt="search-icon"
+            class="search-icon"
+          />
+        </div>
+
+        <div class="date-input">
+          <input type="date" id="dateFilter" />
+          <img
+            src="/assets/icons/calendar-icon.svg"
+            alt="calendar-icon"
+            class="calendar-icon"
+          />
+        </div>
+
+        <button class="search-btn" id="searchBtn">Search</button>
+      </div>
+
+      <div class="table-container">
+        <div class="table-header">
+          <div class="th-image">
+            <img src="/assets/icons/image-icon.svg" alt="image-icon" />
+          </div>
+          <div class="th-date">Date</div>
+          <div class="th-field">Field</div>
+          <div class="th-staff">Staff Count</div>
+          <div class="th-action">Action</div>
+        </div>
+
+        <div class="table-body" id="monitoringTableBody">
+          <!-- Table rows will be dynamically added here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Add or update monitoring-log popup -->
+    <div class="add-monitoring-popup" id="addMonitoringPopup">
+      <div class="popup-header">
+        <div class="header-content">
+          <div class="header-icon">
+            <img
+              src="/assets/icons/monitoring-log-popup-icon.svg"
+              alt="monitoring-icon"
+            />
+          </div>
+          <h1 class="header-title" id="popupTitle">Add Monitoring Log</h1>
+        </div>
+        <button class="close-btn" id="closeBtn">
+          <img
+            src="/assets/icons/close-icon-black.svg"
+            alt="close-icon"
+            class="close-icon"
+          />
+        </button>
+      </div>
+      <div class="popup-content">
+        <form id="addMonitoringForm" class="monitoring-form">
+          <input type="hidden" id="actionType" value="add" />
+          <div class="form-container">
+            <div class="form-fields">
+              <div class="form-group">
+                <select id="field" required>
+                  <option value="" disabled selected hidden>Field</option>
+                </select>
+                <img
+                  src="/assets/icons/drop-down-icon.svg"
+                  alt="dropdown"
+                  class="input-icon dropdown-icon"
+                />
+              </div>
+              <div class="form-group">
+                <textarea
+                  id="observation"
+                  placeholder="Add your observation..."
+                  maxlength="400"
+                  required
+                ></textarea>
+                <div class="char-count">
+                  <span id="currentCount">0</span>/400
+                </div>
+              </div>
+              <div class="image-upload-container">
+                <input
+                  type="file"
+                  id="monitoringImage"
+                  accept=".png,.jpg,.jpeg"
+                  class="file-input"
+                />
+                <div class="upload-area" id="uploadArea">
+                  <div class="upload-content">
+                    <img
+                      src="/assets/icons/add-image-icon.svg"
+                      alt="add-image"
+                      class="upload-icon"
+                    />
+                    <p class="upload-text">Select your file</p>
+                    <p class="upload-subtext">png, jpg, jpeg accepted</p>
+                    <p class="upload-size">(Maximum file size : 10MB)</p>
+                  </div>
+                  <div class="preview-container" id="previewContainer">
+                    <img id="imagePreview" src="" alt="preview" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="selection-fields">
+              <div class="selection-section">
+                <h2 class="section-title">Select Staff</h2>
+                <div class="selection-container" id="staffContainer">
+                  <!-- Staff rows will be dynamically added here -->
+                </div>
+              </div>
+              <div class="selection-section">
+                <h2 class="section-title">Select Crops</h2>
+                <div class="selection-container" id="cropContainer">
+                  <!-- Crop rows will be dynamically added here -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="save-btn-container">
+            <button type="submit" class="save-btn" id="saveBtn">SAVE</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- View monitoring-log popup -->
+    <div class="view-monitoring-popup" id="viewMonitoringPopup">
+      <div class="popup-header">
+        <div class="header-content">
+          <div class="header-icon">
+            <img
+              src="/assets/icons/monitoring-log-popup-icon.svg"
+              alt="monitoring-icon"
+            />
+          </div>
+          <h1 class="header-title">View Monitoring Log</h1>
+        </div>
+        <button class="close-btn" id="closeViewBtn">
+          <img
+            src="/assets/icons/close-icon-black.svg"
+            alt="close-icon"
+            class="close-icon"
+          />
+        </button>
+      </div>
+      <div class="popup-content">
+        <div class="monitoring-details">
+          <div class="details-container">
+            <div class="details-section">
+              <div class="details-row">
+                <label>Field :</label>
+                <span id="viewField"></span>
+              </div>
+              <div class="details-row observation-row">
+                <label>Observation :</label>
+                <textarea
+                  id="viewObservation"
+                  placeholder="No observation recorded..."
+                  readonly
+                ></textarea>
+              </div>
+              <div class="image-section">
+                <div class="preview-container" id="previewViewContainer">
+                  <img id="viewMonitoringImage" src="" alt="monitoring" />
+                </div>
+              </div>
+            </div>
+            <div class="selection-section">
+              <div class="selection-group">
+                <h2 class="section-title">Staff Members</h2>
+                <div class="selection-container" id="staffViewContainer">
+                  <!-- Staff rows will be dynamically added here -->
+                </div>
+              </div>
+              <div class="selection-group">
+                <h2 class="section-title">Crops</h2>
+                <div class="selection-container" id="cropViewContainer">
+                  <!-- Crop rows will be dynamically added here -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="button-container">
+            <button class="close-button" id="closeButton">CLOSE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="/assets/jquery/jquery-3.7.1.min.js"></script>
+    <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/components/js/popup/AddOrUpdateMonitoringLogPopup.js"></script>
+    <script src="/components/js/section/MonitoringLogSection.js"></script>
+  </body>
+</html>

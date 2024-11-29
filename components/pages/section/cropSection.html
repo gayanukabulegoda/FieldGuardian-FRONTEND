@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crop Section</title>
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <link rel="stylesheet" href="/components/css/popup/viewCropPopup.css" />
+    <link
+      rel="stylesheet"
+      href="/components/css/popup/addOrUpdateCropPopup.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/components/css/popup/deleteConfirmationPopup.css"
+    />
+    <link rel="stylesheet" href="/components/css/section/cropSection.css" />
+  </head>
+  <body>
+    <div class="crop-container">
+      <div class="crop-header">
+        <h1 class="page-title">Crop Details</h1>
+        <div class="header-buttons">
+          <button class="btn btn-popup-action" id="addBtn">Add</button>
+        </div>
+      </div>
+
+      <div class="search-section">
+        <div class="search-input">
+          <input type="text" placeholder="Search by name" id="searchName" />
+          <img
+            src="/assets/icons/search-icon.svg"
+            alt="search-icon"
+            class="search-icon"
+          />
+        </div>
+
+        <select class="filter-select" id="fieldFilter">
+          <option value="" disabled selected hidden>Field</option>
+        </select>
+
+        <button class="search-btn" id="searchBtn">Search</button>
+      </div>
+
+      <div class="table-container">
+        <div class="table-header">
+          <div class="th-common">Common Name</div>
+          <div class="th-scientific">Scientific Name</div>
+          <div class="th-category">Category</div>
+          <div class="th-season">Season</div>
+          <div class="th-action">Action</div>
+        </div>
+
+        <div class="table-body" id="cropTableBody">
+          <!-- Table rows will be dynamically added here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete confirmation popup -->
+    <div class="delete-popup" id="deleteConfirmationPopup">
+      <div class="popup-header">
+        <div class="header-content">
+          <div class="header-icon">
+            <img
+              src="/assets/icons/delete-confirmation-popup-icon.svg"
+              alt="delete-icon"
+            />
+          </div>
+          <h1 class="header-title">Delete Confirmation</h1>
+        </div>
+        <button class="close-btn" id="closeDeletePopupBtn">
+          <img
+            src="/assets/icons/close-icon-black.svg"
+            alt="close-icon"
+            class="close-icon"
+          />
+        </button>
+      </div>
+      <div class="popup-content">
+        <p class="confirmation-text">
+          Do you really want to delete these records?<br />
+          This process cannot be undone.
+        </p>
+        <button class="confirm-btn" id="confirmDeleteBtn">CONFIRM</button>
+      </div>
+    </div>
+
+    <!-- Add or Update crop popup -->
+    <div class="add-crop-popup" id="addCropPopup">
+      <div class="popup-header">
+        <div class="header-content">
+          <div class="header-icon">
+            <img src="/assets/icons/crop-popup-icon.svg" alt="crop-icon" />
+          </div>
+          <h1 class="header-title" id="popupTitle">Add Crop</h1>
+        </div>
+        <button class="close-btn" id="closeBtn">
+          <img
+            src="/assets/icons/close-icon-black.svg"
+            alt="close-icon"
+            class="close-icon"
+          />
+        </button>
+      </div>
+      <div class="popup-content">
+        <form id="addCropForm" class="crop-form">
+          <input type="hidden" id="actionType" value="add" />
+          <div class="form-container">
+            <div class="form-fields">
+              <div class="form-group">
+                <input
+                  type="text"
+                  id="commonName"
+                  placeholder="Common name"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <input
+                  type="text"
+                  id="scientificName"
+                  placeholder="Scientific name"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <select id="category" required>
+                  <option value="" disabled selected hidden>Category</option>
+                </select>
+                <img
+                  src="/assets/icons/drop-down-icon.svg"
+                  alt="dropdown"
+                  class="input-icon dropdown-icon"
+                />
+              </div>
+              <div class="form-group">
+                <select id="season" required>
+                  <option value="" disabled selected hidden>Season</option>
+                </select>
+                <img
+                  src="/assets/icons/drop-down-icon.svg"
+                  alt="dropdown"
+                  class="input-icon dropdown-icon"
+                />
+              </div>
+              <div class="form-group">
+                <select id="field" required>
+                  <option value="" disabled selected hidden>Field</option>
+                </select>
+                <img
+                  src="/assets/icons/drop-down-icon.svg"
+                  alt="dropdown"
+                  class="input-icon dropdown-icon"
+                />
+              </div>
+            </div>
+            <div class="image-upload-container">
+              <input
+                type="file"
+                id="cropImage"
+                accept=".png,.jpg,.jpeg"
+                class="file-input"
+              />
+              <div class="upload-area" id="uploadArea">
+                <div class="upload-content">
+                  <img
+                    src="/assets/icons/add-image-icon.svg"
+                    alt="add-image"
+                    class="upload-icon"
+                  />
+                  <p class="upload-text">Select your file</p>
+                  <p class="upload-subtext">png, jpg, jpeg accepted</p>
+                  <p class="upload-size">(Maximum file size : 10MB)</p>
+                </div>
+                <div class="preview-container" id="previewContainer">
+                  <img id="imagePreview" src="" alt="preview" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="save-btn-container">
+            <button type="submit" class="save-btn" id="saveBtn">SAVE</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- View crop popup -->
+    <div class="view-crop-popup" id="viewCropPopup">
+      <div class="popup-header">
+        <div class="header-content">
+          <div class="header-icon">
+            <img src="/assets/icons/crop-popup-icon.svg" alt="crop-icon" />
+          </div>
+          <h1 class="header-title">View Crop</h1>
+        </div>
+        <button class="close-btn" id="closeViewBtn">
+          <img
+            src="/assets/icons/close-icon-black.svg"
+            alt="close-icon"
+            class="close-icon"
+          />
+        </button>
+      </div>
+      <div class="popup-content">
+        <div class="crop-details">
+          <div class="details-container">
+            <div class="details-section">
+              <div class="details-row">
+                <label>Common name :</label>
+                <span id="viewCommonName"></span>
+              </div>
+              <div class="details-row">
+                <label>Scientific name :</label>
+                <span id="viewScientificName"></span>
+              </div>
+              <div class="details-row">
+                <label>Category :</label>
+                <span id="viewCategory"></span>
+              </div>
+              <div class="details-row">
+                <label>Season :</label>
+                <span id="viewSeason"></span>
+              </div>
+              <div class="details-row">
+                <label>Assigned Field :</label>
+                <span id="viewField"></span>
+              </div>
+            </div>
+            <div class="image-section">
+              <div class="preview-container" id="previewContainer">
+                <img id="viewCropImage" src="" alt="crop" />
+              </div>
+            </div>
+          </div>
+          <div class="button-container">
+            <button class="close-button" id="closeButton">CLOSE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="/assets/jquery/jquery-3.7.1.min.js"></script>
+    <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/components/js/popup/AddOrUpdateCropPopup.js"></script>
+    <script src="/components/js/section/CropSection.js"></script>
+  </body>
+</html>

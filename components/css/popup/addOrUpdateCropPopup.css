@@ -1,0 +1,283 @@
+.add-crop-popup {
+  position: fixed;
+  top: 47%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  width: 100%;
+  max-width: 900px;
+  background: var(--white);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0px 4px 18.3px rgba(0, 0, 0, 0.25);
+  display: none;
+}
+
+.popup-header {
+  padding: 14px 14px 14px 26px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.header-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-icon img {
+  width: 28px;
+  height: 28px;
+}
+
+.header-title {
+  color: var(--primary-green);
+  font-size: 23px;
+  font-weight: 400;
+  margin: 0;
+}
+
+.close-btn {
+  width: 48px;
+  height: 48px;
+  border: none;
+  background: var(--white);
+  border-radius: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  background-color: var(--hover-red);
+}
+
+.close-btn:focus {
+  outline: none;
+}
+
+.close-icon {
+  width: 24px;
+  height: 24px;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover .close-icon {
+  content: url("/assets/icons/close-icon-red.svg");
+}
+
+.popup-content {
+  padding: 15px;
+  background: var(--light-green-popup-bg);
+  border-radius: 12px;
+  margin: 0 15px 15px;
+}
+
+.crop-form {
+  background: var(--white);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.form-container {
+  display: flex;
+  gap: 20px;
+}
+
+.form-fields {
+  flex: 1;
+}
+
+.form-group {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 13px 16px;
+  border: 1px solid var(--primary-green);
+  border-radius: 32px;
+  color: var(--text-gray);
+  font-size: 13px;
+  line-height: 18.2px;
+  background: var(--white);
+}
+
+.form-group select {
+  appearance: none;
+  padding-right: 40px;
+  cursor: pointer;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: transparent;
+  box-shadow: 0 0 0 1.5px var(--text-field-focus);
+}
+
+.input-icon {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+}
+
+.image-upload-container {
+  flex: 1;
+}
+
+.file-input {
+  display: none;
+}
+
+.upload-area {
+  width: 100%;
+  height: 100%;
+  min-height: 276px;
+  border: 1px dashed var(--primary-green);
+  border-radius: 8px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.upload-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 1;
+  pointer-events: none;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 20px;
+  border-radius: 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.upload-area:hover .upload-content {
+  opacity: 1;
+}
+
+.upload-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 10px;
+}
+
+.upload-text {
+  color: var(--primary-green);
+  font-size: 16px;
+  margin: 0 0 5px;
+}
+
+.upload-subtext,
+.upload-size {
+  color: var(--text-gray);
+  font-size: 12px;
+  margin: 0;
+}
+
+.preview-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+}
+
+.preview-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.save-btn-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.save-btn {
+  width: 50%;
+  padding: 14px;
+  background: var(--primary-btn-bg);
+  color: var(--white);
+  border: none;
+  border-radius: 32px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18.2px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0px 4px 12px rgba(73, 168, 77, 0.36);
+}
+
+.save-btn:hover {
+  background-color: var(--primary-green);
+}
+
+.save-btn:focus {
+  outline: none;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .add-crop-popup {
+    max-width: 95%;
+    margin: 0 10px;
+  }
+
+  .form-container {
+    flex-direction: column;
+  }
+
+  .popup-header {
+    padding: 10px 10px 10px 22px;
+  }
+
+  .header-title {
+    font-size: 17px;
+  }
+
+  .close-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .crop-form {
+    padding: 15px;
+  }
+
+  .form-group input,
+  .form-group select {
+    padding: 11px 14px;
+  }
+
+  .upload-area {
+    min-height: 200px;
+  }
+
+  .save-btn {
+    width: 100%;
+    padding: 12px;
+  }
+}
