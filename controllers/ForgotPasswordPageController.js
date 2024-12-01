@@ -34,7 +34,10 @@ $(document).ready(function () {
     );
   }
 
-  // Form submission
+  $(".signin-link").click(function () {
+    localStorage.removeItem("email");
+  });
+
   $(".reset-form").on("submit", function (e) {
     e.preventDefault();
 
@@ -55,9 +58,22 @@ $(document).ready(function () {
       return;
     }
 
-    // Here you would typically make an API call to reset the password
-    console.log("Resetting password...");
-    // Add your password reset logic here
+    const email = JSON.parse(localStorage.getItem("email"));
+    if (!email) {
+      alert("Failed to reset password. Please try again.");
+      return;
+    } else {
+      const resetPasswordRequestDTO = {
+        email,
+        password: newPassword,
+      };
+      localStorage.setItem(
+        "resetPasswordRequestDTO",
+        JSON.stringify(resetPasswordRequestDTO)
+      );
+      localStorage.removeItem("email");
+      window.location.href = "/pages/otpVerificationPage.html";
+    }
   });
 
   // Clear form data on page load

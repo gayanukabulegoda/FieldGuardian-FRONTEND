@@ -44,8 +44,14 @@ $(document).ready(function () {
       return;
     }
 
-    // If all validations pass, you can proceed with form submission
-    // Add your signup logic here
-    console.log("Form submitted successfully");
+    const userSignUpRequestDTO = {
+      email,
+      password,
+    };
+    localStorage.setItem(
+      "userSignUpRequestDTO",
+      JSON.stringify(userSignUpRequestDTO)
+    );
+    window.location.href = "/pages/otpVerificationPage.html";
   });
 });

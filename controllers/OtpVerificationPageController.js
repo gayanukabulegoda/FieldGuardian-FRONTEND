@@ -1,4 +1,21 @@
+import AuthService from "../services/AuthService.js";
+import UserService from "../services/UserService.js";
+
 $(document).ready(function () {
+  const userSignUpRequestDTO = JSON.parse(
+    localStorage.getItem("userSignUpRequestDTO")
+  );
+  if (userSignUpRequestDTO) {
+    requestOtp(0, userSignUpRequestDTO.email);
+  }
+
+  const resetPasswordRequestDTO = JSON.parse(
+    localStorage.getItem("resetPasswordRequestDTO")
+  );
+  if (resetPasswordRequestDTO) {
+    requestOtp(1, resetPasswordRequestDTO.email);
+  }
+
   const otpInputs = $(".otp-input");
   let resendTimer;
   let resendEnabled = true;
@@ -70,9 +87,15 @@ $(document).ready(function () {
     });
 
     if (otp.length === 6) {
-      // Here you would typically make an API call to verify the OTP
-      console.log("Verifying OTP:", otp);
-      // Add your verification logic here
+      if (userSignUpRequestDTO) {
+        userSignUpRequestDTO.otp = otp;
+        signUpUser(userSignUpRequestDTO);
+      } else if (resetPasswordRequestDTO) {
+        resetPasswordRequestDTO.otp = otp;
+        updateCurrentUser(resetPasswordRequestDTO);
+      } else {
+        alert("Invalid request. Please try again.");
+      }
     } else {
       alert("Please enter a complete 6-digit OTP");
     }
@@ -89,7 +112,7 @@ $(document).ready(function () {
     // Disable resend button and start countdown
     resendEnabled = false;
     const $resendLink = $(this);
-    let countdown = 10;
+    let countdown = 5;
 
     $resendLink.text(`Resend in ${countdown}s`);
 
@@ -99,14 +122,19 @@ $(document).ready(function () {
         clearInterval(resendTimer);
         $resendLink.text("Resend");
         resendEnabled = true;
+        resentOtp();
       } else {
         $resendLink.text(`Resend in ${countdown}s`);
       }
     }, 1000);
 
-    // Here you would typically make an API call to resend the OTP
-    console.log("Resending OTP...");
-    // Add your resend logic here
+    const resentOtp = () => {
+      if (userSignUpRequestDTO) {
+        requestOtp(0, userSignUpRequestDTO.email);
+      } else if (resetPasswordRequestDTO) {
+        requestOtp(1, resetPasswordRequestDTO.email);
+      }
+    };
   });
 
   // Clear timer on page unload
@@ -116,3 +144,56 @@ $(document).ready(function () {
     }
   });
 });
+
+const requestOtp = (option, email) => {
+  AuthService.requestOtp(option, email)
+    .then((response) => {
+      console.log("OTP requested successfully:", response);
+      return response;
+    })
+    .catch((error) => {
+      console.error("Error requesting OTP:", error);
+    });
+};
+
+const signUpUser = (userSignUpRequestDTO) => {
+  AuthService.signUp(userSignUpRequestDTO)
+    .done((response, textStatus, jqXHR) => {
+      if (jqXHR.status === 201) {
+        localStorage.removeItem("userSignUpRequestDTO");
+        // Save the received token in a cookie
+        document.cookie = `token=${response.token}; path=/`;
+        window.location.href = "/pages/homePage.html";
+      } else {
+        alert("Failed to sign up. Please try again.");
+        clearOtpInputs();
+      }
+    })
+    .fail((xhr, status, error) => {
+      console.error("Error during sign-up:", error);
+      alert("Your OTP is invalid or your account has already been created.");
+      clearOtpInputs();
+    });
+};
+
+const updateCurrentUser = (resetPasswordRequestDTO) => {
+  UserService.updateUser(resetPasswordRequestDTO)
+    .done((response, textStatus, jqXHR) => {
+      if (jqXHR.status === 204) {
+        localStorage.removeItem("resetPasswordRequestDTO");
+        window.location.href = "/index.html";
+      } else {
+        alert("Failed to reset password. Please try again.");
+        clearOtpInputs();
+      }
+    })
+    .fail((xhr, status, error) => {
+      console.error("Error during password reset:", error);
+      alert("Failed to reset password. Please try again.");
+      clearOtpInputs();
+    });
+};
+
+const clearOtpInputs = () => {
+  $(".otp-input").val("");
+};

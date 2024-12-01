@@ -1,10 +1,31 @@
+import UserService from "../services/UserService.js";
+
 $(document).ready(function () {
-  // Current user data (simulate backend data)
-  let currentUser = {
-    name: "Gayanuka BulegodaAAAAAQQ",
-    email: "grbulegoda@gmail.comAQQAAWWWWWRR",
-    role: "ADMINISTRATIVE",
-  };
+  const email = JSON.parse(localStorage.getItem("email"));
+  let currentUser = null;
+  if (email) {
+    getCurrentUser(email).then((user) => {
+      if (user) {
+        currentUser = user;
+        // Set initial user data
+        $(".user-name").text(user.name.split(" ")[0]);
+        $(".profile-name").text(truncateText(user.name, 18));
+        $(".profile-email").text(truncateText(user.email, 24));
+        setProfileImageBasedOnGender(
+          user.gender,
+          ".user-profile .profile-image img"
+        );
+        setProfileImageBasedOnGender(user.gender, "#headerProfileBtn img");
+        // Initialize with user data
+        setMyProiflePopupData(user);
+        setUpdatePasswordPopupData(user);
+      } else {
+        console.error("Failed to retrieve current user.");
+      }
+    });
+  } else {
+    console.error("No email found in localStorage.");
+  }
 
   // Truncate text to a specific character limit
   function truncateText(text, limit) {
@@ -56,22 +77,15 @@ $(document).ready(function () {
 
   // Logout handling
   $("#logoutBtn").click(() => {
+    localStorage.removeItem("email");
+    document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
     window.location.href = "/index.html";
   });
 
   updateDate();
   setInterval(updateDate, 60000); // Update date every minute
 
-  // Set initial user data
-  $(".user-name").text(currentUser.name.split(" ")[0]);
-  $(".profile-name").text(truncateText(currentUser.name, 18));
-  $(".profile-email").text(truncateText(currentUser.email, 24));
-
-  // PopUps -------------------
-
-  // Initialize with user data
-  setMyProiflePopupData(currentUser);
-  setUpdatePasswordPopupData(currentUser);
+  // ------------ PopUps ------------
 
   // Event listeners for buttons
   $("#headerProfileBtn").on("click", function () {
@@ -82,12 +96,10 @@ $(document).ready(function () {
     showUpdatePasswordPopup();
   });
 
-  // Close profile popup
   $("#profilePopup #closeBtn").on("click", function () {
     $("#profilePopup").fadeOut(300);
   });
 
-  // Close profile popup
   $("#updatePasswordPopup #closeBtn").on("click", function () {
     $("#updatePasswordPopup").fadeOut(300);
   });
@@ -118,14 +130,13 @@ $(document).ready(function () {
       return;
     }
 
-    // Here you would typically make an API call to update the password
-    console.log("Password update request sent");
+    updateCurrentUser({ email: currentUser.email, password: newPassword });
 
     // Clear form data on page load
     $("#password, #confirmPassword").val("");
   });
 
-  // Reusable function to close popups when clicking outside the iframe
+  // Function to close popups when clicking outside the iframe
   function closePopupOutsideIframe(popupSelector) {
     $(document).on("click", function (event) {
       const iframe = document.getElementById("contentFrame");
@@ -164,7 +175,7 @@ $(document).ready(function () {
     });
   }
 
-  // Close popups when clicking outside
+  // Close popups when clicking outside the popup
   closePopupOnClickOutside("#profilePopup", "#headerProfileBtn");
   closePopupOnClickOutside("#updatePasswordPopup", "#settingsBtn");
 
@@ -174,7 +185,7 @@ $(document).ready(function () {
     "#updatePasswordPopup",
   ]);
 
-  // Close system users popup when clicking outside the iframe
+  // Close popups in iframe when clicking outside the iframe
   closePopupOutsideIframe(".system-users-popup");
   closePopupOutsideIframe(".delete-popup");
   closePopupOutsideIframe(".add-staff-popup");
@@ -190,7 +201,6 @@ $(document).ready(function () {
   closePopupOutsideIframe(".add-vehicle-popup");
   closePopupOutsideIframe(".view-vehicle-popup");
 
-  // Show profile popup
   function showMyProfilePopup() {
     setMyProiflePopupData(currentUser);
     $("#updatePasswordPopup").fadeOut(300);
@@ -201,6 +211,10 @@ $(document).ready(function () {
     $("#profilePopup #userName").text(truncateText(currentUser.name, 18));
     $("#profilePopup #userEmail").text(truncateText(currentUser.email, 24));
     $("#profilePopup #userRole").text(currentUser.role);
+    setProfileImageBasedOnGender(
+      currentUser.gender,
+      "#profilePopup .profile-image img"
+    );
   }
 
   function showUpdatePasswordPopup() {
@@ -215,6 +229,10 @@ $(document).ready(function () {
     );
     $("#updatePasswordPopup #userEmail").text(
       truncateText(currentUser.email, 30)
+    );
+    setProfileImageBasedOnGender(
+      currentUser.gender,
+      "#updatePasswordPopup .profile-image img"
     );
   }
 
@@ -247,7 +265,7 @@ $(document).ready(function () {
         if (nextInput.length) {
           nextInput.focus();
         } else {
-          $(buttonSelector).focus(); // Focus the button if no more input fields
+          $(buttonSelector).focus();
         }
       }
     });
@@ -297,3 +315,46 @@ $(document).ready(function () {
     );
   }
 });
+
+const setProfileImageBasedOnGender = (gender, container) => {
+  if (gender === "FEMALE") {
+    $(container).attr(
+      "src",
+      "/assets/images/default_female_user_profile_pic.jpg"
+    );
+  } else {
+    $(container).attr(
+      "src",
+      "/assets/images/default_male_user_profile_pic.jpg"
+    );
+  }
+};
+
+const getCurrentUser = (email) => {
+  return UserService.getUser(email)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      console.error("Error retrieving user:", error);
+      return null;
+    });
+};
+
+const updateCurrentUser = (updateUserDTO) => {
+  UserService.updateUser(updateUserDTO)
+    .done((response, textStatus, jqXHR) => {
+      if (jqXHR.status === 204) {
+        alert("Password updated successfully.");
+        $("#updatePasswordPopup").fadeOut(300);
+      } else {
+        alert("Failed to update password. Please try again.");
+        clearOtpInputs();
+      }
+    })
+    .fail((xhr, status, error) => {
+      console.error("Error during password update:", error);
+      alert("Failed to update password. Please try again.");
+      clearOtpInputs();
+    });
+};
