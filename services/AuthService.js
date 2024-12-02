@@ -1,5 +1,7 @@
 import config from "../config.js";
-
+/**
+ * @description This file contains authentication service ajax calls.
+ */
 const AuthService = {
   signUp: function (userRequestDTO) {
     return $.ajax({
@@ -46,6 +48,21 @@ const AuthService = {
       error: function (xhr, status, error) {
         console.error("Error during OTP request:", error);
         throw new Error("Failed to request OTP");
+      },
+    });
+  },
+
+  refreshToken: function (refreshToken) {
+    return $.ajax({
+      url: `${config.baseURL}${config.version}/auth/refresh`,
+      type: "POST",
+      data: { refreshToken: refreshToken },
+      success: function (response) {
+        return response;
+      },
+      error: function (xhr, status, error) {
+        console.error("Error during token refresh:", error);
+        throw new Error("Failed to refresh token");
       },
     });
   },

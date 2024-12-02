@@ -1,3 +1,5 @@
+import StaffService from "../../../services/StaffService.js";
+
 $(document).ready(function () {
   // Fetch and populate designation filter
   function loadDesignations() {
@@ -14,53 +16,23 @@ $(document).ready(function () {
     });
   }
 
-  // Load staff data
-  function loadStaffData(filters = {}) {
-    // Simulated API call - replace with actual backend call
-    const staffData = [
-      {
-        id: "111-111",
-        designation: "SENIOR ASSISTANT MANAGER",
-        contactNo: "071 234 5678",
-        email: "xavierdegk999@gmail.com",
-        firstName: "Xavier",
-        lastName: "De GunasekaraA",
-        dateOfBirth: "1990-01-01",
-        address: "123 Main St",
-        postalCode: "12345",
-        joinedDate: "2020-01-01",
-        gender: "MALE",
-      },
-      {
-        id: "222-222",
-        designation: "SENIOR ASSISTANT MANAGER",
-        contactNo: "071 234 5678",
-        email: "xavierdegk999@gmail.com",
-        firstName: "Xavier",
-        lastName: "De GunasekaraX",
-        dateOfBirth: "1990-01-01",
-        address: "123 Main St",
-        postalCode: "12345",
-        joinedDate: "2020-01-01",
-        gender: "MALE",
-      },
-      {
-        id: "333-333",
-        designation: "SENIOR ASSISTANT MANAGER",
-        contactNo: "071 234 5678",
-        email: "xavierdegk999@gmail.com",
-        firstName: "Xavier",
-        lastName: "De GunasekaraY",
-        dateOfBirth: "1990-01-01",
-        address: "123 Main St",
-        postalCode: "12345",
-        joinedDate: "2020-01-01",
-        gender: "MALE",
-      },
-      // Add more staff members here
-    ];
+  async function loadStaffData(filters = {}) {
+    try {
+      const staffData = await getAllStaffMembers();
+      renderStaffTable(staffData);
+      if (JSON.parse(localStorage.getItem("role")) === "SCIENTIST") {
+        hideButtons();
+      }
+    } catch (error) {
+      console.error("Error loading staff data:", error);
+    }
+  }
 
-    renderStaffTable(staffData);
+  function formatDesignationText(text) {
+    return text
+      .split("_")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ");
   }
 
   // Truncate text to a specific character limit
@@ -81,7 +53,9 @@ $(document).ready(function () {
       const row = `
                 <div class="table-row" data-staff='${JSON.stringify(staff)}'>
                     <div>${truncateText(name, 28)}</div>
-                    <div>${truncateText(staff.designation, 24)}</div>
+                    <div>${formatDesignationText(
+                      truncateText(staff.designation, 24)
+                    )}</div>
                     <div>${truncateText(staff.contactNo, 12)}</div>
                     <div>${truncateText(staff.email, 28)}</div>
                     <div class="action-buttons">
@@ -347,3 +321,19 @@ $(document).ready(function () {
   loadDesignations();
   loadStaffData();
 });
+
+const hideButtons = () => {
+  $("#addBtn").hide();
+  $("#usersBtn").hide();
+  $(".action-btn.edit").hide();
+  $(".action-btn.delete").hide();
+};
+
+const getAllStaffMembers = async () => {
+  try {
+    return await StaffService.getAllStaff();
+  } catch (error) {
+    console.error("Error during staff retrieval:", error);
+    throw new Error("Failed to retrieve staff");
+  }
+};

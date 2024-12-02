@@ -1,30 +1,46 @@
 import UserService from "../services/UserService.js";
+import AuthService from "../services/AuthService.js";
+import { getJwtToken } from "../utils/utils.js";
 
 $(document).ready(function () {
   const email = JSON.parse(localStorage.getItem("email"));
+  const jwtToken = getJwtToken();
   let currentUser = null;
-  if (email) {
-    getCurrentUser(email).then((user) => {
-      if (user) {
-        currentUser = user;
-        // Set initial user data
-        $(".user-name").text(user.name.split(" ")[0]);
-        $(".profile-name").text(truncateText(user.name, 18));
-        $(".profile-email").text(truncateText(user.email, 24));
-        setProfileImageBasedOnGender(
-          user.gender,
-          ".user-profile .profile-image img"
-        );
-        setProfileImageBasedOnGender(user.gender, "#headerProfileBtn img");
-        // Initialize with user data
-        setMyProiflePopupData(user);
-        setUpdatePasswordPopupData(user);
-      } else {
-        console.error("Failed to retrieve current user.");
+  if (jwtToken) {
+    refreshUserToken(jwtToken).then((response) => {
+      if (response && response.token) {
+        // Set the new token in the cookie
+        document.cookie = `token=${response.token}; path=/`;
+        localStorage.removeItem("role");
+        if (email) {
+          getCurrentUser(email).then((user) => {
+            if (user) {
+              currentUser = user;
+              // Set initial user data
+              $(".user-name").text(user.name.split(" ")[0]);
+              $(".profile-name").text(truncateText(user.name, 18));
+              $(".profile-email").text(truncateText(user.email, 24));
+              setProfileImageBasedOnGender(
+                user.gender,
+                ".user-profile .profile-image img"
+              );
+              setProfileImageBasedOnGender(
+                user.gender,
+                "#headerProfileBtn img"
+              );
+              // Initialize with user data
+              setMyProiflePopupData(user);
+              setUpdatePasswordPopupData(user);
+              localStorage.setItem("role", JSON.stringify(user.role));
+            } else {
+              console.error("Failed to retrieve current user.");
+            }
+          });
+        } else {
+          console.error("No email found in localStorage.");
+        }
       }
     });
-  } else {
-    console.error("No email found in localStorage.");
   }
 
   // Truncate text to a specific character limit
@@ -78,6 +94,7 @@ $(document).ready(function () {
   // Logout handling
   $("#logoutBtn").click(() => {
     localStorage.removeItem("email");
+    localStorage.removeItem("role");
     document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
     window.location.href = "/index.html";
   });
@@ -356,5 +373,16 @@ const updateCurrentUser = (updateUserDTO) => {
       console.error("Error during password update:", error);
       alert("Failed to update password. Please try again.");
       clearOtpInputs();
+    });
+};
+
+const refreshUserToken = (refreshToken) => {
+  return AuthService.refreshToken(refreshToken)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      console.error("Error refreshing token:", error);
+      return null;
     });
 };

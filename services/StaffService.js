@@ -1,8 +1,9 @@
 import config from "../config.js";
 import { setDefaultAjaxHeaders } from "../utils/utils.js";
-
+/**
+ * @description This file contains staff service ajax calls.
+ */
 setDefaultAjaxHeaders();
-
 const StaffService = {
   saveStaff: function (staffDTO) {
     return $.ajax({

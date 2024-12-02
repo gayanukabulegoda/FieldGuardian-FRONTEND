@@ -1,35 +1,14 @@
-$(document).ready(function () {
-  // Load equipment data
-  function loadEquipmentData(filters = {}) {
-    // Simulated API call - replace with actual backend call
-    const equipmentData = [
-      {
-        id: "111 - 111",
-        name: "TractorRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
-        type: "AgriculturalRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
-        status: "UNDER_MAINTENANCE",
-        staffId: 1,
-        field: "Evergreen PlainsRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
-      },
-      {
-        id: "222 - 222",
-        name: "Tractor",
-        type: "Agricultural",
-        status: "AVAILABLE",
-        staffId: 2,
-        field: "---",
-      },
-      {
-        id: "333 - 333",
-        name: "Tractor",
-        type: "Agricultural",
-        status: "IN_USE",
-        staffId: 3,
-        field: "Evergreen Plains",
-      },
-    ];
+import EquipmentService from "../../../services/EquipmentService.js";
+import FieldService from "../../../services/FieldService.js";
 
-    renderEquipmentTable(equipmentData);
+$(document).ready(function () {
+  async function loadEquipmentData(filters = {}) {
+    try {
+      const equipmentData = await getAllEquipmentData();
+      renderEquipmentTable(equipmentData);
+    } catch (error) {
+      console.error("Error during equipment retrieval:", error);
+    }
   }
 
   // Get status badge class
@@ -67,9 +46,17 @@ $(document).ready(function () {
     const $tableBody = $("#equipmentTableBody");
     $tableBody.empty();
 
-    data.forEach((equipment) => {
+    data.forEach(async (equipment) => {
       const statusClass = getStatusBadgeClass(equipment.status);
       const statusText = formatStatusText(equipment.status);
+
+      let fieldName = "N/A";
+      if (equipment.assignedFieldCode) {
+        const fieldData = await getAssignedFieldData(
+          equipment.assignedFieldCode
+        );
+        fieldName = fieldData ? fieldData.name : "N/A";
+      }
       const row = `
                 <div class="table-row" data-equipment='${JSON.stringify(
                   equipment
@@ -79,7 +66,7 @@ $(document).ready(function () {
                     <div>
                         <span class="status-badge ${statusClass}">${statusText}</span>
                     </div>
-                    <div>${truncateText(equipment.field, 30)}</div>
+                    <div>${truncateText(fieldName, 30)}</div>
                     <div class="action-buttons">
                         <button class="action-btn delete" title="Delete" data-id="${
                           equipment.id
@@ -96,6 +83,9 @@ $(document).ready(function () {
                 </div>
             `;
       $tableBody.append(row);
+      if (JSON.parse(localStorage.getItem("role")) === "SCIENTIST") {
+        hideButtons();
+      }
     });
   }
 
@@ -298,3 +288,25 @@ $(document).ready(function () {
   // Initialize page
   loadEquipmentData();
 });
+
+const hideButtons = () => {
+  $("#addBtn").hide();
+  $(".action-btn.edit").hide();
+  $(".action-btn.delete").hide();
+};
+
+const getAllEquipmentData = async () => {
+  try {
+    return await EquipmentService.getAllEquipments();
+  } catch (error) {
+    console.error("Error during equipments retrieval:", error);
+  }
+};
+
+const getAssignedFieldData = async (fieldId) => {
+  try {
+    return await FieldService.getField(fieldId);
+  } catch (error) {
+    console.error("Error during field retrieval:", error);
+  }
+};

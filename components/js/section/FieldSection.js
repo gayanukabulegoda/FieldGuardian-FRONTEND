@@ -1,34 +1,19 @@
-$(document).ready(function () {
-  // Load field data
-  function loadFieldData(filters = {}) {
-    // Simulated API call - replace with actual backend call
-    const fieldData = [
-      {
-        code: "111-111",
-        fieldImage1: "/assets/images/temp-image.jpg",
-        fieldImage2: "/assets/images/default_no_pic_image.png",
-        name: "Evergreen Plains",
-        location: "40.7128,-74.0060",
-        extentSize: 100.5,
-      },
-      {
-        code: "222-222",
-        fieldImage1: "/assets/images/temp-image.jpg",
-        fieldImage2: "/assets/images/default_no_pic_image.png",
-        name: "Evergreen Plainsz",
-        location: "40.7128,-74.0060",
-        extentSize: 100.5,
-      },
-      {
-        code: "333-333",
-        fieldImage1: "/assets/images/temp-image.jpg",
-        name: "Evergreen PlainsV",
-        location: "40.7128,-74.0060",
-        extentSize: 100.5,
-      },
-    ];
+import FieldService from "../../../services/FieldService.js";
 
-    renderFieldTable(fieldData);
+$(document).ready(function () {
+  if (JSON.parse(localStorage.getItem("role")) === "ADMINISTRATIVE") {
+    hideButtons();
+  }
+  async function loadFieldData(filters = {}) {
+    try {
+      const fieldData = await getAllFieldData();
+      renderFieldTable(fieldData);
+      if (JSON.parse(localStorage.getItem("role")) === "ADMINISTRATIVE") {
+        hideButtons();
+      }
+    } catch (error) {
+      console.error("Error during field retrieval:", error);
+    }
   }
 
   // Truncate text to a specific character limit
@@ -39,21 +24,39 @@ $(document).ready(function () {
     return text;
   }
 
+  // Extract coordinates from location string
+  function extractCoordinates(location) {
+    const regex = /Point \[x=(-?\d+\.\d+), y=(-?\d+\.\d+)\]/;
+    const match = location.match(regex);
+    if (match) {
+      return { lat: match[1], lng: match[2] };
+    }
+    return null;
+  }
+
   // Render field table
   function renderFieldTable(data) {
     const $tableBody = $("#fieldTableBody");
     $tableBody.empty();
 
     data.forEach((field) => {
+      const coordinates = extractCoordinates(field.location);
+      const googleMapsLink = coordinates
+        ? `https://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}`
+        : "#";
       const row = `
         <div class="table-row" data-field='${JSON.stringify(field)}'>
           <div>
-            <img src="${field.fieldImage1}" alt="${
+            <img src="data:image/jpeg;base64,${field.fieldImage1}" alt="${
         field.name
       }" class="field-image">
           </div>
           <div>${truncateText(field.name, 30)}</div>
-          <div>${truncateText(field.location, 30)}</div>
+          <div>
+            <a href="${googleMapsLink}" target="_blank" class="location-link">
+              View Location
+            </a>
+          </div>
           <div>${field.extentSize}</div>
           <div class="action-buttons">
             <button class="action-btn delete" title="Delete" data-id="${
@@ -317,3 +320,18 @@ $(document).ready(function () {
   // Initialize page
   loadFieldData();
 });
+
+const hideButtons = () => {
+  $("#addBtn").hide();
+  $(".action-btn.edit").hide();
+  $(".action-btn.delete").hide();
+};
+
+const getAllFieldData = async () => {
+  try {
+    return await FieldService.getAllFields();
+  } catch (error) {
+    console.error("Error during field retrieval:", error);
+    throw new Error("Failed to retrieve field");
+  }
+};

@@ -1,92 +1,17 @@
-$(document).ready(function () {
-  // Load monitoring log data
-  function loadMonitoringData(filters = {}) {
-    // Simulated API call - replace with actual backend call
-    const monitoringData = [
-      {
-        code: "111-111",
-        observedImage: "/assets/images/temp-image.jpg",
-        date: "2024-11-11",
-        field: "Evergreen Plains",
-        staffCount: 10,
-        observation:
-          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaa aaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaa",
-      },
-      {
-        code: "222-222",
-        observedImage: "/assets/images/temp-image.jpg",
-        date: "2024-11-11",
-        field: "Evergreen Plains",
-        staffCount: 10,
-        observation:
-          "ObservationAB ASIEJFWPoisrejgovmoimpooimp po3imjvpwigcpwoi4 p textMMMMMMMMMMMMMMMMMMMMMMMMM MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMManjw ebdiojceoirjOMOokmdcijsnejljkaaaaaaaaaaaQQQQQQQ QQQQQQQQQQQQQQQQQxxxxxhnjaeffffffff ffffffffffffffffffffffffffffffff",
-      },
-      {
-        code: "333-333",
-        observedImage: "/assets/images/temp-image.jpg",
-        date: "2024-11-11",
-        field: "Evergreen Plains",
-        staffCount: 10,
-      },
-      {
-        code: "444-444",
-        observedImage: "/assets/images/temp-image.jpg",
-        date: "2024-11-11",
-        field: "Evergreen Plains",
-        staffCount: 10,
-      },
-      {
-        code: "555-555",
-        observedImage: "/assets/images/temp-image.jpg",
-        date: "2024-11-11",
-        field: "Evergreen Plains",
-        staffCount: 10,
-      },
-      {
-        code: "666-666",
-        observedImage: "/assets/images/temp-image.jpg",
-        date: "2024-11-11",
-        field: "Evergreen Plains",
-        staffCount: 10,
-      },
-      {
-        code: "777-777",
-        observedImage: "/assets/images/temp-image.jpg",
-        date: "2024-11-11",
-        field: "Evergreen Plains",
-        staffCount: 10,
-      },
-      {
-        code: "888-888",
-        observedImage: "/assets/images/temp-image.jpg",
-        date: "2024-11-11",
-        field: "Evergreen Plains",
-        staffCount: 10,
-      },
-      {
-        code: "999-999",
-        observedImage: "/assets/images/temp-image.jpg",
-        date: "2024-11-11",
-        field: "Evergreen Plains",
-        staffCount: 10,
-      },
-      {
-        code: "101-101",
-        observedImage: "/assets/images/temp-image.jpg",
-        date: "2024-11-11",
-        field: "Evergreen Plains",
-        staffCount: 10,
-      },
-      {
-        code: "112-112",
-        observedImage: "/assets/images/temp-image.jpg",
-        date: "2024-11-11",
-        field: "Evergreen Plains",
-        staffCount: 10,
-      },
-    ];
+import MonitoringLogService from "../../../services/MonitoringLogService.js";
+import FieldService from "../../../services/FieldService.js";
 
-    renderMonitoringTable(monitoringData);
+$(document).ready(function () {
+  if (JSON.parse(localStorage.getItem("role")) === "ADMINISTRATIVE") {
+    hideButtons();
+  }
+  async function loadMonitoringData(filters = {}) {
+    try {
+      const monitoringData = await getAllMonitoringLogData();
+      renderMonitoringTable(monitoringData);
+    } catch (error) {
+      console.error("Error during monitoring logs retrieval:", error);
+    }
   }
 
   // Truncate text to a specific character limit
@@ -112,16 +37,21 @@ $(document).ready(function () {
     const $tableBody = $("#monitoringTableBody");
     $tableBody.empty();
 
-    data.forEach((log) => {
+    data.forEach(async (log) => {
+      let fieldName = "N/A";
+      if (log.fieldCode) {
+        const monitoredField = await getMonitoredField(log.fieldCode);
+        fieldName = monitoredField ? monitoredField.name : "N/A";
+      }
       const row = `
         <div class="table-row" data-log='${JSON.stringify(log)}'>
           <div>
-            <img src="${log.observedImage}" alt="${
+            <img src="data:image/jpeg;base64,${log.observedImage}" alt="${
         log.field
       }" class="field-image">
           </div>
           <div>${formatDate(log.date)}</div>
-          <div>${truncateText(log.field, 30)}</div>
+          <div>${truncateText(fieldName, 30)}</div>
           <div>${log.staffCount}</div>
           <div class="action-buttons">
             <button class="action-btn edit" title="Edit">
@@ -134,6 +64,9 @@ $(document).ready(function () {
         </div>
       `;
       $tableBody.append(row);
+      if (JSON.parse(localStorage.getItem("role")) === "ADMINISTRATIVE") {
+        hideButtons();
+      }
     });
   }
 
@@ -334,3 +267,24 @@ $(document).ready(function () {
   // Initialize page
   loadMonitoringData();
 });
+
+const hideButtons = () => {
+  $("#addBtn").hide();
+  $(".action-btn.edit").hide();
+};
+
+const getAllMonitoringLogData = async () => {
+  try {
+    return await MonitoringLogService.getAllMonitoringLogs();
+  } catch (error) {
+    console.error("Error during monitoring logs retrieval:", error);
+  }
+};
+
+const getMonitoredField = async (fieldId) => {
+  try {
+    return await FieldService.getField(fieldId);
+  } catch (error) {
+    console.error("Error during field retrieval:", error);
+  }
+};

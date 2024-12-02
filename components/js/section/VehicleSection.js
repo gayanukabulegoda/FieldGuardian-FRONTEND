@@ -1,77 +1,16 @@
-$(document).ready(function () {
-  // Load vehicle data
-  function loadVehicleData(filters = {}) {
-    // Simulated API call - replace with actual backend call
-    const vehicleData = [
-      {
-        code: "111-111",
-        licensePlate: "ABC1234",
-        category: "Truck",
-        status: "AVAILABLE",
-        fuelType: "Diesel",
-        remark:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-      },
-      {
-        code: "222-222",
-        licensePlate: "ABC1234AAAAAAAAAAAAAAAAAAAAAAAAAAA",
-        category: "TruckAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-        status: "IN_USE",
-        fuelType: "DieselAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-        remark: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      },
-      {
-        code: "333-333",
-        licensePlate: "ABC1234",
-        category: "Truck",
-        status: "OUT_OF_SERVICE",
-        fuelType: "Diesel",
-      },
-      {
-        code: "444-444",
-        licensePlate: "ABC1234",
-        category: "Truck",
-        status: "AVAILABLE",
-        fuelType: "Diesel",
-      },
-      {
-        code: "555-555",
-        licensePlate: "ABC1234",
-        category: "Truck",
-        status: "IN_USE",
-        fuelType: "Diesel",
-      },
-      {
-        code: "666-666",
-        licensePlate: "ABC1234",
-        category: "Truck",
-        status: "OUT_OF_SERVICE",
-        fuelType: "Diesel",
-      },
-      {
-        code: "777-777",
-        licensePlate: "ABC1234",
-        category: "Truck",
-        status: "AVAILABLE",
-        fuelType: "Diesel",
-      },
-      {
-        code: "888-888",
-        licensePlate: "ABC1234",
-        category: "Truck",
-        status: "IN_USE",
-        fuelType: "Diesel",
-      },
-      {
-        code: "999-999",
-        licensePlate: "ABC1234",
-        category: "Truck",
-        status: "OUT_OF_SERVICE",
-        fuelType: "Diesel",
-      },
-    ];
+import VehicleService from "../../../services/VehicleService.js";
 
-    renderVehicleTable(vehicleData);
+$(document).ready(function () {
+  async function loadVehicleData(filters = {}) {
+    try {
+      const vehicleData = await getAllVehicleData();
+      renderVehicleTable(vehicleData);
+      if (JSON.parse(localStorage.getItem("role")) === "SCIENTIST") {
+        hideButtons();
+      }
+    } catch (error) {
+      console.error("Error during vehicle retrieval:", error);
+    }
   }
 
   // Get status badge class
@@ -116,7 +55,7 @@ $(document).ready(function () {
                 <div class="table-row" data-vehicle='${JSON.stringify(
                   vehicle
                 )}'>
-                    <div>${truncateText(vehicle.licensePlate, 12)}</div>
+                    <div>${truncateText(vehicle.licensePlateNumber, 12)}</div>
                     <div>${truncateText(vehicle.category, 18)}</div>
                     <div>
                         <span class="status-badge ${statusClass}">${statusText}</span>
@@ -153,7 +92,7 @@ $(document).ready(function () {
 
   // Action button handlers
   $(document).on("click", ".action-btn.delete", function () {
-    const vehicleCode = $(this).data("id");   
+    const vehicleCode = $(this).data("id");
     showDeleteConfirmationPopup(vehicleCode);
   });
 
@@ -331,3 +270,18 @@ $(document).ready(function () {
   // Initialize page
   loadVehicleData();
 });
+
+const hideButtons = () => {
+  $("#addBtn").hide();
+  $(".action-btn.edit").hide();
+  $(".action-btn.delete").hide();
+};
+
+const getAllVehicleData = async () => {
+  try {
+    return await VehicleService.getAllVehicles();
+  } catch (error) {
+    console.error("Error during vehicle retrieval:", error);
+    throw new Error("Failed to retrieve vehicle");
+  }
+};

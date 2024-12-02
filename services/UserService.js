@@ -1,8 +1,9 @@
 import config from "../config.js";
 import { setDefaultAjaxHeaders } from "../utils/utils.js";
-
+/**
+ * @description This file contains user service ajax calls.
+ */
 setDefaultAjaxHeaders();
-
 const UserService = {
   updateUser: function (userRequestDTO) {
     return $.ajax({

@@ -1,4 +1,9 @@
+import CropService from "../../../services/CropService.js";
+
 $(document).ready(function () {
+  if (JSON.parse(localStorage.getItem("role")) === "ADMINISTRATIVE") {
+    hideButtons();
+  }
   // Fetch and populate field filter
   function loadFields() {
     // Simulated API call - replace with actual backend call
@@ -10,99 +15,16 @@ $(document).ready(function () {
     });
   }
 
-  // Load crop data
-  function loadCropData(filters = {}) {
-    // Simulated API call - replace with actual backend call
-    const cropData = [
-      {
-        code: "111-111",
-        commonName: "Wheat",
-        scientificName: "Triticum aestivum",
-        category: "Vegetable",
-        season: "Winter",
-        field: "Field 1",
-        image: "/assets/images/temp-image.jpg",
-      },
-      {
-        code: "222-222",
-        commonName: "Wheat",
-        scientificName: "Triticum aestivum",
-        category: "Fruit",
-        season: "Winter",
-        field: "Field 2",
-        image: "/assets/images/temp-image.jpg",
-      },
-      {
-        code: "333-333",
-        commonName: "Wheat",
-        scientificName: "Triticum aestivum",
-        category: "Vegetable",
-        season: "Winter",
-        field: "Field 3",
-        image: "/assets/images/temp-image.jpg",
-      },
-      {
-        code: "444-444",
-        commonName: "Wheat",
-        scientificName: "Triticum aestivum",
-        category: "Fruit",
-        season: "Winter",
-        field: "Field 3",
-      },
-      {
-        code: "555-555",
-        commonName: "Wheat",
-        scientificName: "Triticum aestivum",
-        category: "Cereal",
-        season: "Winter",
-      },
-      {
-        code: "666-666",
-        commonName: "Wheat",
-        scientificName: "Triticum aestivum",
-        category: "Cereal",
-        season: "Winter",
-      },
-      {
-        code: "777-777",
-        commonName: "Wheat",
-        scientificName: "Triticum aestivum",
-        category: "Cereal",
-        season: "Winter",
-      },
-      {
-        code: "888-888",
-        commonName: "WheatAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-        scientificName:
-          "Triticum aestivumAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-        category: "CerealAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-        season: "WinterAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      },
-      {
-        code: "999-999",
-        commonName: "Wheat",
-        scientificName: "Triticum aestivum",
-        category: "Cereal",
-        season: "Winter",
-      },
-      {
-        code: "101-101",
-        commonName: "Wheat",
-        scientificName: "Triticum aestivum",
-        category: "Cereal",
-        season: "Winter",
-      },
-      {
-        code: "112-112",
-        commonName: "Wheat",
-        scientificName: "Triticum aestivum",
-        category: "Cereal",
-        season: "Winter",
-      },
-      // Add more crop entries here
-    ];
-
-    renderCropTable(cropData);
+  async function loadCropData(filters = {}) {
+    try {
+      const cropData = await getAllCropData();
+      renderCropTable(cropData);
+      if (JSON.parse(localStorage.getItem("role")) === "ADMINISTRATIVE") {
+        hideButtons();
+      }
+    } catch (error) {
+      console.error("Error during crop retrieval:", error);
+    }
   }
 
   // Truncate text to a specific character limit
@@ -280,8 +202,8 @@ $(document).ready(function () {
       $("#imagePreview").attr("src", crop.image);
       $("#previewContainer").show();
     } else {
-       $("#imagePreview").attr("src", "/assets/images/default_no_pic_image");
-       $("#previewContainer").show();
+      $("#imagePreview").attr("src", "/assets/images/default_no_pic_image");
+      $("#previewContainer").show();
     }
   };
 
@@ -312,3 +234,18 @@ $(document).ready(function () {
   loadFields();
   loadCropData();
 });
+
+const hideButtons = () => {
+  $("#addBtn").hide();
+  $(".action-btn.edit").hide();
+  $(".action-btn.delete").hide();
+};
+
+const getAllCropData = async () => {
+  try {
+    return await CropService.getAllCrops();
+  } catch (error) {
+    console.error("Error fetching crop data:", error);
+    throw new Error("Failed to fetch crop data");
+  }
+};
