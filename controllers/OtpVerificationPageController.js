@@ -161,6 +161,10 @@ const signUpUser = (userSignUpRequestDTO) => {
     .done((response, textStatus, jqXHR) => {
       if (jqXHR.status === 201) {
         localStorage.removeItem("userSignUpRequestDTO");
+        localStorage.setItem(
+          "email",
+          JSON.stringify(userSignUpRequestDTO.email)
+        );
         // Save the received token in a cookie
         document.cookie = `token=${response.token}; path=/`;
         window.location.href = "/pages/homePage.html";

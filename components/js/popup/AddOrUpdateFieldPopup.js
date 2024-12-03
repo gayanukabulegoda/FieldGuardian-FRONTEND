@@ -1,3 +1,7 @@
+import FieldService from "../../../services/FieldService.js";
+import EquipmentService from "../../../services/EquipmentService.js";
+import StaffService from "../../../services/StaffService.js";
+
 $(document).ready(function () {
   const $addFieldForm = $("#addFieldForm");
   const $actionType = $("#actionType");
@@ -53,7 +57,6 @@ $(document).ready(function () {
         resetImageUpload(areaId);
         return;
       }
-
       // Validate file size
       if (file.size > maxFileSize) {
         showError("File size must be less than 10MB");
@@ -79,26 +82,29 @@ $(document).ready(function () {
   }
 
   // Load staff and equipment data
-  function loadStaffData() {
-    // TODO: Replace with actual API call
-    const staffData = [
-      { id: 1, name: "Xavier De Gunasekara", mobile: "071 234 5678" },
-      { id: 2, name: "John Doe", mobile: "072 345 6789" },
-      { id: 1, name: "Xavier De Gunasekara", mobile: "071 234 5678" },
-      { id: 1, name: "Xavier De Gunasekara", mobile: "071 234 5678" },
-      // Add more staff data
-    ];
-    renderStaffRows(staffData);
+  async function loadStaffData() {
+    try {
+      const staffData = await getAllStaffMembers();
+      renderStaffRows(staffData);
+    } catch (error) {
+      console.error("Error loading staff data:", error);
+    }
   }
 
-  function loadEquipmentData() {
-    // TODO: Replace with actual API call
-    const equipmentData = [
-      { id: 1, name: "Tractor", type: "Agricultural" },
-      { id: 2, name: "Harvester", type: "Agricultural" },
-      // Add more equipment data
-    ];
-    renderEquipmentRows(equipmentData);
+  async function loadEquipmentData() {
+    try {
+      const equipmentData = await getAllEquipmentData();
+      renderEquipmentRows(equipmentData);
+    } catch (error) {
+      console.error("Error loading equipment data:", error);
+    }
+  }
+
+  function truncateText(text, limit) {
+    if (text.length > limit) {
+      return text.substring(0, limit) + "...";
+    }
+    return text;
   }
 
   function renderStaffRows(staffData) {
@@ -106,11 +112,15 @@ $(document).ready(function () {
     $container.empty();
 
     staffData.forEach((staff) => {
+      const name = `${staff.firstName} ${staff.lastName}`;
       const row = `
         <div class="selection-row" data-id="${staff.id}">
           <div class="selection-info">
-            <span class="selection-name">${staff.name}</span>
-            <span class="selection-detail">${staff.mobile}</span>
+            <span class="selection-name">${truncateText(name, 28)}</span>
+            <span class="selection-detail">${truncateText(
+              staff.contactNo,
+              12
+            )}</span>
           </div>
         </div>
       `;
@@ -126,8 +136,14 @@ $(document).ready(function () {
       const row = `
         <div class="selection-row" data-id="${equipment.id}">
           <div class="selection-info">
-            <span class="selection-name">${equipment.name}</span>
-            <span class="selection-detail">${equipment.type}</span>
+            <span class="selection-name">${truncateText(
+              equipment.name,
+              30
+            )}</span>
+            <span class="selection-detail">${truncateText(
+              equipment.type,
+              23
+            )}</span>
           </div>
         </div>
       `;
@@ -159,84 +175,213 @@ $(document).ready(function () {
   });
 
   // Form submission handler
-  $addFieldForm.on("submit", function (event) {
+  $addFieldForm.on("submit", async function (event) {
     event.preventDefault();
 
-    const formData = new FormData();
-    formData.append("name", $("#name").val());
-    formData.append("extentSize", $("#extentSize").val());
-    formData.append("location", $("#location").val());
-    formData.append("staffIds", Array.from(selectedStaffIds));
-    formData.append("equipmentIds", Array.from(selectedEquipmentIds));
-
+    const fieldDTO = {
+      code: $("#fieldCode").val(),
+      name: $("#name").val(),
+      extentSize: $("#extentSize").val(),
+      location: extractCoordinates($("#location").val()),
+    };
     const image1 = $("#fieldImage1")[0].files[0];
     const image2 = $("#fieldImage2")[0].files[0];
-    if (image1) formData.append("image1", image1);
-    if (image2) formData.append("image2", image2);
+    if (image1) fieldDTO.fieldImage1 = image1;
+    if (image2) fieldDTO.fieldImage2 = image2;
 
     // Add validation
-    if (!validateForm(formData)) {
+    if (!validateForm(fieldDTO)) {
       return;
     }
-
     const actionType = $actionType.val();
 
-    if (actionType === "add") {
-      // TODO: Replace with actual API call for adding field
-      console.log("Adding field:", formData);
-      showSuccessMessage("Field added successfully!");
-    } else if (actionType === "update") {
-      // TODO: Replace with actual API call for updating field
-      console.log("Updating field:", formData);
-      showSuccessMessage("Field updated successfully!");
-    }
+    try {
+      if (actionType === "add") {
+        await addFieldData(fieldDTO);
+        if (selectedStaffIds.size > 0) {
+          alert("selectedStaffIds");
+          await updateFieldStaffData(
+            fieldDTO.code,
+            Array.from(selectedStaffIds)
+          );
+        }
+        if (selectedEquipmentIds.size > 0) {
+          alert("selectedEquipmentIds");
+          await updateFieldEquipmentData(
+            fieldDTO.code,
+            Array.from(selectedEquipmentIds)
+          );
+        }
+      } else if (actionType === "update") {
+        // Convert base64 images to File objects if necessary
+        if (
+          !fieldDTO.fieldImage1 &&
+          $("#imagePreview1").attr("src").startsWith("data:image")
+        ) {
+          fieldDTO.fieldImage1 = base64ToFile(
+            $("#imagePreview1").attr("src"),
+            "fieldImage1.jpg"
+          );
+        }
+        if (
+          !fieldDTO.fieldImage2 &&
+          $("#imagePreview2").attr("src").startsWith("data:image")
+        ) {
+          fieldDTO.fieldImage2 = base64ToFile(
+            $("#imagePreview2").attr("src"),
+            "fieldImage2.jpg"
+          );
+        }
 
-    // Simulate successful save
+        await updateFieldData(fieldDTO.code, fieldDTO);
+        if (selectedStaffIds.size > 0) {
+          await updateFieldStaffData(
+            fieldDTO.code,
+            Array.from(selectedStaffIds)
+          );
+        }
+        if (selectedEquipmentIds.size > 0) {
+          await updateFieldEquipmentData(
+            fieldDTO.code,
+            Array.from(selectedEquipmentIds)
+          );
+        }
+      }
+      window.location.reload();
+    } catch (error) {
+      console.error("Error during field addition/update:", error);
+    }
     hideAddFieldPopup();
   });
 
+  // Convert base64 to File
+  function base64ToFile(base64, filename) {
+    const arr = base64.split(",");
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
+  }
+
+  // Extract coordinates from Google Maps URL
+  function extractCoordinates(url) {
+    const regex1 = /@(-?\d+\.\d+),(-?\d+\.\d+)/;
+    const regex2 = /q=(-?\d+\.\d+),(-?\d+\.\d+)/;
+    let match = url.match(regex1);
+    if (!match) {
+      match = url.match(regex2);
+    }
+    if (match) {
+      return `${match[1]},${match[2]}`;
+    }
+    return null;
+  }
+
   // Form validation
-  function validateForm(formData) {
-    if (!formData.get("name")) {
+  function validateForm(fieldDTO) {
+    if (!fieldDTO.name) {
       showError("Please enter field name");
       return false;
     }
-
-    if (!formData.get("extentSize")) {
+    if (!fieldDTO.extentSize) {
       showError("Please enter extent size");
       return false;
     }
-
-    if (!formData.get("location")) {
+    if (!fieldDTO.location) {
       showError("Please enter location");
       return false;
     }
-
-    if (!formData.get("image1") && $actionType.val() === "add") {
+    if (!fieldDTO.fieldImage1 && $actionType.val() === "add") {
       showError("Please select at least one image");
       return false;
     }
-
     return true;
   }
 
-  // Error message display
   function showError(message) {
-    // TODO: Implement error message display
     alert(message);
   }
 
-  // Success message display
-  function showSuccessMessage(message) {
-    // TODO: Implement success message display
-    alert(message);
-  }
-
-  // Initialize popup
   function initializePopup() {
     loadStaffData();
     loadEquipmentData();
   }
-
   initializePopup();
 });
+
+const addFieldData = async (fieldDTO) => {
+  return FieldService.saveField(fieldDTO)
+    .then((response, textStatus, jqXHR) => {
+      if (jqXHR.status !== 201) {
+        alert("Failed to add field");
+      }
+    })
+    .catch((xhr, status, error) => {
+      console.error("Error during field addition:", error);
+      alert("Failed to add field");
+      throw new Error("Failed to add field");
+    });
+};
+
+const updateFieldData = async (id, fieldDTO) => {
+  return FieldService.updateField(id, fieldDTO)
+    .then((response, textStatus, jqXHR) => {
+      if (jqXHR.status !== 204) {
+        alert("Failed to update field");
+      }
+    })
+    .catch((xhr, status, error) => {
+      console.error("Error during field update:", error);
+      alert("Failed to update field");
+      throw new Error("Failed to update field");
+    });
+};
+
+const updateFieldStaffData = async (id, staffIds) => {
+  return FieldService.updateFieldStaff(id, staffIds)
+    .then((response, textStatus, jqXHR) => {
+      if (jqXHR.status !== 204) {
+        alert("Failed to update field staff");
+      }
+    })
+    .catch((xhr, status, error) => {
+      console.error("Error during field staff update:", error);
+      alert("Failed to update field staff");
+      throw new Error("Failed to update field staff");
+    });
+};
+
+const updateFieldEquipmentData = async (fieldCode, equipmentIds) => {
+  return EquipmentService.updateFieldEquipments(fieldCode, equipmentIds)
+    .then((response, textStatus, jqXHR) => {
+      if (jqXHR.status !== 204) {
+        alert("Failed to update field equipment");
+      }
+    })
+    .catch((xhr, status, error) => {
+      console.error("Error during field equipment update:", error);
+      alert("Failed to update field equipment");
+      throw new Error("Failed to update field equipment");
+    });
+};
+
+const getAllStaffMembers = async () => {
+  try {
+    return await StaffService.getAllStaff();
+  } catch (error) {
+    console.error("Error during staff retrieval:", error);
+    throw new Error("Failed to retrieve staff");
+  }
+};
+
+const getAllEquipmentData = async () => {
+  try {
+    return await EquipmentService.getAvailableEquipments();
+  } catch (error) {
+    console.error("Error during equipments retrieval:", error);
+  }
+};

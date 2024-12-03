@@ -1,3 +1,6 @@
+import CropService from "../../../services/CropService.js";
+import FieldService from "../../../services/FieldService.js";
+
 $(document).ready(function () {
   const $addCropForm = $("#addCropForm");
   const $actionType = $("#actionType");
@@ -60,110 +63,169 @@ $(document).ready(function () {
   });
 
   // Form submission handler
-  $addCropForm.on("submit", function (event) {
+  $addCropForm.on("submit", async function (event) {
     event.preventDefault();
 
-    const formData = new FormData();
-    formData.append("commonName", $("#commonName").val());
-    formData.append("scientificName", $("#scientificName").val());
-    formData.append("category", $("#category").val());
-    formData.append("season", $("#season").val());
-    formData.append("field", $("#field").val());
+    const cropDTO = {
+      code: $("#cropCode").val(),
+      commonName: $("#commonName").val(),
+      scientificName: $("#scientificName").val(),
+      category: $("#category").val(),
+      season: $("#season").val(),
+      fieldCode: $("#field").val(),
+    };
 
     const file = $fileInput[0].files[0];
-    if (file) {
-      formData.append("image", file);
-    }
+    if (file) cropDTO.cropImage = file;
 
     // Add validation
-    if (!validateForm(formData)) {
+    if (!validateForm(cropDTO)) {
       return;
     }
-
     const actionType = $actionType.val();
 
-    if (actionType === "add") {
-      // TODO: Replace with actual API call for adding crop
-      console.log("Adding crop:", formData);
-      showSuccessMessage("Crop added successfully!");
-    } else if (actionType === "update") {
-      // TODO: Replace with actual API call for updating crop
-      console.log("Updating crop:", formData);
-      showSuccessMessage("Crop updated successfully!");
+    try {
+      if (actionType === "add") {
+        await addCropData(cropDTO);
+      } else if (actionType === "update") {
+        // Convert base64 images to File objects if necessary
+        if (
+          !cropDTO.cropImage &&
+          $("#imagePreview").attr("src").startsWith("data:image")
+        ) {
+          cropDTO.cropImage = base64ToFile(
+            $("#imagePreview").attr("src"),
+            "cropImage.jpg"
+          );
+        }
+        await updateCropData(cropDTO.code, cropDTO);
+      }
+      window.location.reload();
+    } catch (error) {
+      console.error("Error adding/updating crop:", error);
     }
-
-    // Simulate successful save
     hideAddCropPopup();
   });
 
+  // Convert base64 to File
+  function base64ToFile(base64, filename) {
+    const arr = base64.split(",");
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
+  }
+
   // Form validation
-  function validateForm(formData) {
-    if (!formData.get("commonName")) {
+  function validateForm(cropDTO) {
+    if (!cropDTO.commonName) {
       showError("Please enter common name");
       return false;
     }
-
-    if (!formData.get("scientificName")) {
+    if (!cropDTO.scientificName) {
       showError("Please enter scientific name");
       return false;
     }
-
-    if (!formData.get("category")) {
+    if (!cropDTO.category) {
       showError("Please select category");
       return false;
     }
-
-    if (!formData.get("season")) {
+    if (!cropDTO.season) {
       showError("Please select season");
       return false;
     }
-
-    if (!formData.get("field")) {
+    if (!cropDTO.fieldCode) {
       showError("Please select field");
       return false;
     }
-
-    if (!formData.get("image") && $actionType.val() === "add") {
+    if (!cropDTO.cropImage && $actionType.val() === "add") {
       showError("Please select an image");
       return false;
     }
-
     return true;
   }
 
-  // Error message display
   function showError(message) {
-    // TODO: Implement error message display
     alert(message);
   }
 
-  // Success message display
-  function showSuccessMessage(message) {
-    // TODO: Implement success message display
-    alert(message);
-  }
-
-  // Initialize popup
-  function initializePopup() {
+  async function initializePopup() {
     // Load categories
-    const categories = ["Vegetable", "Fruit", "Grain"];
+    const categories = [
+      "Vegetable",
+      "Fruit",
+      "Grain",
+      "Legume",
+      "Root and Tuber",
+      "Spice",
+      "Herb",
+      "Other",
+    ];
     categories.forEach((category) => {
       $("#category").append(`<option value="${category}">${category}</option>`);
     });
 
     // Load seasons
-    const seasons = ["Spring", "Summer", "Fall", "Winter"];
+    const seasons = [
+      "Maha Season",
+      "Yala Season",
+      "Crop Rotation",
+      "Perennial",
+    ];
     seasons.forEach((season) => {
       $("#season").append(`<option value="${season}">${season}</option>`);
     });
 
     // Load fields
-    // TODO: Replace with actual API call
-    const fields = ["Field 1", "Field 2", "Field 3"];
-    fields.forEach((field) => {
-      $("#field").append(`<option value="${field}">${field}</option>`);
-    });
+    try {
+      const fields = await getAllFieldData();
+      fields.forEach((field) => {
+        $("#field").append(
+          `<option value="${field.code}">${field.name}</option>`
+        );
+      });
+    } catch (error) {
+      console.error("Error during field retrieval:", error);
+    }
   }
-
   initializePopup();
 });
+
+const addCropData = async (cropDTO) => {
+  return CropService.saveCrop(cropDTO)
+    .then((response, textStatus, jqXHR) => {
+      if (jqXHR.status !== 201) {
+        alert("Failed to add crop");
+      }
+    })
+    .catch((xhr, status, error) => {
+      console.error("Error adding crop:", error);
+      alert("Failed to add crop");
+    });
+};
+
+const updateCropData = async (id, cropDTO) => {
+  return CropService.updateCrop(id, cropDTO)
+    .then((response, textStatus, jqXHR) => {
+      if (jqXHR.status !== 204) {
+        alert("Failed to update crop");
+      }
+    })
+    .catch((xhr, status, error) => {
+      console.error("Error updating crop:", error);
+      alert("Failed to update crop");
+    });
+};
+
+const getAllFieldData = async () => {
+  try {
+    return await FieldService.getAllFields();
+  } catch (error) {
+    console.error("Error during field retrieval:", error);
+    throw new Error("Failed to retrieve field");
+  }
+};

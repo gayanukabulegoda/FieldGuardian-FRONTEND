@@ -119,6 +119,7 @@
       <div class="popup-content">
         <form id="equipmentForm" class="equipment-form">
           <input type="hidden" id="actionType" value="add" />
+          <input type="hidden" id="equipmentId" name="equipmentId" />
           <div class="form-group">
             <input type="text" id="name" placeholder="Name" required />
           </div>
@@ -216,7 +217,10 @@
 
     <script src="/assets/jquery/jquery-3.7.1.min.js"></script>
     <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="/components/js/popup/AddOrUpdateEquipmentPopup.js"></script>
+    <script
+      type="module"
+      src="/components/js/popup/AddOrUpdateEquipmentPopup.js"
+    ></script>
     <script
       type="module"
       src="/components/js/section/EquipmentSection.js"

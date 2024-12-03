@@ -120,6 +120,7 @@
       <div class="popup-content">
         <form id="addVehicleForm" class="vehicle-form">
           <input type="hidden" id="actionType" value="add" />
+          <input type="hidden" id="vehicleCode" name="vehicleCode" />
           <div class="form-container">
             <div class="form-fields">
               <div class="form-group">
@@ -248,7 +249,10 @@
 
     <script src="/assets/jquery/jquery-3.7.1.min.js"></script>
     <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="/components/js/popup/AddOrUpdateVehiclePopup.js"></script>
+    <script
+      type="module"
+      src="/components/js/popup/AddOrUpdateVehiclePopup.js"
+    ></script>
     <script
       type="module"
       src="/components/js/section/VehicleSection.js"

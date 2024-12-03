@@ -106,6 +106,20 @@ const StaffService = {
       },
     });
   },
+
+  getAllStaffDesignations: function () {
+    return $.ajax({
+      url: `${config.baseURL}${config.version}/staff/designations`,
+      type: "GET",
+      success: function (response) {
+        return response;
+      },
+      error: function (xhr, status, error) {
+        console.error("Error during staff designations retrieval:", error);
+        throw new Error("Failed to retrieve staff designations");
+      },
+    });
+  },
 };
 
 export default StaffService;

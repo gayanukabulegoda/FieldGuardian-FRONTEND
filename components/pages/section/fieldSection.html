@@ -112,6 +112,7 @@
       <div class="popup-content">
         <form id="addFieldForm" class="field-form">
           <input type="hidden" id="actionType" value="add" />
+          <input type="hidden" id="fieldCode" name="fieldCode" />
           <div class="form-container">
             <div class="form-fields">
               <div class="form-group">
@@ -122,6 +123,7 @@
                   type="number"
                   id="extentSize"
                   placeholder="Extent size (sq. m)"
+                  step="0.01"
                   required
                 />
               </div>
@@ -280,7 +282,10 @@
 
     <script src="/assets/jquery/jquery-3.7.1.min.js"></script>
     <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="/components/js/popup/AddOrUpdateFieldPopup.js"></script>
+    <script
+      type="module"
+      src="/components/js/popup/AddOrUpdateFieldPopup.js"
+    ></script>
     <script type="module" src="/components/js/section/fieldSection.js"></script>
   </body>
 </html>

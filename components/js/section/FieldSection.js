@@ -1,4 +1,5 @@
 import FieldService from "../../../services/FieldService.js";
+import EquipmentService from "../../../services/EquipmentService.js";
 
 $(document).ready(function () {
   if (JSON.parse(localStorage.getItem("role")) === "ADMINISTRATIVE") {
@@ -102,101 +103,121 @@ $(document).ready(function () {
     showViewFieldPopup(fieldData);
   });
 
-  // View field popup --------------------------------------------------------
+  // -------- View field popup --------
 
-  const populateFieldDetails = (fieldData) => {
+  const populateFieldDetails = async (fieldData) => {
+    $("#viewName").text("");
+    $("#viewExtentSize").text("");
+    $("#viewLocation").attr("href", "#");
+    $("#viewFieldImage1").attr("src", "");
+    $("#viewFieldImage2").attr("src", "");
+    $("#staffViewContainer").empty();
+    $("#equipmentViewContainer").empty();
+
+    const coordinates = extractCoordinates(fieldData.location);
+    const googleMapsLink = coordinates
+      ? `https://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}`
+      : "#";
     $("#viewName")
       .text(truncateText(fieldData.name, 30))
       .attr("data-full-text", fieldData.name);
     $("#viewExtentSize")
       .text(fieldData.extentSize)
       .attr("data-full-text", fieldData.extentSize);
-    $("#viewLocation").attr("href", fieldData.location);
+    $("#viewLocation").attr("href", googleMapsLink);
 
     // Handle images
-    if (fieldData.image1) {
+    if (fieldData.fieldImage1) {
       $("#viewFieldImage1").attr(
         "src",
-        `data:image/jpeg;base64,${fieldData.image1}`
+        `data:image/jpeg;base64,${fieldData.fieldImage1}`
       );
       $("#previewViewContainer1").show();
     } else {
       setDefaultImage("#viewFieldImage1", "#previewViewContainer1");
     }
 
-    if (fieldData.image2) {
+    if (fieldData.fieldImage2) {
       $("#viewFieldImage2").attr(
         "src",
-        `data:image/jpeg;base64,${fieldData.image2}`
+        `data:image/jpeg;base64,${fieldData.fieldImage2}`
       );
       $("#previewContainer2").show();
     } else {
       setDefaultImage("#viewFieldImage2", "#previewViewContainer2");
     }
 
-    // Temporary data ----------------------------------------------
-    const staffMembers = [
-      {
-        name: "John Doe",
-        mobile: "123-456-7890",
-      },
-      {
-        name: "Jane Xavier",
-        mobile: "123-456-7890",
-      },
-      {
-        name: "John Smith",
-        mobile: "123-456-7890",
-      },
-    ];
-
-    const equipment = [
-      {
-        name: "Tractor",
-        type: "Heavy",
-      },
-      {
-        name: "Plough",
-        type: "Medium",
-      },
-      {
-        name: "Seeder",
-        type: "Light",
-      },
-    ];
-    // ---------------------------------------------------------------
-
-    // Populate staff members
-    const $staffViewContainer = $("#staffViewContainer");
-    $staffViewContainer.empty();
-    // fieldData.staffMembers.forEach((staff) => {
-    staffMembers.forEach((staff) => {
-      const row = `
+    try {
+      const staffMembers = await getAllFieldStaff(fieldData.code);
+      // Populate staff members
+      const $staffViewContainer = $("#staffViewContainer");
+      $staffViewContainer.empty();
+      if (staffMembers.length === 0) {
+        $staffViewContainer.append(
+          `<div class="selection-row">
+          <div class="selection-info">
+            <span class="selection-name">No Staff Assingned</span>
+            <span class="selection-detail">----</span>
+          </div>  
+        </div>`
+        );
+      } else {
+        staffMembers.forEach((staff) => {
+          const name = `${staff.firstName} ${staff.lastName}`;
+          const row = `
         <div class="selection-row">
           <div class="selection-info">
-            <span class="selection-name">${staff.name}</span>
-            <span class="selection-detail">${staff.mobile}</span>
+            <span class="selection-name">${truncateText(name, 28)}</span>
+            <span class="selection-detail">${truncateText(
+              staff.contactNo,
+              12
+            )}</span>
           </div>
         </div>
       `;
-      $staffViewContainer.append(row);
-    });
+          $staffViewContainer.append(row);
+        });
+      }
+    } catch (error) {
+      console.error("Error during staff retrieval:", error);
+    }
 
-    // Populate equipment
-    const $equipmentViewContainer = $("#equipmentViewContainer");
-    $equipmentViewContainer.empty();
-    // fieldData.equipment.forEach((equipment) => {
-    equipment.forEach((equipment) => {
-      const row = `
+    try {
+      const equipments = await getAllFieldEquipment(fieldData.code);
+      // Populate equipment
+      const $equipmentViewContainer = $("#equipmentViewContainer");
+      $equipmentViewContainer.empty();
+      if (equipments.length === 0) {
+        $equipmentViewContainer.append(
+          `<div class="selection-row">
+          <div class="selection-info">
+            <span class="selection-name">No Equipment Assingned</span>
+            <span class="selection-detail">----</span>
+          </div>
+        </div>`
+        );
+      } else {
+        equipments.forEach((equipment) => {
+          const row = `
         <div class="selection-row">
           <div class="selection-info">
-            <span class="selection-name">${equipment.name}</span>
-            <span class="selection-detail">${equipment.type}</span>
+            <span class="selection-name">${truncateText(
+              equipment.name,
+              30
+            )}</span>
+            <span class="selection-detail">${truncateText(
+              equipment.type,
+              23
+            )}</span>
           </div>
         </div>
       `;
-      $equipmentViewContainer.append(row);
-    });
+          $equipmentViewContainer.append(row);
+        });
+      }
+    } catch (error) {
+      console.error("Error during equipment retrieval:", error);
+    }
   };
 
   const showViewFieldPopup = (fieldData) => {
@@ -215,31 +236,37 @@ $(document).ready(function () {
     hideViewFieldPopup();
   });
 
-  // Delete confirmation popup ----------------------------------------------
+  // -------- Delete confirmation popup --------
 
   $("#closeDeletePopupBtn").on("click", function () {
     hideDeleteConfirmationPopup();
   });
 
   // Confirm delete button handler
-  $("#confirmDeleteBtn").on("click", function () {
+  $("#confirmDeleteBtn").on("click", async function () {
+    try {
+      const fieldCode = $(this).data("id");
+      await FieldService.deleteField(fieldCode);
+      $(`.table-row[data-id="${fieldCode}"]`).remove();
+    } catch (error) {
+      console.error("Error during field deletion:", error);
+    }
     hideDeleteConfirmationPopup();
+    loadFieldData();
   });
 
-  // Show delete confirmation popup
   const showDeleteConfirmationPopup = (fieldCode) => {
     $("#confirmDeleteBtn").data("id", fieldCode);
     $("#deleteConfirmationPopup").fadeIn(300);
     disableFieldButtonsAndInputs();
   };
 
-  // Hide delete confirmation popup
   const hideDeleteConfirmationPopup = () => {
     $("#deleteConfirmationPopup").fadeOut(300);
     enableFieldButtonsAndInputs();
   };
 
-  // Add field popup --------------------------------------------------------
+  // -------- Add field popup --------
 
   const $addFieldPopup = $("#addFieldPopup");
   const $addFieldForm = $("#addFieldForm");
@@ -249,13 +276,14 @@ $(document).ready(function () {
   const $staffSelectionTitle = $("#staffSelectionTitle");
   const $equipmentSelectionTitle = $("#equipmentSelectionTitle");
 
-  const showAddFieldPopup = () => {
+  const showAddFieldPopup = (fieldCode) => {
     $addFieldForm[0].reset();
     $popupTitle.text("Add Field");
     $saveBtn.text("SAVE");
     $actionType.val("add");
     $staffSelectionTitle.text("Select Staff (Optional)");
     $equipmentSelectionTitle.text("Select Equipment (Optional)");
+    $("#fieldCode").val(fieldCode);
     $addFieldPopup.fadeIn(300);
     disableFieldButtonsAndInputs();
   };
@@ -266,23 +294,34 @@ $(document).ready(function () {
     $actionType.val("update");
     $staffSelectionTitle.text("Select Staff");
     $equipmentSelectionTitle.text("Select Equipment");
+    $("#fieldCode").val(fieldData.code);
     fillFromWithFieldData(fieldData);
     $addFieldPopup.fadeIn(300);
     disableFieldButtonsAndInputs();
   };
 
   const fillFromWithFieldData = (fieldData) => {
+    const coordinates = extractCoordinates(fieldData.location);
+    const googleMapsLink = coordinates
+      ? `https://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}`
+      : "#";
     $("#name").val(fieldData.name);
-    $("#location").val(fieldData.location);
+    $("#location").val(googleMapsLink);
     $("#extentSize").val(fieldData.extentSize);
     if (fieldData.fieldImage1) {
-      $("#imagePreview1").attr("src", fieldData.fieldImage1);
+      $("#imagePreview1").attr(
+        "src",
+        `data:image/jpeg;base64,${fieldData.fieldImage1}`
+      );
       $("#previewContainer1").show();
     } else {
       setDefaultImage("#imagePreview1", "#previewContainer");
     }
     if (fieldData.fieldImage2) {
-      $("#imagePreview2").attr("src", fieldData.fieldImage2);
+      $("#imagePreview2").attr(
+        "src",
+        `data:image/jpeg;base64,${fieldData.fieldImage2}`
+      );
       $("#previewContainer2").show();
     } else {
       setDefaultImage("#imagePreview2", "#previewContainer2");
@@ -296,10 +335,20 @@ $(document).ready(function () {
 
   // Show add field popup
   $("#addBtn").on("click", function () {
-    showAddFieldPopup();
+    const firstRowFieldCode = $("#fieldTableBody .table-row:first").data(
+      "field"
+    ).code;
+    const newFieldCode = incrementFieldCode(firstRowFieldCode);
+    showAddFieldPopup(newFieldCode);
   });
 
-  // Function to disable buttons and inputs
+  function incrementFieldCode(fieldCode) {
+    const parts = fieldCode.split("-");
+    const numericPart = parseInt(parts[2], 10);
+    const newNumericPart = String(numericPart + 1).padStart(3, "0");
+    return `${parts[0]}-${parts[1]}-${newNumericPart}`;
+  }
+
   const disableFieldButtonsAndInputs = () => {
     $(".action-btn, #addBtn, #searchBtn, #searchName, #landSizeFilter").css(
       "pointer-events",
@@ -307,14 +356,12 @@ $(document).ready(function () {
     );
   };
 
-  // Function to enable buttons and inputs
   const enableFieldButtonsAndInputs = () => {
     $(".action-btn, #addBtn, #searchBtn, #searchName, #landSizeFilter").css(
       "pointer-events",
       "auto"
     );
   };
-
   window.enableFieldButtonsAndInputs = enableFieldButtonsAndInputs;
 
   // Initialize page
@@ -333,5 +380,23 @@ const getAllFieldData = async () => {
   } catch (error) {
     console.error("Error during field retrieval:", error);
     throw new Error("Failed to retrieve field");
+  }
+};
+
+const getAllFieldStaff = async (fieldId) => {
+  try {
+    return await FieldService.getFieldStaff(fieldId);
+  } catch (error) {
+    console.error("Error during field staff retrieval:", error);
+    throw new Error("Failed to retrieve field staff");
+  }
+};
+
+const getAllFieldEquipment = async (fieldId) => {
+  try {
+    return await EquipmentService.getInUseFieldEquipments(fieldId);
+  } catch (error) {
+    console.error("Error during field equipment retrieval:", error);
+    throw new Error("Failed to retrieve field equipment");
   }
 };

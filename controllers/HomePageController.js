@@ -93,10 +93,7 @@ $(document).ready(function () {
 
   // Logout handling
   $("#logoutBtn").click(() => {
-    localStorage.removeItem("email");
-    localStorage.removeItem("role");
-    document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-    window.location.href = "/index.html";
+    logoutUser();
   });
 
   updateDate();
@@ -376,12 +373,20 @@ const updateCurrentUser = (updateUserDTO) => {
     });
 };
 
+const logoutUser = () => {
+  localStorage.removeItem("email");
+  localStorage.removeItem("role");
+  document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+  window.location.href = "/index.html";
+};
+
 const refreshUserToken = (refreshToken) => {
   return AuthService.refreshToken(refreshToken)
     .then((response) => {
       return response;
     })
     .catch((error) => {
+      logoutUser();
       console.error("Error refreshing token:", error);
       return null;
     });
