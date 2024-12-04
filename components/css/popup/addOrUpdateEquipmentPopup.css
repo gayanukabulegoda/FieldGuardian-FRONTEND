@@ -94,7 +94,8 @@
 }
 
 .form-group input,
-.form-group select {
+.form-group select,
+.select2-container--default .select2-selection--single {
   width: 100%;
   padding: 13px 16px;
   border: 1px solid var(--primary-green);
@@ -103,16 +104,19 @@
   font-size: 13px;
   line-height: 18.2px;
   background: var(--white);
+  height: 48px;
 }
 
-.form-group select {
+.form-group select,
+.select2-container--default .select2-selection--single {
   appearance: none;
   padding-right: 40px;
   cursor: pointer;
 }
 
 .form-group input:focus,
-.form-group select:focus {
+.form-group select:focus,
+.select2-container--default .select2-selection--single:focus {
   outline: none;
   border-color: transparent;
   box-shadow: 0 0 0 1.5px var(--text-field-focus);
@@ -126,6 +130,68 @@
   width: 18px;
   height: 18px;
   pointer-events: none;
+}
+
+.select2-container--default
+  .select2-selection--single
+  .select2-selection__rendered {
+  color: var(--text-gray);
+  font-size: 13px;
+  line-height: 18.2px;
+  padding: 3px 0;
+}
+
+.select2-container--default
+  .select2-selection--single
+  .select2-selection__placeholder {
+  color: var(--text-gray);
+}
+
+.select2-container--default
+  .select2-selection--single
+  .select2-selection__arrow {
+  display: none;
+}
+
+.select2-container--default .select2-search--dropdown .select2-search__field {
+  font-size: 13px;
+  color: var(--text-gray);
+  border: 0.5px solid var(--light-green-popup-bg);
+  box-shadow: none;
+  outline: none;
+}
+
+.select2-dropdown {
+  border-radius: 8px;
+  border: 1px solid var(--primary-green);
+}
+
+.select2-results__option {
+  padding: 8px 16px;
+  font-size: 13px;
+  color: var(--text-gray);
+}
+
+.select2-results__option--highlighted {
+  background-color: var(--text-field-focus);
+  color: var(--white);
+}
+
+.select2-results__options::-webkit-scrollbar {
+  width: 6px;
+}
+
+.select2-results__options::-webkit-scrollbar-track {
+  background: var(--neutral-bg);
+}
+
+.select2-results__options::-webkit-scrollbar-thumb {
+  background: var(--text-gray);
+  border-radius: 4px;
+}
+
+.select2-results__options::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-green);
 }
 
 .save-btn-container {
@@ -183,8 +249,10 @@
   }
 
   .form-group input,
-  .form-group select {
+  .form-group select,
+  .select2-container--default .select2-selection--single {
     padding: 11px 14px;
+    height: 40px;
   }
 
   .save-btn {

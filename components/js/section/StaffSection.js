@@ -101,7 +101,7 @@ $(document).ready(function () {
     showViewStaffPopup(staffData);
   });
 
-  // -------- view staff popup --------
+  // -------- View staff popup --------
 
   // Populate staff details with tooltips for full text
   function populateStaffDetails(staffData) {

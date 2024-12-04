@@ -97,6 +97,10 @@
   padding-top: 12px;
 }
 
+.view-vehicle-popup .remark-field {
+  flex: 1;
+}
+
 .view-vehicle-popup .details-row {
   display: flex;
   align-items: flex-start;
@@ -128,7 +132,7 @@
 
 .view-vehicle-popup .remark-row textarea {
   width: 100%;
-  height: 150px;
+  height: 200px;
   padding: 13px 16px;
   border: 1px solid var(--text-gray);
   border-style: dotted;
@@ -165,55 +169,6 @@
   word-wrap: break-word;
 }
 
-.view-vehicle-popup .selection-section {
-  flex: 1;
-}
-
-.view-vehicle-popup .selection-group {
-  margin-bottom: 20px;
-}
-
-.view-vehicle-popup .section-title {
-  color: var(--text-gray);
-  font-size: 14px;
-  font-weight: 400;
-  margin: 0 0 10px;
-}
-
-.view-vehicle-popup .selection-container {
-  background: var(--neutral-bg);
-  border-radius: 8px;
-  height: 300px;
-  overflow-y: auto;
-  padding: 10px;
-}
-
-.view-vehicle-popup .selection-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 15px;
-  margin-bottom: 5px;
-  background: var(--white);
-  border-radius: 6px;
-}
-
-.view-vehicle-popup .selection-info {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.view-vehicle-popup .selection-name {
-  color: var(--text-dark);
-  font-size: 14px;
-}
-
-.view-vehicle-popup .selection-detail {
-  color: var(--text-gray);
-  font-size: 12px;
-}
-
 .view-vehicle-popup .button-container {
   display: flex;
   justify-content: center;
@@ -245,24 +200,20 @@
 }
 
 /* Scrollbar Styling */
-.view-vehicle-popup textarea::-webkit-scrollbar,
-.view-vehicle-popup .selection-container::-webkit-scrollbar {
+.view-vehicle-popup textarea::-webkit-scrollbar {
   width: 6px;
 }
 
-.view-vehicle-popup textarea::-webkit-scrollbar-track,
-.view-vehicle-popup .selection-container::-webkit-scrollbar-track {
+.view-vehicle-popup textarea::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.view-vehicle-popup textarea::-webkit-scrollbar-thumb,
-.view-vehicle-popup .selection-container::-webkit-scrollbar-thumb {
+.view-vehicle-popup textarea::-webkit-scrollbar-thumb {
   background: var(--text-gray);
   border-radius: 3px;
 }
 
-.view-vehicle-popup textarea::-webkit-scrollbar-thumb:hover,
-.view-vehicle-popup .selection-container::-webkit-scrollbar-thumb:hover {
+.view-vehicle-popup textarea::-webkit-scrollbar-thumb:hover {
   background: var(--primary-btn-bg);
 }
 
@@ -292,10 +243,6 @@
 
   .view-vehicle-popup .vehicle-details {
     padding: 15px;
-  }
-
-  .view-vehicle-popup .selection-container {
-    height: 200px;
   }
 
   .view-vehicle-popup .details-row {

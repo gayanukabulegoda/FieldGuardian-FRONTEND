@@ -1,21 +1,16 @@
+import VehicleService from "../../../services/VehicleService.js";
+
 $(document).ready(function () {
   const $addVehicleForm = $("#addVehicleForm");
   const $actionType = $("#actionType");
   const $remark = $("#remark");
   const $charCount = $("#currentCount");
-  const selectedStaffIds = new Set();
 
   function hideAddVehiclePopup() {
     $("#addVehiclePopup").fadeOut();
     $addVehicleForm[0].reset();
-    resetSelections();
     updateCharCount();
     enableVehicleButtonsAndInputs();
-  }
-
-  function resetSelections() {
-    selectedStaffIds.clear();
-    $(".selection-row").removeClass("selected");
   }
 
   // Character count for remark
@@ -23,7 +18,6 @@ $(document).ready(function () {
     const currentLength = $remark.val().length;
     $charCount.text(currentLength);
   }
-
   $remark.on("input", updateCharCount);
 
   // Close button handler
@@ -31,79 +25,43 @@ $(document).ready(function () {
     hideAddVehiclePopup();
   });
 
-  // Load staff data
-  function loadStaffData() {
-    // TODO: Replace with actual API call
-    const staffData = [
-      { id: 1, name: "Xavier De Gunasekara", mobile: "071 234 5678" },
-      { id: 2, name: "John Doe", mobile: "072 345 6789" },
-      { id: 3, name: "Jane Smith", mobile: "073 456 7890" },
-      { id: 4, name: "Mike Johnson", mobile: "074 567 8901" },
-      { id: 5, name: "Sarah Wilson", mobile: "075 678 9012" },
-    ];
-    renderStaffRows(staffData);
-  }
-
-  function renderStaffRows(staffData) {
-    const $container = $("#staffContainer");
-    $container.empty();
-
-    staffData.forEach((staff) => {
-      const row = `
-        <div class="selection-row" data-id="${staff.id}">
-          <div class="selection-info">
-            <span class="selection-name">${staff.name}</span>
-            <span class="selection-detail">${staff.mobile}</span>
-          </div>
-        </div>
-      `;
-      $container.append(row);
-    });
-  }
-
-  // Selection handlers
-  $("#staffContainer").on("click", ".selection-row", function () {
-    const staffId = $(this).data("id");
-    $(this).toggleClass("selected");
-
-    if ($(this).hasClass("selected")) {
-      selectedStaffIds.add(staffId);
-    } else {
-      selectedStaffIds.delete(staffId);
-    }
-  });
-
   // Form submission handler
-  $addVehicleForm.on("submit", function (event) {
+  $addVehicleForm.on("submit", async function (event) {
     event.preventDefault();
 
-    const formData = {
+    const vehicleDTO = {
+      code: $("#vehicleCode").val(),
       licensePlateNumber: $("#licensePlateNumber").val(),
       category: $("#category").val(),
       fuelType: $("#fuelType").val(),
       remark: $("#remark").val(),
-      staffIds: Array.from(selectedStaffIds),
+      status: $("#status").val() || null,
+      driverId: $("#staff").val() || null,
     };
 
     // Add validation
-    if (!validateForm(formData)) {
+    if (!validateForm(vehicleDTO)) {
       return;
     }
-
     const actionType = $actionType.val();
 
-    if (actionType === "add") {
-      // TODO: Replace with actual API call for adding vehicle
-      console.log("Adding vehicle:", formData);
-      showSuccessMessage("Vehicle added successfully!");
-    } else if (actionType === "update") {
-      // TODO: Replace with actual API call for updating vehicle
-      console.log("Updating vehicle:", formData);
-      showSuccessMessage("Vehicle updated successfully!");
+    try {
+      if (actionType === "add") {
+        await addVehicleData(vehicleDTO);
+        if (vehicleDTO.driverId) {
+          await updateVehicleDriverData(vehicleDTO.code, vehicleDTO.driverId);
+        }
+      } else if (actionType === "update") {
+        await updateVehicleData(vehicleDTO.code, vehicleDTO);
+        if (vehicleDTO.driverId) {
+          await updateVehicleDriverData(vehicleDTO.code, vehicleDTO.driverId);
+        }
+      }
+    } catch (error) {
+      console.error("Error during vehicle addition/update:", error);
     }
-
-    // Simulate successful save
     hideAddVehiclePopup();
+    window.location.reload();
   });
 
   // Form validation
@@ -112,42 +70,58 @@ $(document).ready(function () {
       showError("Please enter license plate number");
       return false;
     }
-
     if (!data.category) {
       showError("Please select category");
       return false;
     }
-
     if (!data.fuelType) {
       showError("Please select fuel type");
       return false;
     }
-
     if (!data.remark) {
       showError("Please add your remark");
       return false;
     }
-
     return true;
   }
 
-  // Error message display
   function showError(message) {
-    // TODO: Implement error message display
-    alert(message);
-  }
-
-  // Success message display
-  function showSuccessMessage(message) {
-    // TODO: Implement success message display
     alert(message);
   }
 
   // Initialize popup
   function initializePopup() {
-    loadStaffData();
     updateCharCount();
   }
-
   initializePopup();
 });
+
+const addVehicleData = async (vehicleDTO) => {
+  return VehicleService.saveVehicle(vehicleDTO)
+    .then((response, textStatus, jqXHR) => {
+      if (jqXHR.status !== 201) {
+        alert("Failed to add vehicle");
+      }
+    })
+    .catch((xhr, status, error) => {
+      console.error("Error during vehicle addition:", error);
+      alert("Failed to add vehicle");
+    });
+};
+
+const updateVehicleData = async (id, vehicleDTO) => {
+  return VehicleService.updateVehicle(id, vehicleDTO)
+    .then((response, textStatus, jqXHR) => {
+      if (jqXHR.status !== 204) {
+        alert("Failed to update vehicle");
+      }
+    })
+    .catch((xhr, status, error) => {
+      console.error("Error during vehicle update:", error);
+      alert("Failed to update vehicle");
+    });
+};
+
+const updateVehicleDriverData = async (vehicleId, driverId) => {
+  return VehicleService.updateVehicleDriver(vehicleId, driverId);
+};

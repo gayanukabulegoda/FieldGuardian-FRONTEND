@@ -199,14 +199,12 @@ $(document).ready(function () {
       if (actionType === "add") {
         await addFieldData(fieldDTO);
         if (selectedStaffIds.size > 0) {
-          alert("selectedStaffIds");
           await updateFieldStaffData(
             fieldDTO.code,
             Array.from(selectedStaffIds)
           );
         }
         if (selectedEquipmentIds.size > 0) {
-          alert("selectedEquipmentIds");
           await updateFieldEquipmentData(
             fieldDTO.code,
             Array.from(selectedEquipmentIds)

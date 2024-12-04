@@ -35,7 +35,6 @@ $(document).ready(function () {
     return null;
   }
 
-  // Render field table
   function renderFieldTable(data) {
     const $tableBody = $("#fieldTableBody");
     $tableBody.empty();
@@ -344,9 +343,14 @@ $(document).ready(function () {
 
   function incrementFieldCode(fieldCode) {
     const parts = fieldCode.split("-");
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+    const day = String(currentDate.getDate()).padStart(2, "0");
+    const todayDate = `${year}${month}${day}`;
     const numericPart = parseInt(parts[2], 10);
     const newNumericPart = String(numericPart + 1).padStart(3, "0");
-    return `${parts[0]}-${parts[1]}-${newNumericPart}`;
+    return `${parts[0]}-${todayDate}-${newNumericPart}`;
   }
 
   const disableFieldButtonsAndInputs = () => {

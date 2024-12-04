@@ -1,4 +1,5 @@
 import VehicleService from "../../../services/VehicleService.js";
+import StaffService from "../../../services/StaffService.js";
 
 $(document).ready(function () {
   async function loadVehicleData(filters = {}) {
@@ -106,18 +107,37 @@ $(document).ready(function () {
     showViewVehiclePopup(vehicleData);
   });
 
-  // View vehicle popup --------------------------------------------------------
+  // --------  View vehicle popup --------
 
-  const populateVehicleDetails = (vehicleData) => {
+  const getStaffNameAndNoFromStaffId = async (staffId) => {
+    const staffData = await getAssignedStaffData(staffId);
+    const name = staffData.firstName ? staffData.firstName : "N/A";
+    const contactNo = staffData.contactNo ? staffData.contactNo : "N/A";
+    return { name, contactNo };
+  };
+
+  const populateVehicleDetails = async (vehicleData) => {
     $("#viewLicensePlateNumber")
-      .text(vehicleData.licensePlate)
-      .attr("data-full-text", vehicleData.licensePlate);
+      .text(truncateText(vehicleData.licensePlateNumber, 12))
+      .attr("data-full-text", vehicleData.licensePlateNumber);
     $("#viewCategory")
-      .text(vehicleData.category)
+      .text(truncateText(vehicleData.category, 18))
       .attr("data-full-text", vehicleData.category);
     $("#viewFuelType")
-      .text(vehicleData.fuelType)
+      .text(truncateText(vehicleData.fuelType, 20))
       .attr("data-full-text", vehicleData.fuelType);
+    $("#viewStatus")
+      .text(formatStatusText(vehicleData.status))
+      .attr("data-full-text", formatStatusText(vehicleData.status));
+
+    let staff = { name: "N/A", contactNo: "N/A" };
+    if (vehicleData.driverId) {
+      staff = await getStaffNameAndNoFromStaffId(vehicleData.driverId);
+    }
+    $("#viewStaff")
+      .text(truncateText(staff.name + " - " + staff.contactNo, 30))
+      .attr("data-full-text", staff.name + " - " + staff.contactNo);
+
     if (vehicleData.remark) {
       $("#viewRemark")
         .text(vehicleData.remark)
@@ -125,51 +145,6 @@ $(document).ready(function () {
     } else {
       $("#viewRemark").text("No remark recorded...");
     }
-
-    // Temporary data -------------------------------------------------
-    const staffMembers = [
-      {
-        name: "Xavier De Gunasekara",
-        mobile: "071 234 5678",
-      },
-      {
-        name: "John Doe",
-        mobile: "072 345 6789",
-      },
-      {
-        name: "Jane Smith",
-        mobile: "073 456 7890",
-      },
-      {
-        name: "Xavier De Gunasekara",
-        mobile: "071 234 5678",
-      },
-      {
-        name: "John Doe",
-        mobile: "072 345 6789",
-      },
-      {
-        name: "Jane Smith",
-        mobile: "073 456 7890",
-      },
-    ];
-    // ---------------------------------------------------------------
-
-    // Populate staff members
-    const $staffViewContainer = $("#staffViewContainer");
-    $staffViewContainer.empty();
-    // vehicleData.staffMembers.forEach((staff) => {
-    staffMembers.forEach((staff) => {
-      const row = `
-        <div class="selection-row">
-          <div class="selection-info">
-            <span class="selection-name">${staff.name}</span>
-            <span class="selection-detail">${staff.mobile}</span>
-          </div>
-        </div>
-      `;
-      $staffViewContainer.append(row);
-    });
   };
 
   const showViewVehiclePopup = (vehicleData) => {
@@ -187,15 +162,23 @@ $(document).ready(function () {
     hideViewVehiclePopup();
   });
 
-  // Delete confirmation popup ----------------------------------------------
+  // -------- Delete confirmation popup --------
 
   $("#closeDeletePopupBtn").on("click", function () {
     hideDeleteConfirmationPopup();
   });
 
   // Confirm delete button handler
-  $("#confirmDeleteBtn").on("click", function () {
+  $("#confirmDeleteBtn").on("click", async function () {
+    try {
+      const vehicleCode = $(this).data("id");
+      await VehicleService.deleteVehicle(vehicleCode);
+      $(`.table-row[data-id="${vehicleCode}"]`).remove();
+    } catch (error) {
+      console.error("Error during vehicle deletion:", error);
+    }
     hideDeleteConfirmationPopup();
+    loadVehicleData();
   });
 
   // Show delete confirmation popup
@@ -211,21 +194,145 @@ $(document).ready(function () {
     enableVehicleButtonsAndInputs();
   }
 
-  // Add vehicle popup ------------------------------------------------------
+  // -------- Add vehicle popup --------
 
   const $addVehiclePopup = $("#addVehiclePopup");
   const $addVehicleForm = $("#addVehicleForm");
   const $popupTitle = $("#popupTitle");
   const $saveBtn = $("#saveBtn");
   const $actionType = $("#actionType");
-  const $staffSelectionTitle = $("#staffSelectionTitle");
+  const $statusSelect = $("#status");
+  const $staffSelect = $("#staff");
+  const $fuelTypeSelect = $("#fuelType");
+  const $categorySelect = $("#category");
+  const $statusInputDiv = $("#status").closest(".form-group");
 
-  const showAddVehiclePopup = () => {
+  const loadStatusDataForPopup = () => {
+    const statusData = ["AVAILABLE", "IN_USE", "OUT_OF_SERVICE"];
+    $statusSelect.empty();
+    statusData.forEach((status) => {
+      $statusSelect.append(
+        $("<option>", {
+          value: status,
+          text: formatStatusText(status),
+        })
+      );
+    });
+  };
+
+  const loadFuelTypesForPopup = () => {
+    const fuelTypes = [
+      { value: "DIESEL", text: "Diesel" },
+      { value: "PETROL", text: "Petrol" },
+      { value: "BIODIESEL", text: "Biodiesel" },
+      { value: "ETHANOL", text: "Ethanol" },
+      { value: "LPG", text: "Liquefied Petroleum Gas (LPG)" },
+      { value: "ELECTRICITY", text: "Electricity" },
+    ];
+    $fuelTypeSelect.empty();
+    $fuelTypeSelect.append(
+      '<option value="" disabled selected hidden>Fuel type</option>'
+    );
+    fuelTypes.forEach((type) => {
+      $fuelTypeSelect.append(
+        $("<option>", {
+          value: type.value,
+          text: type.text,
+        })
+      );
+    });
+  };
+
+  const loadVehicleCategoriesForPopup = () => {
+    const vehicleCategories = [
+      { value: "TRACTOR", text: "Tractor" },
+      { value: "COMBINE_HARVESTER", text: "Combine Harvester" },
+      { value: "FORAGE_HARVESTER", text: "Forage Harvester" },
+      { value: "SUGARCANE_HARVESTER", text: "Sugarcane Harvester" },
+      { value: "TRUCK", text: "Truck" },
+      { value: "VAN", text: "Van" },
+      { value: "LORRY", text: "Lorry" },
+      { value: "TRAILER", text: "Trailer" },
+      { value: "SEED_DRILL", text: "Seed Drill" },
+      { value: "PLANTER", text: "Planter" },
+      { value: "TRANSPLANTER", text: "Transplanter" },
+      { value: "WATER_TANKER", text: "Water Tanker" },
+      { value: "IRRIGATION_TRUCK", text: "Irrigation Truck" },
+      { value: "SPRAYER", text: "Sprayer" },
+      { value: "DUSTER", text: "Duster" },
+      { value: "PLOW", text: "Plow" },
+      { value: "HARROW", text: "Harrow" },
+      { value: "CULTIVATOR", text: "Cultivator" },
+      { value: "ROTAVATOR", text: "Rotavator" },
+      { value: "ATV", text: "All-Terrain Vehicle (ATV)" },
+      { value: "UTV", text: "Utility Vehicle (UTV)" },
+      { value: "POWER_TILLER", text: "Power Tiller" },
+      { value: "GRAIN_DRYER", text: "Grain Dryer" },
+      { value: "RICE_MILL", text: "Rice Mill" },
+      { value: "WINNOWER", text: "Winnower" },
+    ];
+
+    $categorySelect.empty();
+    $categorySelect.append(
+      '<option value="" disabled selected hidden>Category</option>'
+    );
+    vehicleCategories.forEach((category) => {
+      $categorySelect.append(
+        $("<option>", {
+          value: category.value,
+          text: category.text,
+        })
+      );
+    });
+    $categorySelect.select2({
+      placeholder: "Select a Type",
+      allowClear: true,
+      width: "100%",
+    });
+  };
+
+  async function loadStaffMembersForPopup(isAddPopup) {
+    try {
+      const staffMembers = await getAllStaffMembers();
+      $staffSelect.empty();
+      if (isAddPopup) {
+        $staffSelect.append(
+          '<option value="" disabled selected hidden>Staff (Optional)</option>'
+        );
+      } else {
+        $staffSelect.append(
+          '<option value="" disabled selected hidden>Staff</option>'
+        );
+      }
+      staffMembers.forEach((staff) => {
+        $staffSelect.append(
+          $("<option>", {
+            value: staff.id,
+            text: staff.firstName + " - " + staff.contactNo,
+          })
+        );
+      });
+      $staffSelect.select2({
+        placeholder: "Select a staff member",
+        allowClear: true,
+        width: "100%",
+      });
+    } catch (error) {
+      console.error("Error during staff retrieval:", error);
+    }
+  }
+
+  const showAddVehiclePopup = (vehicleCode) => {
     $addVehicleForm[0].reset();
     $popupTitle.text("Add Vehicle");
     $saveBtn.text("SAVE");
     $actionType.val("add");
-    $staffSelectionTitle.text("Select Staff (Optional)");
+    $statusInputDiv.css("display", "none");
+    $("#vehicleCode").val(vehicleCode);
+    loadStaffMembersForPopup(true);
+    loadFuelTypesForPopup();
+    loadVehicleCategoriesForPopup();
+    loadStatusDataForPopup();
     $addVehiclePopup.fadeIn(300);
     disableVehicleButtonsAndInputs();
   };
@@ -234,37 +341,69 @@ $(document).ready(function () {
     $popupTitle.text("Update Vehicle");
     $saveBtn.text("UPDATE");
     $actionType.val("update");
-    $staffSelectionTitle.text("Select Staff");
+    $statusInputDiv.css("display", "block");
+    $("#vehicleCode").val(vehicleData.code);
+    loadStaffMembersForPopup(false).then(() => {
+      if (vehicleData.driverId) {
+        const customOption = new Option(
+          "Staff already assigned!",
+          vehicleData.driverId,
+          true,
+          true
+        );
+        $("#staff").append(customOption).trigger("change");
+        $("#staff").prop("disabled", true);
+      } else {
+        $("#staff").prop("disabled", false);
+      }
+    });
+    loadFuelTypesForPopup();
+    loadVehicleCategoriesForPopup();
+    loadStatusDataForPopup();
     fillWithVehicleData(vehicleData);
     $addVehiclePopup.fadeIn(300);
     disableVehicleButtonsAndInputs();
   };
 
   const fillWithVehicleData = (vehicleData) => {
-    $("#licensePlateNumber").val(vehicleData.licensePlate);
-    $("#category").val(vehicleData.category.toUpperCase());
-    $("#fuelType").val(vehicleData.fuelType.toUpperCase());
+    $("#licensePlateNumber").val(vehicleData.licensePlateNumber);
+    $("#category").val(vehicleData.category).trigger("change");
+    $("#status").val(vehicleData.status);
+    $("#fuelType").val(vehicleData.fuelType);
     $("#remark").val(vehicleData.remark);
   };
 
   $("#addBtn").on("click", function () {
-    showAddVehiclePopup();
+    const firstRowVehicleCode = $("#vehicleTableBody .table-row:first").data(
+      "vehicle"
+    ).code;
+    const newVehicleCode = incrementVehicleCode(firstRowVehicleCode);
+    showAddVehiclePopup(newVehicleCode);
   });
 
-  // Function to disable buttons and inputs
+  function incrementVehicleCode(vehicleCode) {
+    const parts = vehicleCode.split("-");
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+    const day = String(currentDate.getDate()).padStart(2, "0");
+    const todayDate = `${year}${month}${day}`;
+    const numericPart = parseInt(parts[2], 10);
+    const newNumericPart = String(numericPart + 1).padStart(3, "0");
+    return `${parts[0]}-${todayDate}-${newNumericPart}`;
+  }
+
   const disableVehicleButtonsAndInputs = () => {
     $(
       ".action-btn, #addBtn, #searchBtn, #searchName, #categoryFilter, #statusFilter"
     ).css("pointer-events", "none");
   };
 
-  // Function to enable buttons and inputs
   const enableVehicleButtonsAndInputs = () => {
     $(
       ".action-btn, #addBtn, #searchBtn, #searchName, #categoryFilter, #statusFilter"
     ).css("pointer-events", "auto");
   };
-
   window.enableVehicleButtonsAndInputs = enableVehicleButtonsAndInputs;
 
   // Initialize page
@@ -283,5 +422,21 @@ const getAllVehicleData = async () => {
   } catch (error) {
     console.error("Error during vehicle retrieval:", error);
     throw new Error("Failed to retrieve vehicle");
+  }
+};
+
+const getAssignedStaffData = async (staffId) => {
+  try {
+    return await StaffService.getStaff(staffId);
+  } catch (error) {
+    console.error("Error during staff retrieval:", error);
+  }
+};
+
+const getAllStaffMembers = async () => {
+  try {
+    return await StaffService.getAllStaff();
+  } catch (error) {
+    console.error("Error during staff retrieval:", error);
   }
 };

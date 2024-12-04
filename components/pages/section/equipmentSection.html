@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Equipment Section</title>
+    <link rel="stylesheet" href="/assets/select2/select2.min.css" />
     <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/assets/css/styles.css" />
     <link
@@ -126,10 +127,6 @@
           <div class="form-group">
             <select id="type" required>
               <option value="" disabled selected hidden>Type</option>
-              <option value="Agricultural">Agricultural</option>
-              <option value="Harvester">Harvester</option>
-              <option value="Sprayer">Sprayer</option>
-              <option value="Plow">Plow</option>
             </select>
             <img
               src="/assets/icons/drop-down-icon.svg"
@@ -217,6 +214,7 @@
 
     <script src="/assets/jquery/jquery-3.7.1.min.js"></script>
     <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/assets/select2/select2.min.js"></script>
     <script
       type="module"
       src="/components/js/popup/AddOrUpdateEquipmentPopup.js"
