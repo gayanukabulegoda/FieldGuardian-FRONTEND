@@ -1,108 +1,36 @@
-$(document).ready(function () {
-  // Fetch and populate field filter
-  function loadFields() {
-    // Simulated API call - replace with actual backend call
-    const fields = ["Field A", "Field B", "Field C"];
+import CropService from "../../../services/CropService.js";
+import FieldService from "../../../services/FieldService.js";
 
-    const $select = $("#fieldFilter");
-    fields.forEach((field) => {
-      $select.append(new Option(field, field));
-    });
+$(document).ready(function () {
+  let fieldsArray = [];
+
+  if (JSON.parse(localStorage.getItem("role")) === "ADMINISTRATIVE") {
+    hideButtons();
+  }
+  // Fetch and populate field filter
+  async function loadFields() {
+    try {
+      const fields = await getAllFieldData();
+      fieldsArray = fields;
+      const $select = $("#fieldFilter");
+      fields.forEach((field) => {
+        $select.append(new Option(field.name, field.code));
+      });
+    } catch (error) {
+      console.error("Error during field retrieval:", error);
+    }
   }
 
-  // Load crop data
-  function loadCropData(filters = {}) {
-    // Simulated API call - replace with actual backend call
-    const cropData = [
-      {
-        code: "111-111",
-        commonName: "Wheat",
-        scientificName: "Triticum aestivum",
-        category: "Vegetable",
-        season: "Winter",
-        field: "Field 1",
-        image: "/assets/images/temp-image.jpg",
-      },
-      {
-        code: "222-222",
-        commonName: "Wheat",
-        scientificName: "Triticum aestivum",
-        category: "Fruit",
-        season: "Winter",
-        field: "Field 2",
-        image: "/assets/images/temp-image.jpg",
-      },
-      {
-        code: "333-333",
-        commonName: "Wheat",
-        scientificName: "Triticum aestivum",
-        category: "Vegetable",
-        season: "Winter",
-        field: "Field 3",
-        image: "/assets/images/temp-image.jpg",
-      },
-      {
-        code: "444-444",
-        commonName: "Wheat",
-        scientificName: "Triticum aestivum",
-        category: "Fruit",
-        season: "Winter",
-        field: "Field 3",
-      },
-      {
-        code: "555-555",
-        commonName: "Wheat",
-        scientificName: "Triticum aestivum",
-        category: "Cereal",
-        season: "Winter",
-      },
-      {
-        code: "666-666",
-        commonName: "Wheat",
-        scientificName: "Triticum aestivum",
-        category: "Cereal",
-        season: "Winter",
-      },
-      {
-        code: "777-777",
-        commonName: "Wheat",
-        scientificName: "Triticum aestivum",
-        category: "Cereal",
-        season: "Winter",
-      },
-      {
-        code: "888-888",
-        commonName: "WheatAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-        scientificName:
-          "Triticum aestivumAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-        category: "CerealAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-        season: "WinterAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      },
-      {
-        code: "999-999",
-        commonName: "Wheat",
-        scientificName: "Triticum aestivum",
-        category: "Cereal",
-        season: "Winter",
-      },
-      {
-        code: "101-101",
-        commonName: "Wheat",
-        scientificName: "Triticum aestivum",
-        category: "Cereal",
-        season: "Winter",
-      },
-      {
-        code: "112-112",
-        commonName: "Wheat",
-        scientificName: "Triticum aestivum",
-        category: "Cereal",
-        season: "Winter",
-      },
-      // Add more crop entries here
-    ];
-
-    renderCropTable(cropData);
+  async function loadCropData(filters = {}) {
+    try {
+      const cropData = await getAllCropData();
+      renderCropTable(cropData);
+      if (JSON.parse(localStorage.getItem("role")) === "ADMINISTRATIVE") {
+        hideButtons();
+      }
+    } catch (error) {
+      console.error("Error during crop retrieval:", error);
+    }
   }
 
   // Truncate text to a specific character limit
@@ -113,7 +41,6 @@ $(document).ready(function () {
     return text;
   }
 
-  // Render crop table
   function renderCropTable(data) {
     const $tableBody = $("#cropTableBody");
     $tableBody.empty();
@@ -169,7 +96,7 @@ $(document).ready(function () {
     showViewCropPopup(cropData);
   });
 
-  // View crop popup --------------------------------------------------------
+  // -------- View crop popup --------
 
   const populateCropDetails = (cropData) => {
     $("#viewCommonName")
@@ -185,15 +112,14 @@ $(document).ready(function () {
       .text(cropData.season)
       .attr("data-full-text", cropData.season);
     $("#viewField")
-      .text(truncateText(cropData.field, 30))
-      .attr("data-full-text", cropData.field);
+      .text(truncateText(getFieldNameFromArray(cropData.fieldCode), 30))
+      .attr("data-full-text", getFieldNameFromArray(cropData.fieldCode));
 
-    if (cropData.image) {
+    if (cropData.cropImage) {
       $("#viewCropImage").attr(
         "src",
-        `data:image/jpeg;base64,${cropData.image}`
+        `data:image/jpeg;base64,${cropData.cropImage}`
       );
-      $("#viewCropImage").attr("src", cropData.image);
       $("#viewCropPopup #previewContainer").show();
     } else {
       $("#viewCropImage").attr(
@@ -202,6 +128,11 @@ $(document).ready(function () {
       );
       $("#viewCropPopup #previewContainer").show();
     }
+  };
+
+  const getFieldNameFromArray = (fieldCode) => {
+    const field = fieldsArray.find((field) => field.code === fieldCode);
+    return field ? field.name : "Unknown Field";
   };
 
   const showViewCropPopup = (cropData) => {
@@ -215,36 +146,42 @@ $(document).ready(function () {
     enableCropButtonsAndInputs();
   };
 
-  // Close button handlers
+  // Close button handler
   $("#closeViewBtn, #closeButton").on("click", function () {
     hideViewCropPopup();
   });
 
-  // Delete confirmation popup ----------------------------------------------
+  // -------- Delete confirmation popup --------
 
   $("#closeDeletePopupBtn").on("click", function () {
     hideDeleteConfirmationPopup();
   });
 
   // Confirm delete button handler
-  $("#confirmDeleteBtn").on("click", function () {
+  $("#confirmDeleteBtn").on("click", async function () {
+    try {
+      const cropCode = $(this).data("id");
+      await CropService.deleteCrop(cropCode);
+      $(`.table-row[data-id="${cropCode}"]`).remove();
+    } catch (error) {
+      console.error("Error during crop deletion:", error);
+    }
     hideDeleteConfirmationPopup();
+    loadCropData();
   });
 
-  // Show delete confirmation popup
   function showDeleteConfirmationPopup(cropCode) {
     $("#confirmDeleteBtn").data("id", cropCode);
     $("#deleteConfirmationPopup").fadeIn(300);
     disableCropButtonsAndInputs();
   }
 
-  // Hide delete confirmation popup
   function hideDeleteConfirmationPopup() {
     $("#deleteConfirmationPopup").fadeOut(300);
     enableCropButtonsAndInputs();
   }
 
-  // Add crop popup --------------------------------------------------------
+  // -------- Add crop popup --------
 
   const $addCropPopup = $("#addCropPopup");
   const $addCropForm = $("#addCropForm");
@@ -252,11 +189,12 @@ $(document).ready(function () {
   const $saveBtn = $("#saveBtn");
   const $actionType = $("#actionType");
 
-  const showAddCropPopup = () => {
+  const showAddCropPopup = (cropCode) => {
     $addCropForm[0].reset();
     $popupTitle.text("Add Crop");
     $saveBtn.text("SAVE");
     $actionType.val("add");
+    $("#cropCode").val(cropCode);
     $addCropPopup.fadeIn(300);
     disableCropButtonsAndInputs();
   };
@@ -265,6 +203,7 @@ $(document).ready(function () {
     $popupTitle.text("Update Crop");
     $saveBtn.text("UPDATE");
     $actionType.val("update");
+    $("#cropCode").val(crop.code);
     fillFromWithCropData(crop);
     $addCropPopup.fadeIn(300);
     disableCropButtonsAndInputs();
@@ -275,13 +214,16 @@ $(document).ready(function () {
     $("#scientificName").val(crop.scientificName);
     $("#category").val(crop.category);
     $("#season").val(crop.season);
-    $("#field").val(crop.field);
-    if (crop.image) {
-      $("#imagePreview").attr("src", crop.image);
+    $("#field").val(crop.fieldCode);
+    if (crop.cropImage) {
+      $("#imagePreview").attr(
+        "src",
+        `data:image/jpeg;base64,${crop.cropImage}`
+      );
       $("#previewContainer").show();
     } else {
-       $("#imagePreview").attr("src", "/assets/images/default_no_pic_image");
-       $("#previewContainer").show();
+      $("#imagePreview").attr("src", "/assets/images/default_no_pic_image.png");
+      $("#previewContainer").show();
     }
   };
 
@@ -290,7 +232,6 @@ $(document).ready(function () {
     showAddCropPopup();
   });
 
-  // Function to disable buttons and inputs
   function disableCropButtonsAndInputs() {
     $(".action-btn, #addBtn, #searchBtn, #searchName, #fieldFilter").css(
       "pointer-events",
@@ -298,17 +239,39 @@ $(document).ready(function () {
     );
   }
 
-  // Function to enable buttons and inputs
   function enableCropButtonsAndInputs() {
     $(".action-btn, #addBtn, #searchBtn, #searchName, #fieldFilter").css(
       "pointer-events",
       "auto"
     );
   }
-
   window.enableCropButtonsAndInputs = enableCropButtonsAndInputs;
 
   // Initialize page
   loadFields();
   loadCropData();
 });
+
+const hideButtons = () => {
+  $("#addBtn").hide();
+  $(".action-btn.edit").hide();
+  $(".action-btn.delete").hide();
+};
+
+const getAllCropData = async () => {
+  try {
+    return await CropService.getAllCrops();
+  } catch (error) {
+    console.error("Error fetching crop data:", error);
+    throw new Error("Failed to fetch crop data");
+  }
+};
+
+const getAllFieldData = async () => {
+  try {
+    return await FieldService.getAllFields();
+  } catch (error) {
+    console.error("Error during field retrieval:", error);
+    throw new Error("Failed to retrieve field");
+  }
+};

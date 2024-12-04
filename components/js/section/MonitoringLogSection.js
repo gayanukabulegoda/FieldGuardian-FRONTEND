@@ -1,92 +1,17 @@
-$(document).ready(function () {
-  // Load monitoring log data
-  function loadMonitoringData(filters = {}) {
-    // Simulated API call - replace with actual backend call
-    const monitoringData = [
-      {
-        code: "111-111",
-        observedImage: "/assets/images/temp-image.jpg",
-        date: "2024-11-11",
-        field: "Evergreen Plains",
-        staffCount: 10,
-        observation:
-          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaa aaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaa",
-      },
-      {
-        code: "222-222",
-        observedImage: "/assets/images/temp-image.jpg",
-        date: "2024-11-11",
-        field: "Evergreen Plains",
-        staffCount: 10,
-        observation:
-          "ObservationAB ASIEJFWPoisrejgovmoimpooimp po3imjvpwigcpwoi4 p textMMMMMMMMMMMMMMMMMMMMMMMMM MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMManjw ebdiojceoirjOMOokmdcijsnejljkaaaaaaaaaaaQQQQQQQ QQQQQQQQQQQQQQQQQxxxxxhnjaeffffffff ffffffffffffffffffffffffffffffff",
-      },
-      {
-        code: "333-333",
-        observedImage: "/assets/images/temp-image.jpg",
-        date: "2024-11-11",
-        field: "Evergreen Plains",
-        staffCount: 10,
-      },
-      {
-        code: "444-444",
-        observedImage: "/assets/images/temp-image.jpg",
-        date: "2024-11-11",
-        field: "Evergreen Plains",
-        staffCount: 10,
-      },
-      {
-        code: "555-555",
-        observedImage: "/assets/images/temp-image.jpg",
-        date: "2024-11-11",
-        field: "Evergreen Plains",
-        staffCount: 10,
-      },
-      {
-        code: "666-666",
-        observedImage: "/assets/images/temp-image.jpg",
-        date: "2024-11-11",
-        field: "Evergreen Plains",
-        staffCount: 10,
-      },
-      {
-        code: "777-777",
-        observedImage: "/assets/images/temp-image.jpg",
-        date: "2024-11-11",
-        field: "Evergreen Plains",
-        staffCount: 10,
-      },
-      {
-        code: "888-888",
-        observedImage: "/assets/images/temp-image.jpg",
-        date: "2024-11-11",
-        field: "Evergreen Plains",
-        staffCount: 10,
-      },
-      {
-        code: "999-999",
-        observedImage: "/assets/images/temp-image.jpg",
-        date: "2024-11-11",
-        field: "Evergreen Plains",
-        staffCount: 10,
-      },
-      {
-        code: "101-101",
-        observedImage: "/assets/images/temp-image.jpg",
-        date: "2024-11-11",
-        field: "Evergreen Plains",
-        staffCount: 10,
-      },
-      {
-        code: "112-112",
-        observedImage: "/assets/images/temp-image.jpg",
-        date: "2024-11-11",
-        field: "Evergreen Plains",
-        staffCount: 10,
-      },
-    ];
+import MonitoringLogService from "../../../services/MonitoringLogService.js";
+import FieldService from "../../../services/FieldService.js";
 
-    renderMonitoringTable(monitoringData);
+$(document).ready(function () {
+  if (JSON.parse(localStorage.getItem("role")) === "ADMINISTRATIVE") {
+    hideButtons();
+  }
+  async function loadMonitoringData(filters = {}) {
+    try {
+      const monitoringData = await getAllMonitoringLogData();
+      renderMonitoringTable(monitoringData);
+    } catch (error) {
+      console.error("Error during monitoring logs retrieval:", error);
+    }
   }
 
   // Truncate text to a specific character limit
@@ -97,7 +22,6 @@ $(document).ready(function () {
     return text;
   }
 
-  // Format date to display format
   function formatDate(dateString) {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -107,21 +31,25 @@ $(document).ready(function () {
     });
   }
 
-  // Render monitoring table
   function renderMonitoringTable(data) {
     const $tableBody = $("#monitoringTableBody");
     $tableBody.empty();
 
-    data.forEach((log) => {
+    data.forEach(async (log) => {
+      let fieldName = "N/A";
+      if (log.fieldCode) {
+        const monitoredField = await getMonitoredField(log.fieldCode);
+        fieldName = monitoredField ? monitoredField.name : "N/A";
+      }
       const row = `
         <div class="table-row" data-log='${JSON.stringify(log)}'>
           <div>
-            <img src="${log.observedImage}" alt="${
+            <img src="data:image/jpeg;base64,${log.observedImage}" alt="${
         log.field
       }" class="field-image">
           </div>
           <div>${formatDate(log.date)}</div>
-          <div>${truncateText(log.field, 30)}</div>
+          <div>${truncateText(fieldName, 30)}</div>
           <div>${log.staffCount}</div>
           <div class="action-buttons">
             <button class="action-btn edit" title="Edit">
@@ -134,6 +62,9 @@ $(document).ready(function () {
         </div>
       `;
       $tableBody.append(row);
+      if (JSON.parse(localStorage.getItem("role")) === "ADMINISTRATIVE") {
+        hideButtons();
+      }
     });
   }
 
@@ -157,101 +88,115 @@ $(document).ready(function () {
     showViewMonitoringLogPopup(logData);
   });
 
-  // View monitoring log popup -------------------------------------------------
+  // -------- View monitoring log popup --------
+  const getFieldNameFromFieldCode = async (fieldCode) => {
+    const fieldData = await getAssignedFieldData(fieldCode);
+    return fieldData ? fieldData.name : "N/A";
+  };
 
-  const populateMonitoringLogDetails = (monitoringData) => {
+  const populateMonitoringLogDetails = async (monitoringData) => {
+    let fieldName = "N/A";
+    if (monitoringData.fieldCode) {
+      fieldName = await getFieldNameFromFieldCode(monitoringData.fieldCode);
+    }
     $("#viewField")
-      .text(truncateText(monitoringData.field, 30))
-      .attr("data-full-text", monitoringData.field);
-    if (monitoringData.observation) {
+      .text(truncateText(fieldName, 30))
+      .attr("data-full-text", fieldName);
+
+    if (monitoringData.details) {
       $("#viewObservation")
-        .text(monitoringData.observation)
-        .attr("data-full-text", monitoringData.observation);
+        .text(monitoringData.details)
+        .attr("data-full-text", monitoringData.details);
     } else {
       $("#viewObservation").text("No observation recorded...");
     }
 
     // Handle monitoring image
     if (monitoringData.observedImage) {
-      // $("#viewMonitoringImage").attr(
-      //   "src",
-      //   `data:image/jpeg;base64,${monitoringData.observedImage}`
-      // );
-      $("#viewMonitoringImage").attr("src", `${monitoringData.observedImage}`);
+      $("#viewMonitoringImage").attr(
+        "src",
+        `data:image/jpeg;base64,${monitoringData.observedImage}`
+      );
       $("#previewViewContainer").show();
     } else {
       setDefaultImage("#viewMonitoringImage", "#previewViewContainer");
     }
 
-    // Temporary data -------------------------------------------------
-    const crops = [
-      {
-        name: "Rice",
-        scientificName: "Oryza sativa",
-      },
-      {
-        name: "Wheat",
-        scientificName: "Triticum aestivum",
-      },
-      {
-        name: "Maize",
-        scientificName: "Zea mays",
-      },
-    ];
-
-    const staffMembers = [
-      {
-        name: "John Doe",
-        mobile: "9876543210",
-      },
-      {
-        name: "Jane Doe",
-        mobile: "9876543210",
-      },
-      {
-        name: "John Smith",
-        mobile: "9876543210",
-      },
-    ];
-    // ---------------------------------------------------------------
-
-    // Populate staff members
-    const $staffViewContainer = $("#staffViewContainer");
-    $staffViewContainer.empty();
-    // monitoringData.staffMembers.forEach((staff) => {
-    staffMembers.forEach((staff) => {
-      const row = `
+    try {
+      const staffMembers = await getStaffDataByMonitoringLogId(
+        monitoringData.code
+      );
+      // Populate staff members
+      const $staffViewContainer = $("#staffViewContainer");
+      $staffViewContainer.empty();
+      if (staffMembers.length === 0) {
+        $staffViewContainer.append(`
         <div class="selection-row">
           <div class="selection-info">
-            <span class="selection-name">${staff.name}</span>
-            <span class="selection-detail">${staff.mobile}</span>
+            <span class="selection-name">No staff assigned</span>
+            <span class="selection-detail">----</span>
+          </div>
+        </div>`);
+      } else {
+        staffMembers.forEach((staff) => {
+          const name = `${staff.firstName} ${staff.lastName}`;
+          const row = `
+        <div class="selection-row">
+          <div class="selection-info">
+            <span class="selection-name">${truncateText(name, 28)}</span>
+            <span class="selection-detail">${truncateText(
+              staff.contactNo,
+              12
+            )}</span>
           </div>
         </div>
       `;
-      $staffViewContainer.append(row);
-    });
+          $staffViewContainer.append(row);
+        });
+      }
+    } catch (error) {
+      console.error("Error during staff retrieval:", error);
+    }
 
-    // Populate crops
-    const $cropViewContainer = $("#cropViewContainer");
-    $cropViewContainer.empty();
-    // monitoringData.crops.forEach((crop) => {
-    crops.forEach((crop) => {
-      const row = `
+    try {
+      const crops = await getCropDataByMonitoringLogId(monitoringData.code);
+      // Populate crops
+      const $cropViewContainer = $("#cropViewContainer");
+      $cropViewContainer.empty();
+      if (crops.length === 0) {
+        $cropViewContainer.append(`
         <div class="selection-row">
           <div class="selection-info">
-            <span class="selection-name">${crop.name}</span>
-            <span class="selection-detail">${crop.scientificName}</span>
+            <span class="selection-name">No crops assigned</span>
+            <span class="selection-detail">----</span>
+          </div>
+        </div>`);
+      } else {
+        crops.forEach((crop) => {
+          const row = `
+        <div class="selection-row">
+          <div class="selection-info">
+            <span class="selection-name">${truncateText(
+              crop.commonName,
+              28
+            )}</span>
+            <span class="selection-detail">${truncateText(
+              crop.scientificName,
+              28
+            )}</span>
           </div>
         </div>
       `;
-      $cropViewContainer.append(row);
-    });
+          $cropViewContainer.append(row);
+        });
+      }
+    } catch (error) {
+      console.error("Error during crops retrieval:", error);
+    }
   };
 
   const showViewMonitoringLogPopup = (monitoringData) => {
     populateMonitoringLogDetails(monitoringData);
-    console.log(monitoringData);
-
     $("#viewMonitoringPopup").fadeIn(300);
     disableMonitoringLogButtonsAndInputs();
   };
@@ -266,7 +211,7 @@ $(document).ready(function () {
     hideViewMonitoringPopup();
   });
 
-  // Add monitoring log popup -------------------------------------------------
+  // -------- Add monitoring log popup --------
 
   const $addMonitoringPopup = $("#addMonitoringPopup");
   const $addMonitoringForm = $("#addMonitoringForm");
@@ -274,11 +219,12 @@ $(document).ready(function () {
   const $saveBtn = $("#saveBtn");
   const $actionType = $("#actionType");
 
-  const showAddMonitoringLogPopup = () => {
+  const showAddMonitoringLogPopup = (logCode) => {
     $addMonitoringForm[0].reset();
     $popupTitle.text("Add Monitoring Log");
     $saveBtn.text("SAVE");
     $actionType.val("add");
+    $("#logCode").val(logCode);
     $addMonitoringPopup.fadeIn(300);
     disableMonitoringLogButtonsAndInputs();
   };
@@ -287,16 +233,20 @@ $(document).ready(function () {
     $popupTitle.text("Update Monitoring Log");
     $saveBtn.text("UPDATE");
     $actionType.val("update");
+    $("#logCode").val(logData.code);
     fillFormWithMonitoringLogData(logData);
     $addMonitoringPopup.fadeIn(300);
     disableMonitoringLogButtonsAndInputs();
   };
 
   const fillFormWithMonitoringLogData = (logData) => {
-    $("#field").val(logData.field);
-    $("#observation").val(logData.observation);
+    $("#field").val(logData.fieldCode);
+    $("#observation").val(logData.details);
     if (logData.observedImage) {
-      $("#imagePreview").attr("src", logData.observedImage);
+      $("#imagePreview").attr(
+        "src",
+        `data:image/jpeg;base64,${logData.observedImage}`
+      );
       $("#previewContainer").show();
     } else {
       setDefaultImage("#imagePreview", "#previewContainer");
@@ -309,10 +259,25 @@ $(document).ready(function () {
   };
 
   $("#addBtn").on("click", function () {
-    showAddMonitoringLogPopup();
+    const firstRowLogCode = $("#monitoringTableBody .table-row:first").data(
+      "log"
+    ).code;
+    const newLogCode = incrementLogCode(firstRowLogCode);
+    showAddMonitoringLogPopup(newLogCode);
   });
 
-  // Function to disable buttons and inputs
+  function incrementLogCode(logCode) {
+    const parts = logCode.split("-");
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+    const day = String(currentDate.getDate()).padStart(2, "0");
+    const todayDate = `${year}${month}${day}`;
+    const numericPart = parseInt(parts[2], 10);
+    const newNumericPart = String(numericPart + 1).padStart(3, "0");
+    return `${parts[0]}-${todayDate}-${newNumericPart}`;
+  }
+
   const disableMonitoringLogButtonsAndInputs = () => {
     $(".action-btn, #addBtn, #searchBtn, #searchField, #dateFilter").css(
       "pointer-events",
@@ -320,17 +285,60 @@ $(document).ready(function () {
     );
   };
 
-  // Function to enable buttons and inputs
   const enableMonitoringLogButtonsAndInputs = () => {
     $(".action-btn, #addBtn, #searchBtn, #searchField, #dateFilter").css(
       "pointer-events",
       "auto"
     );
   };
-
   window.enableMonitoringLogButtonsAndInputs =
     enableMonitoringLogButtonsAndInputs;
 
   // Initialize page
   loadMonitoringData();
 });
+
+const hideButtons = () => {
+  $("#addBtn").hide();
+  $(".action-btn.edit").hide();
+};
+
+const getAllMonitoringLogData = async () => {
+  try {
+    return await MonitoringLogService.getAllMonitoringLogs();
+  } catch (error) {
+    console.error("Error during monitoring logs retrieval:", error);
+  }
+};
+
+const getMonitoredField = async (fieldId) => {
+  try {
+    return await FieldService.getField(fieldId);
+  } catch (error) {
+    console.error("Error during field retrieval:", error);
+  }
+};
+
+const getAssignedFieldData = async (fieldId) => {
+  try {
+    return await FieldService.getField(fieldId);
+  } catch (error) {
+    console.error("Error during field retrieval:", error);
+  }
+};
+
+const getCropDataByMonitoringLogId = async (logId) => {
+  try {
+    return await MonitoringLogService.getCropsByMonitoringLogId(logId);
+  } catch (error) {
+    console.error("Error during crops retrieval:", error);
+  }
+};
+
+const getStaffDataByMonitoringLogId = async (logId) => {
+  try {
+    return await MonitoringLogService.getStaffByMonitoringLogId(logId);
+  } catch (error) {
+    console.error("Error during staff retrieval:", error);
+  }
+};

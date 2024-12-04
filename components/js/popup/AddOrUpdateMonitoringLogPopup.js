@@ -1,3 +1,8 @@
+import MonitoringLogService from "../../../services/MonitoringLogService.js";
+import FieldService from "../../../services/FieldService.js";
+import StaffService from "../../../services/StaffService.js";
+import CropService from "../../../services/CropService.js";
+
 $(document).ready(function () {
   const $addMonitoringForm = $("#addMonitoringForm");
   const $actionType = $("#actionType");
@@ -37,7 +42,6 @@ $(document).ready(function () {
     const currentLength = $observation.val().length;
     $charCount.text(currentLength);
   }
-
   $observation.on("input", updateCharCount);
 
   // Close button handler
@@ -79,35 +83,42 @@ $(document).ready(function () {
     reader.readAsDataURL(file);
   });
 
-  // Load fields, staff and crops data
-  function loadFieldData() {
-    // TODO: Replace with actual API call
-    const fields = ["Field 1", "Field 2", "Field 3", "Evergreen Plains"];
-    fields.forEach((field) => {
-      $("#field").append(`<option value="${field}">${field}</option>`);
-    });
+  async function loadFieldData() {
+    try {
+      const fields = await getAllFieldData();
+      fields.forEach((field) => {
+        $("#field").append(
+          `<option value="${field.code}">${field.name}</option>`
+        );
+      });
+    } catch (error) {
+      console.error("Error during field retrieval:", error);
+    }
   }
 
-  function loadStaffData() {
-    // TODO: Replace with actual API call
-    const staffData = [
-      { id: 1, name: "Xavier De Gunasekara", mobile: "071 234 5678" },
-      { id: 2, name: "John Doe", mobile: "072 345 6789" },
-      { id: 1, name: "Xavier De Gunasekara", mobile: "071 234 5678" },
-      { id: 2, name: "John Doe", mobile: "072 345 6789" },
-    ];
-    renderStaffRows(staffData);
+  async function loadStaffData() {
+    try {
+      const staffData = await getAllStaffData();
+      renderStaffRows(staffData);
+    } catch (error) {
+      console.error("Error during staff retrieval:", error);
+    }
   }
 
-  function loadCropData() {
-    // TODO: Replace with actual API call
-    const cropData = [
-      { id: 1, name: "Wheat", scientificName: "Triticum aestivum" },
-      { id: 2, name: "Rice", scientificName: "Oryza sativa" },
-      { id: 1, name: "Wheat", scientificName: "Triticum aestivum" },
-      { id: 2, name: "Rice", scientificName: "Oryza sativa" },
-    ];
-    renderCropRows(cropData);
+  async function loadCropData() {
+    try {
+      const cropData = await getAllCropData();
+      renderCropRows(cropData);
+    } catch (error) {
+      console.error("Error during crop retrieval:", error);
+    }
+  }
+
+  function truncateText(text, limit) {
+    if (text.length > limit) {
+      return text.substring(0, limit) + "...";
+    }
+    return text;
   }
 
   function renderStaffRows(staffData) {
@@ -115,11 +126,15 @@ $(document).ready(function () {
     $container.empty();
 
     staffData.forEach((staff) => {
+      const name = `${staff.firstName} ${staff.lastName}`;
       const row = `
         <div class="selection-row" data-id="${staff.id}">
           <div class="selection-info">
-            <span class="selection-name">${staff.name}</span>
-            <span class="selection-detail">${staff.mobile}</span>
+            <span class="selection-name">${truncateText(name, 28)}</span>
+            <span class="selection-detail">${truncateText(
+              staff.contactNo,
+              12
+            )}</span>
           </div>
         </div>
       `;
@@ -133,10 +148,16 @@ $(document).ready(function () {
 
     cropData.forEach((crop) => {
       const row = `
-        <div class="selection-row" data-id="${crop.id}">
+        <div class="selection-row" data-id="${crop.code}">
           <div class="selection-info">
-            <span class="selection-name">${crop.name}</span>
-            <span class="selection-detail">${crop.scientificName}</span>
+            <span class="selection-name">${truncateText(
+              crop.commonName,
+              28
+            )}</span>
+            <span class="selection-detail">${truncateText(
+              crop.scientificName,
+              28
+            )}</span>
           </div>
         </div>
       `;
@@ -168,80 +189,106 @@ $(document).ready(function () {
   });
 
   // Form submission handler
-  $addMonitoringForm.on("submit", function (event) {
+  $addMonitoringForm.on("submit", async function (event) {
     event.preventDefault();
 
-    const formData = new FormData();
-    formData.append("field", $("#field").val());
-    formData.append("observation", $("#observation").val());
-    formData.append("staffIds", Array.from(selectedStaffIds));
-    formData.append("cropIds", Array.from(selectedCropIds));
+    const date = new Date();
+    const today = date.toISOString().split("T")[0];
 
+    const monitoringLogDTO = {
+      code: $("#logCode").val(),
+      date: today,
+      details: $("#observation").val(),
+      fieldCode: $("#field").val(),
+    };
     const file = $fileInput[0].files[0];
-    if (file) {
-      formData.append("image", file);
-    }
+    if (file) monitoringLogDTO.observedImage = file;
 
     // Add validation
-    if (!validateForm(formData)) {
+    if (!validateForm(monitoringLogDTO)) {
       return;
     }
-
     const actionType = $actionType.val();
 
-    if (actionType === "add") {
-      // TODO: Replace with actual API call for adding monitoring log
-      console.log("Adding monitoring log:", formData);
-      showSuccessMessage("Monitoring log added successfully!");
-    } else if (actionType === "update") {
-      // TODO: Replace with actual API call for updating monitoring log
-      console.log("Updating monitoring log:", formData);
-      showSuccessMessage("Monitoring log updated successfully!");
-    }
+    try {
+      if (actionType === "add") {
+        await addMontoringLogData(monitoringLogDTO);
+        if (selectedStaffIds.size > 0 && selectedCropIds.size > 0) {
+          const updateDTO = {
+            monitoringLogId: monitoringLogDTO.code,
+            staffIds: Array.from(selectedStaffIds),
+            cropCodes: Array.from(selectedCropIds),
+          };
+          await updateMonitoringLogStaffAndCropsData(updateDTO);
+        }
+      } else if (actionType === "update") {
+        // Convert base64 image to File objects if necessary
+        if (
+          !monitoringLogDTO.observedImage &&
+          $imagePreview.attr("src").startsWith("data:image")
+        ) {
+          monitoringLogDTO.observedImage = base64ToFile(
+            $imagePreview.attr("src"),
+            "observed_image.png"
+          );
+        }
 
-    // Simulate successful save
+        await updateMontoringLogData(monitoringLogDTO.code, monitoringLogDTO);
+        if (selectedStaffIds.size > 0 && selectedCropIds.size > 0) {
+          const updateDTO = {
+            monitoringLogId: monitoringLogDTO.code,
+            staffIds: Array.from(selectedStaffIds),
+            cropCodes: Array.from(selectedCropIds),
+          };
+          await updateMonitoringLogStaffAndCropsData(updateDTO);
+        }
+      }
+      window.location.reload();
+    } catch (error) {
+      console.error("Error during monitoring log addition:", error);
+    }
     hideAddMonitoringPopup();
   });
 
+  // Convert base64 to File
+  function base64ToFile(base64, filename) {
+    const arr = base64.split(",");
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
+  }
+
   // Form validation
-  function validateForm(formData) {
-    if (!formData.get("field")) {
+  function validateForm(monitoringLogDTO) {
+    if (!monitoringLogDTO.fieldCode) {
       showError("Please select a field");
       return false;
     }
-
-    if (!formData.get("observation")) {
+    if (!monitoringLogDTO.details) {
       showError("Please add your observation");
       return false;
     }
-
-    if (!formData.get("image") && $actionType.val() === "add") {
+    if (!monitoringLogDTO.observedImage && $actionType.val() === "add") {
       showError("Please select an image");
       return false;
     }
-
     if (selectedStaffIds.size === 0) {
       showError("Please select at least one staff member");
       return false;
     }
-
     if (selectedCropIds.size === 0) {
       showError("Please select at least one crop");
       return false;
     }
-
     return true;
   }
 
-  // Error message display
   function showError(message) {
-    // TODO: Implement error message display
-    alert(message);
-  }
-
-  // Success message display
-  function showSuccessMessage(message) {
-    // TODO: Implement success message display
     alert(message);
   }
 
@@ -252,6 +299,71 @@ $(document).ready(function () {
     loadCropData();
     updateCharCount();
   }
-
   initializePopup();
 });
+
+const addMontoringLogData = (monitoringLogDTO) => {
+  return MonitoringLogService.saveMonitoringLog(monitoringLogDTO)
+    .then((response, textStatus, jqXHR) => {
+      if (jqXHR.status !== 201) {
+        alert("Failed to add monitoring log");
+      }
+    })
+    .catch((xhr, status, error) => {
+      console.error("Error during monitoring log addition:", error);
+      alert("Failed to add monitoring log");
+    });
+};
+
+const updateMontoringLogData = (id, monitoringLogDTO) => {
+  return MonitoringLogService.updateMonitoringLog(id, monitoringLogDTO)
+    .then((response, textStatus, jqXHR) => {
+      if (jqXHR.status !== 204) {
+        alert("Failed to update monitoring log");
+      }
+    })
+    .catch((xhr, status, error) => {
+      console.error("Error during monitoring log update:", error);
+      alert("Failed to update monitoring log");
+    });
+};
+
+const updateMonitoringLogStaffAndCropsData = (updateDTO) => {
+  return MonitoringLogService.updateMonitoringLogStaffAndCrops(updateDTO)
+    .then((response, textStatus, jqXHR) => {
+      if (jqXHR.status !== 204) {
+        alert("Failed to update monitoring log staff and crops");
+      }
+    })
+    .catch((xhr, status, error) => {
+      console.error(
+        "Error during monitoring log staff and crops update:",
+        error
+      );
+      alert("Failed to update monitoring log staff and crops");
+    });
+};
+
+const getAllFieldData = async () => {
+  try {
+    return await FieldService.getAllFields();
+  } catch (error) {
+    console.error("Error during field retrieval:", error);
+  }
+};
+
+const getAllStaffData = async () => {
+  try {
+    return await StaffService.getAllStaff();
+  } catch (error) {
+    console.error("Error during staff retrieval:", error);
+  }
+};
+
+const getAllCropData = async () => {
+  try {
+    return await CropService.getAllCrops();
+  } catch (error) {
+    console.error("Error during crop retrieval:", error);
+  }
+};

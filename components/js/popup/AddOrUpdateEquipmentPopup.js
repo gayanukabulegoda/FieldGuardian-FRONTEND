@@ -1,3 +1,5 @@
+import EquipmentService from "../../../services/EquipmentService.js";
+
 $(document).ready(function () {
   const $equipmentForm = $("#equipmentForm");
   const $actionType = $("#actionType");
@@ -14,34 +16,45 @@ $(document).ready(function () {
   });
 
   // Form submission handler
-  $equipmentForm.on("submit", function (event) {
+  $equipmentForm.on("submit", async function (event) {
     event.preventDefault();
 
-    const formData = {
+    const equipmentDTO = {
+      id: $("#equipmentId").val(),
       name: $("#name").val(),
       type: $("#type").val(),
+      status: $("#status").val() || null,
       staffId: $("#staff").val() || null,
     };
 
     // Add validation
-    if (!validateForm(formData)) {
+    if (!validateForm(equipmentDTO)) {
       return;
     }
 
     const actionType = $actionType.val();
 
     if (actionType === "add") {
-      // TODO: Replace with actual API call for adding equipment
-      console.log("Adding equipment:", formData);
-      showSuccessMessage("Equipment added successfully!");
+      await addEquimentData(equipmentDTO);
+      if (equipmentDTO.staffId) {
+        const updateEquipmentStaffDTO = {
+          equipmentId: equipmentDTO.id,
+          staffId: equipmentDTO.staffId,
+        };
+        await updateEquipmentStaffData(updateEquipmentStaffDTO);
+      }
     } else if (actionType === "update") {
-      // TODO: Replace with actual API call for updating equipment
-      console.log("Updating equipment:", formData);
-      showSuccessMessage("Equipment updated successfully!");
+      await updateEquipmentData(equipmentDTO.id, equipmentDTO);
+      if (equipmentDTO.staffId) {
+        const updateEquipmentStaffDTO = {
+          equipmentId: equipmentDTO.id,
+          staffId: equipmentDTO.staffId,
+        };
+        await updateEquipmentStaffData(updateEquipmentStaffDTO);
+      }
     }
-
-    // Simulate successful save
     hideEquipmentPopup();
+    window.location.reload();
   });
 
   // Form validation
@@ -50,24 +63,53 @@ $(document).ready(function () {
       showError("Please enter equipment name");
       return false;
     }
-
     if (!data.type) {
       showError("Please select equipment type");
       return false;
     }
-
     return true;
   }
 
-  // Error message display
   function showError(message) {
-    // TODO: Implement error message display
-    alert(message);
-  }
-
-  // Success message display
-  function showSuccessMessage(message) {
-    // TODO: Implement success message display
     alert(message);
   }
 });
+
+const addEquimentData = async (equipmentDTO) => {
+  return EquipmentService.saveEquipment(equipmentDTO)
+    .done((response, textStatus, jqXHR) => {
+      if (!jqXHR.status === 201) {
+        alert("Failed to add equipment");
+      }
+    })
+    .fail((xhr, status, error) => {
+      console.error("Error during equipment addition:", error);
+      alert("Failed to add equipment");
+    });
+};
+
+const updateEquipmentData = async (id, equipmentDTO) => {
+  return EquipmentService.updateEquipment(id, equipmentDTO)
+    .done((response, textStatus, jqXHR) => {
+      if (!jqXHR.status === 204) {
+        alert("Failed to update equipment");
+      }
+    })
+    .fail((xhr, status, error) => {
+      console.error("Error during equipment update:", error);
+      alert("Failed to update equipment");
+    });
+};
+
+const updateEquipmentStaffData = async (updateEquipmentStaffDTO) => {
+  return EquipmentService.updateEquipmentStaff(updateEquipmentStaffDTO)
+    .done((response, textStatus, jqXHR) => {
+      if (!jqXHR.status === 204) {
+        alert("Failed to update equipment staff");
+      }
+    })
+    .fail((xhr, status, error) => {
+      console.error("Error during equipment staff update:", error);
+      alert("Failed to update equipment staff");
+    });
+};

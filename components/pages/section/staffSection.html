@@ -6,8 +6,11 @@
     <title>Staff Section</title>
     <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/assets/css/styles.css" />
-    <link rel="stylesheet" href="/components/css/popup/viewStaffPopup.css">
-    <link rel="stylesheet" href="/components/css/popup/addOrUpdateStaffPopup.css" />
+    <link rel="stylesheet" href="/components/css/popup/viewStaffPopup.css" />
+    <link
+      rel="stylesheet"
+      href="/components/css/popup/addOrUpdateStaffPopup.css"
+    />
     <link rel="stylesheet" href="/components/css/popup/systemUsersPopup.css" />
     <link
       rel="stylesheet"
@@ -43,9 +46,9 @@
 
         <select class="filter-select" id="genderFilter">
           <option value="" disabled selected hidden>Filter by Gender</option>
-          <option value="male">MALE</option>
-          <option value="female">FEMALE</option>
-          <option value="other">OTHER</option>
+          <option value="MALE">Male</option>
+          <option value="FEMALE">Female</option>
+          <option value="OTHER">Other</option>
         </select>
 
         <button class="search-btn" id="searchBtn">Search</button>
@@ -173,6 +176,7 @@
       <div class="popup-content">
         <form id="addStaffForm" class="staff-form">
           <input type="hidden" id="actionType" value="add" />
+          <input type="hidden" id="staffId" name="staffId" />
           <div class="form-row">
             <div class="form-group">
               <input
@@ -183,11 +187,13 @@
               />
             </div>
             <div class="form-group">
-              <input
-                type="tel"
-                id="contactNumber"
-                placeholder="Contact number"
-                required
+              <select id="designation" required>
+                <option value="" disabled selected hidden>Designation</option>
+              </select>
+              <img
+                src="/assets/icons/drop-down-icon.svg"
+                alt="dropdown"
+                class="input-icon dropdown-icon"
               />
             </div>
           </div>
@@ -206,7 +212,12 @@
           </div>
           <div class="form-row">
             <div class="form-group">
-              <input type="date" id="dateOfBirth" placeholder="Date of birth" required />
+              <input
+                type="date"
+                id="dateOfBirth"
+                placeholder="Date of birth"
+                required
+              />
               <img
                 src="/assets/icons/calendar-icon.svg"
                 alt="calendar"
@@ -214,7 +225,12 @@
               />
             </div>
             <div class="form-group">
-              <input type="date" id="joinedDate" placeholder="Joined date" required />
+              <input
+                type="date"
+                id="joinedDate"
+                placeholder="Joined date"
+                required
+              />
               <img
                 src="/assets/icons/calendar-icon.svg"
                 alt="calendar"
@@ -250,13 +266,11 @@
               />
             </div>
             <div class="form-group">
-              <select id="designation" required>
-                <option value="" disabled selected hidden>Designation</option>
-              </select>
-              <img
-                src="/assets/icons/drop-down-icon.svg"
-                alt="dropdown"
-                class="input-icon dropdown-icon"
+              <input
+                type="tel"
+                id="contactNumber"
+                placeholder="Contact number"
+                required
               />
             </div>
           </div>
@@ -277,7 +291,11 @@
           <h1 class="header-title">View Staff</h1>
         </div>
         <button class="close-btn" id="closeViewBtn">
-          <img src="/assets/icons/close-icon-black.svg" alt="close-icon" class="close-icon" />
+          <img
+            src="/assets/icons/close-icon-black.svg"
+            alt="close-icon"
+            class="close-icon"
+          />
         </button>
       </div>
       <div class="popup-content">
@@ -341,8 +359,14 @@
 
     <script src="/assets/jquery/jquery-3.7.1.min.js"></script>
     <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="/components/js/popup/AddOrUpdateStaffPopup.js"></script>
-    <script src="/components/js/popup/SystemUsersPopup.js"></script>
-    <script src="/components/js/section/StaffSection.js"></script>
+    <script
+      type="module"
+      src="/components/js/popup/AddOrUpdateStaffPopup.js"
+    ></script>
+    <script
+      type="module"
+      src="/components/js/popup/SystemUsersPopup.js"
+    ></script>
+    <script type="module" src="/components/js/section/StaffSection.js"></script>
   </body>
 </html>

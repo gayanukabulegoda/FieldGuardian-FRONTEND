@@ -1,51 +1,13 @@
-$(document).ready(function () {
-  // Load system users data
-  function loadSystemUsers() {
-    // Simulated API call - replace with actual backend call
-    const userData = [
-      {
-        name: "Xavier De GunasekaraAAAAAAAAAAAAAAAA",
-        role: "ADMINISTRATIVEAAAAAA",
-        email: "xavierdegk999@gmail.comAAAAAAAAAAA",
-      },
-      {
-        name: "Xavier De Gunasekara",
-        role: "ADMINISTRATIVE",
-        email: "xavierdegk999@gmail.com",
-      },
-      {
-        name: "Xavier De Gunasekara",
-        role: "ADMINISTRATIVE",
-        email: "xavierdegk999@gmail.com",
-      },
-      {
-        name: "Xavier De Gunasekara",
-        role: "ADMINISTRATIVE",
-        email: "xavierdegk999@gmail.com",
-      },
-      {
-        name: "Xavier De Gunasekara",
-        role: "ADMINISTRATIVE",
-        email: "xavierdegk999@gmail.com",
-      },
-      {
-        name: "Xavier De Gunasekara",
-        role: "ADMINISTRATIVE",
-        email: "xavierdegk999@gmail.com",
-      },
-      {
-        name: "Xavier De Gunasekara",
-        role: "ADMINISTRATIVE",
-        email: "xavierdegk999@gmail.com",
-      },
-      {
-        name: "Xavier De Gunasekara",
-        role: "ADMINISTRATIVE",
-        email: "xavierdegk999@gmail.com",
-      },
-    ];
+import UserService from "../../../services/UserService.js";
 
-    renderUsersTable(userData);
+$(document).ready(function () {
+  async function loadSystemUsers() {
+    try {
+      const userData = await getAllUserData();
+      renderUsersTable(userData);
+    } catch (error) {
+      console.error("Error while loading system users: ", error);
+    }
   }
 
   // Truncate text to a specific character limit
@@ -63,12 +25,14 @@ $(document).ready(function () {
 
     data.forEach((user) => {
       const row = `
-        <div class="table-row">
+        <div class="table-row" data-mail="${user.email}">
           <div>${truncateText(user.name, 28)}</div>
           <div>${truncateText(user.role, 14)}</div>
           <div>${truncateText(user.email, 28)}</div>
           <div>
-            <button class="delete-btn" title="Delete">
+            <button class="delete-btn" title="Delete" data-email="${
+              user.email
+            }">
               <img src="/assets/icons/delete-icon-silver.svg" alt="delete">
             </button>
           </div>
@@ -86,7 +50,8 @@ $(document).ready(function () {
 
   // Delete button handler
   $(document).on("click", ".delete-btn", function () {
-    showDeleteConfirmationPopup();
+    const email = $(this).data("email");
+    showDeleteConfirmationPopup(email);
   });
 
   // Close button handler for delete confirmation popup
@@ -95,21 +60,36 @@ $(document).ready(function () {
   });
 
   // Confirm delete button handler
-  $("#confirmSystemUsersDeleteBtn").on("click", function () {
+  $("#confirmSystemUsersDeleteBtn").on("click", async function () {
+    try {
+      const email = $(this).data("email");
+      await UserService.deleteUser(email);
+      $(`.table-row[data-mail="${email}"]`).remove();
+    } catch (error) {
+      console.error("Error while deleting user: ", error);
+    }
     hideDeleteConfirmationPopup();
   });
 
-  // Show delete confirmation popup
-  function showDeleteConfirmationPopup() {
+  function showDeleteConfirmationPopup(email) {
+    $("#confirmSystemUsersDeleteBtn").data("email", email);
     $("#deleteConfirmationSystemUsersPopup").fadeIn(300);
   }
 
-  // Hide delete confirmation popup
   function hideDeleteConfirmationPopup() {
     $("#deleteConfirmationSystemUsersPopup").fadeOut(300);
-    enableStaffButtonsAndInputs(); 
+    enableStaffButtonsAndInputs();
   }
 
   // Initialize popup
   loadSystemUsers();
 });
+
+const getAllUserData = async () => {
+  try {
+    const response = await UserService.getAllUsers();
+    return response;
+  } catch (error) {
+    console.error("Error while fetching user data: ", error);
+  }
+};

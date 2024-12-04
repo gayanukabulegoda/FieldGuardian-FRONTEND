@@ -204,6 +204,18 @@ body {
   object-fit: cover;
 }
 
+.table-row .location-link {
+  color: inherit;
+  text-decoration: none;
+  border: none;
+  transition: color 0.3s ease;
+}
+
+.table-row .location-link:hover {
+  color: var(--primary-green);
+  text-decoration: none;
+}
+
 .action-buttons {
   display: flex;
   gap: 15px;

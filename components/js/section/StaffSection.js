@@ -1,66 +1,37 @@
-$(document).ready(function () {
-  // Fetch and populate designation filter
-  function loadDesignations() {
-    // Simulated API call - replace with actual backend call
-    const designations = [
-      "SENIOR ASSISTANT MANAGER",
-      "MANAGER",
-      "ASSISTANT MANAGER",
-    ];
+import StaffService from "../../../services/StaffService.js";
 
-    const $select = $("#designationFilter");
-    designations.forEach((designation) => {
-      $select.append(new Option(designation, designation));
-    });
+$(document).ready(function () {
+  async function loadDesignations() {
+    try {
+      const designations = await getAllDesignations();
+      const $select = $("#designationFilter");
+      designations.forEach((designation) => {
+        $select.append(
+          new Option(formatDesignationText(designation), designation)
+        );
+      });
+    } catch (error) {
+      console.error("Error loading designations:", error);
+    }
   }
 
-  // Load staff data
-  function loadStaffData(filters = {}) {
-    // Simulated API call - replace with actual backend call
-    const staffData = [
-      {
-        id: "111-111",
-        designation: "SENIOR ASSISTANT MANAGER",
-        contactNo: "071 234 5678",
-        email: "xavierdegk999@gmail.com",
-        firstName: "Xavier",
-        lastName: "De GunasekaraA",
-        dateOfBirth: "1990-01-01",
-        address: "123 Main St",
-        postalCode: "12345",
-        joinedDate: "2020-01-01",
-        gender: "MALE",
-      },
-      {
-        id: "222-222",
-        designation: "SENIOR ASSISTANT MANAGER",
-        contactNo: "071 234 5678",
-        email: "xavierdegk999@gmail.com",
-        firstName: "Xavier",
-        lastName: "De GunasekaraX",
-        dateOfBirth: "1990-01-01",
-        address: "123 Main St",
-        postalCode: "12345",
-        joinedDate: "2020-01-01",
-        gender: "MALE",
-      },
-      {
-        id: "333-333",
-        designation: "SENIOR ASSISTANT MANAGER",
-        contactNo: "071 234 5678",
-        email: "xavierdegk999@gmail.com",
-        firstName: "Xavier",
-        lastName: "De GunasekaraY",
-        dateOfBirth: "1990-01-01",
-        address: "123 Main St",
-        postalCode: "12345",
-        joinedDate: "2020-01-01",
-        gender: "MALE",
-      },
-      // Add more staff members here
-    ];
+  async function loadStaffData(filters = {}) {
+    try {
+      const staffData = await getAllStaffMembers();
+      renderStaffTable(staffData);
+      if (JSON.parse(localStorage.getItem("role")) === "SCIENTIST") {
+        hideButtons();
+      }
+    } catch (error) {
+      console.error("Error loading staff data:", error);
+    }
+  }
 
-    renderStaffTable(staffData);
+  function formatDesignationText(text) {
+    return text
+      .split("_")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ");
   }
 
   // Truncate text to a specific character limit
@@ -71,7 +42,6 @@ $(document).ready(function () {
     return text;
   }
 
-  // Render staff table
   function renderStaffTable(data) {
     const $tableBody = $("#staffTableBody");
     $tableBody.empty();
@@ -81,7 +51,9 @@ $(document).ready(function () {
       const row = `
                 <div class="table-row" data-staff='${JSON.stringify(staff)}'>
                     <div>${truncateText(name, 28)}</div>
-                    <div>${truncateText(staff.designation, 24)}</div>
+                    <div>${formatDesignationText(
+                      truncateText(staff.designation, 24)
+                    )}</div>
                     <div>${truncateText(staff.contactNo, 12)}</div>
                     <div>${truncateText(staff.email, 28)}</div>
                     <div class="action-buttons">
@@ -129,7 +101,7 @@ $(document).ready(function () {
     showViewStaffPopup(staffData);
   });
 
-  // view staff popup --------------------------------------------------------
+  // -------- View staff popup --------
 
   // Populate staff details with tooltips for full text
   function populateStaffDetails(staffData) {
@@ -158,11 +130,11 @@ $(document).ready(function () {
       .text(formatDate(staffData.joinedDate))
       .attr("data-full-text", formatDate(staffData.joinedDate));
     $("#viewGender")
-      .text(staffData.gender)
-      .attr("data-full-text", staffData.gender);
+      .text(formatDesignationText(staffData.gender))
+      .attr("data-full-text", formatDesignationText(staffData.gender));
     $("#viewDesignation")
-      .text(staffData.designation)
-      .attr("data-full-text", staffData.designation);
+      .text(formatDesignationText(staffData.designation))
+      .attr("data-full-text", formatDesignationText(staffData.designation));
   }
 
   // Format date for display
@@ -194,35 +166,45 @@ $(document).ready(function () {
 
   // Show system users popup
   $("#usersBtn").on("click", function () {
-    $(".system-users-popup").fadeIn();
-    disableStaffButtonsAndInputs();
+    showSystemUsersPopup();
   });
 
-  // Delete confirmation popup ----------------------------------------------
+  const showSystemUsersPopup = () => {
+    $(".system-users-popup").fadeIn();
+    disableStaffButtonsAndInputs();
+  };
+
+  // -------- Delete confirmation popup --------
 
   $("#closeDeletePopupBtn").on("click", function () {
     hideDeleteConfirmationPopup();
   });
 
   // Confirm delete button handler
-  $("#confirmDeleteBtn").on("click", function () {
+  $("#confirmDeleteBtn").on("click", async function () {
+    try {
+      const staffId = $(this).data("id");
+      await StaffService.deleteStaff(staffId);
+      $(`.table-row[data-id="${staffId}"]`).remove();
+    } catch (error) {
+      console.error("Error while deleting staff: ", error);
+    }
     hideDeleteConfirmationPopup();
+    loadStaffData();
   });
 
-  // Show delete confirmation popup
   function showDeleteConfirmationPopup(staffId) {
     $("#confirmDeleteBtn").data("id", staffId);
     $("#deleteConfirmationPopup").fadeIn(300);
     disableStaffButtonsAndInputs();
   }
 
-  // Hide delete confirmation popup
   function hideDeleteConfirmationPopup() {
     $("#deleteConfirmationPopup").fadeOut(300);
     enableStaffButtonsAndInputs();
   }
 
-  // Add staff popup --------------------------------------------------------
+  // -------- Add staff popup --------
 
   const $addStaffPopup = $("#addStaffPopup");
   const $addStaffForm = $("#addStaffForm");
@@ -230,7 +212,6 @@ $(document).ready(function () {
   const $saveBtn = $("#saveBtn");
   const $actionType = $("#actionType");
 
-  // Show add staff popup function
   function showAddStaffPopup() {
     $addStaffForm[0].reset();
     $popupTitle.text("Add Staff");
@@ -242,11 +223,11 @@ $(document).ready(function () {
     disableStaffButtonsAndInputs();
   }
 
-  // Show update staff popup function
   function showUpdateStaffPopup(staffData) {
     $popupTitle.text("Update Staff");
     $saveBtn.text("UPDATE");
     $actionType.val("update");
+    $("#staffId").val(staffData.id);
     formatDateInputs();
     loadDesignationsForStaffPopup();
     fillFormWithStaffData(staffData);
@@ -254,33 +235,36 @@ $(document).ready(function () {
     disableStaffButtonsAndInputs();
   }
 
-  function loadDesignationsForStaffPopup() {
-    // Simulated API call - replace with actual backend call
-    const designations = [
-      "SENIOR ASSISTANT MANAGER",
-      "MANAGER",
-      "ASSISTANT MANAGER",
-    ];
-
-    const $select = $("#designation");
-    $select.empty();
-    if ($actionType.val() === "add")
-      $select.append(new Option("Designation", "", true, true));
-    designations.forEach((designation) => {
-      $select.append(new Option(designation, designation));
-    });
+  async function loadDesignationsForStaffPopup() {
+    try {
+      const designations = await getAllDesignations();
+      const $select = $("#designation");
+      $select.empty();
+      if ($actionType.val() === "add") {
+        const defaultOption = new Option("Select Designation", "", true, true);
+        defaultOption.disabled = true;
+        $select.append(defaultOption);
+      }
+      designations.forEach((designation) => {
+        $select.append(
+          new Option(formatDesignationText(designation), designation)
+        );
+      });
+    } catch (error) {
+      console.error("Error loading designations for staff popup:", error);
+    }
   }
 
   // Fill form with staff data for updating
   function fillFormWithStaffData(data) {
     $("#firstName").val(data.firstName);
     $("#lastName").val(data.lastName);
-    $("#dateOfBirth").val(data.dateOfBirth);
+    $("#dateOfBirth").val(formatDate(data.dateOfBirth));
     $("#address").val(data.address);
     $("#postalCode").val(data.postalCode);
     $("#contactNumber").val(data.contactNo);
     $("#email").val(data.email);
-    $("#joinedDate").val(data.joinedDate);
+    $("#joinedDate").val(formatDate(data.joinedDate));
     $("#gender").val(data.gender);
     $("#designation").val(data.designation);
   }
@@ -290,7 +274,7 @@ $(document).ready(function () {
     showAddStaffPopup();
   });
 
-  // Reusable function to close popups when clicking outside
+  // Function to close popups when clicking outside
   function closePopupOnClickOutside(popupSelector, triggerSelector) {
     $(document).on("click", function (event) {
       if (
@@ -326,24 +310,45 @@ $(document).ready(function () {
     });
   }
 
-  // Function to disable buttons and inputs
   function disableStaffButtonsAndInputs() {
     $(
       ".action-btn, #searchBtn, #searchName, #designationFilter, #genderFilter, #usersBtn, #addBtn"
     ).css("pointer-events", "none");
   }
 
-  // Function to enable buttons and inputs
   function enableStaffButtonsAndInputs() {
     $(
       ".action-btn, #searchBtn, #searchName, #designationFilter, #genderFilter, #usersBtn, #addBtn"
     ).css("pointer-events", "auto");
   }
-
-  // Expose enableStaffButtonsAndInputs globally
   window.enableStaffButtonsAndInputs = enableStaffButtonsAndInputs;
 
   // Initialize page
   loadDesignations();
   loadStaffData();
 });
+
+const hideButtons = () => {
+  $("#addBtn").hide();
+  $("#usersBtn").hide();
+  $(".action-btn.edit").hide();
+  $(".action-btn.delete").hide();
+};
+
+const getAllStaffMembers = async () => {
+  try {
+    return await StaffService.getAllStaff();
+  } catch (error) {
+    console.error("Error during staff retrieval:", error);
+    throw new Error("Failed to retrieve staff");
+  }
+};
+
+const getAllDesignations = () => {
+  try {
+    return StaffService.getAllStaffDesignations();
+  } catch (error) {
+    console.error("Error fetching designations:", error);
+    throw new Error("Failed to fetch designations");
+  }
+};

@@ -90,6 +90,7 @@
       <div class="popup-content">
         <form id="addMonitoringForm" class="monitoring-form">
           <input type="hidden" id="actionType" value="add" />
+          <input type="hidden" id="logCode" name="logCode" />
           <div class="form-container">
             <div class="form-fields">
               <div class="form-group">
@@ -225,7 +226,13 @@
 
     <script src="/assets/jquery/jquery-3.7.1.min.js"></script>
     <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="/components/js/popup/AddOrUpdateMonitoringLogPopup.js"></script>
-    <script src="/components/js/section/MonitoringLogSection.js"></script>
+    <script
+      type="module"
+      src="/components/js/popup/AddOrUpdateMonitoringLogPopup.js"
+    ></script>
+    <script
+      type="module"
+      src="/components/js/section/MonitoringLogSection.js"
+    ></script>
   </body>
 </html>
