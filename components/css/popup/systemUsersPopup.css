@@ -1,0 +1,169 @@
+.system-users-popup {
+  position: fixed;
+  top: 48%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  max-width: 1040px;
+  max-height: 100vh;
+  width: 100%;
+  background: var(--white);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0px 4px 18.3px rgba(0, 0, 0, 0.25);
+  display: none;
+}
+
+.system-users-popup .popup-container {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.system-users-popup .popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 8px 8px 15px 18px;
+  padding: 0;
+}
+
+.system-users-popup .popup-title {
+  color: var(--primary-green);
+  font-size: 21px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.system-users-popup .close-btn {
+  width: 48px;
+  height: 48px;
+  border: none;
+  background: var(--white);
+  border-radius: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.system-users-popup .close-btn:hover {
+  background-color: var(--hover-red);
+}
+
+.system-users-popup .close-btn:hover img {
+  content: url("/assets/icons/close-icon-red.svg");
+}
+
+.system-users-popup .close-btn:focus {
+  outline: none;
+}
+
+.system-users-popup .table-container {
+  background: var(--light-green-popup-bg);
+  padding: 10px;
+  border-radius: 12px;
+}
+
+.users-table {
+  background: var(--white);
+  padding: 10px;
+  border-radius: 8px;
+  overflow-y: hidden;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(90vh - 120px);
+}
+
+.users-table .table-header {
+  display: grid;
+  grid-template-columns: 1.8fr 1.5fr 2.5fr 0.8fr;
+  padding: 12px 20px;
+  background: var(--neutral-bg);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  color: var(--text-gray);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.users-table .table-body {
+  flex: 1;
+  margin-bottom: 0;
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+}
+
+.users-table .table-body::-webkit-scrollbar {
+  display: none;
+}
+
+.users-table .table-row {
+  display: grid;
+  grid-template-columns: 1.8fr 1.5fr 2.5fr 0.8fr;
+  padding: 12px 20px;
+  background: var(--gray-bg);
+  border-radius: 8px;
+  align-items: center;
+  font-size: 14px;
+  color: var(--text-light-gray);
+}
+
+.users-table .table-row:hover {
+  background: var(--neutral-bg);
+}
+
+.users-table .delete-btn {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.users-table .delete-btn img {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.2s ease;
+}
+
+.users-table .delete-btn:hover img {
+  transform: scale(1.2);
+  content: url("/assets/icons/delete-icon-red.svg");
+}
+
+.users-table .delete-btn:focus {
+  outline: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .system-users-popup .popup-container {
+    width: 95%;
+    padding: 16px;
+  }
+
+  .system-users-popup .popup-title {
+    font-size: 20px;
+  }
+
+  .users-table .table-header,
+  .users-table .table-row {
+    font-size: 12px;
+    padding: 10px 12px;
+  }
+
+  .users-table .table-header {
+    grid-template-columns: 1.5fr 1fr 2fr 0.5fr;
+  }
+
+  .users-table .table-row {
+    grid-template-columns: 1.5fr 1fr 2fr 0.5fr;
+  }
+}

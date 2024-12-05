@@ -1,0 +1,26 @@
+@import url(https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Montserrat:wght@600&display=swap);
+
+:root {
+  --primary-green: #2e7d32;
+  --secondary-green: #4caf50;
+  --dark-green: #548957;
+  --light-green: #e7f0d6;
+  --lighter-green: #d0f2d9;
+  --light-green-popup-bg: #ddf1d7;
+  --primary-btn-bg: #4bae4f;
+  --neutral-bg: #f2f3f1;
+  --gray-bg: #fafafa;
+  --text-gray: #727374;
+  --text-light-gray: #676767;
+  --text-dark: #3d3e3e;
+  --white: #ffffff;
+  --text-field-focus: #2e7d3280;
+  --primary-red: #ff3b30;
+  --light-red-bg: #fff1f0;
+  --hover-red: #ffe1e1;
+  --hover-dark-red: #e0352b;
+}
+
+* {
+  font-family: "Poppins", sans-serif;
+}
