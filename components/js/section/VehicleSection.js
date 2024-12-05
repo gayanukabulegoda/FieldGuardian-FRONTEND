@@ -2,7 +2,7 @@ import VehicleService from "../../../services/VehicleService.js";
 import StaffService from "../../../services/StaffService.js";
 
 $(document).ready(function () {
-  async function loadVehicleData(filters = {}) {
+  async function loadVehicleData() {
     try {
       const vehicleData = await getAllVehicleData();
       renderVehicleTable(vehicleData);
@@ -12,6 +12,34 @@ $(document).ready(function () {
     } catch (error) {
       console.error("Error during vehicle retrieval:", error);
     }
+  }
+
+  async function loadTableWithFilteredData(filters = {}) {
+    try {
+      const vehicleData = await VehicleService.filterVehicles(filters);
+      if (vehicleData.length === 0) {
+        alert("No vehicle for your search!");
+        clearSearchInputs();
+        loadVehicleData();
+      } else {
+        renderVehicleTable(vehicleData);
+        clearSearchInputs();
+      }
+      if (JSON.parse(localStorage.getItem("role")) === "SCIENTIST") {
+        hideButtons();
+      }
+    } catch (error) {
+      console.error("Error during vehicle retrieval:", error);
+      alert("No vehicle for your search!");
+      clearSearchInputs();
+      loadVehicleData();
+    }
+  }
+
+  function clearSearchInputs() {
+    $("#searchName").val("");
+    $("#categoryFilter").val("");
+    $("#statusFilter").val("");
   }
 
   // Get status badge class
@@ -84,11 +112,17 @@ $(document).ready(function () {
   // Search button click handler
   $("#searchBtn").on("click", function () {
     const filters = {
-      name: $("#searchName").val(),
+      licensePlateNumber: $("#searchName").val(),
       category: $("#categoryFilter").val(),
       status: $("#statusFilter").val(),
     };
-    loadVehicleData(filters);
+    if (!filters.licensePlateNumber && !filters.category && !filters.status) {
+      alert("No vehicle for your search!");
+      clearSearchInputs();
+      loadVehicleData();
+    } else {
+      loadTableWithFilteredData(filters);
+    }
   });
 
   // Action button handlers
@@ -243,35 +277,41 @@ $(document).ready(function () {
     });
   };
 
-  const loadVehicleCategoriesForPopup = () => {
-    const vehicleCategories = [
-      { value: "TRACTOR", text: "Tractor" },
-      { value: "COMBINE_HARVESTER", text: "Combine Harvester" },
-      { value: "FORAGE_HARVESTER", text: "Forage Harvester" },
-      { value: "SUGARCANE_HARVESTER", text: "Sugarcane Harvester" },
-      { value: "TRUCK", text: "Truck" },
-      { value: "VAN", text: "Van" },
-      { value: "LORRY", text: "Lorry" },
-      { value: "TRAILER", text: "Trailer" },
-      { value: "SEED_DRILL", text: "Seed Drill" },
-      { value: "PLANTER", text: "Planter" },
-      { value: "TRANSPLANTER", text: "Transplanter" },
-      { value: "WATER_TANKER", text: "Water Tanker" },
-      { value: "IRRIGATION_TRUCK", text: "Irrigation Truck" },
-      { value: "SPRAYER", text: "Sprayer" },
-      { value: "DUSTER", text: "Duster" },
-      { value: "PLOW", text: "Plow" },
-      { value: "HARROW", text: "Harrow" },
-      { value: "CULTIVATOR", text: "Cultivator" },
-      { value: "ROTAVATOR", text: "Rotavator" },
-      { value: "ATV", text: "All-Terrain Vehicle (ATV)" },
-      { value: "UTV", text: "Utility Vehicle (UTV)" },
-      { value: "POWER_TILLER", text: "Power Tiller" },
-      { value: "GRAIN_DRYER", text: "Grain Dryer" },
-      { value: "RICE_MILL", text: "Rice Mill" },
-      { value: "WINNOWER", text: "Winnower" },
-    ];
+  const vehicleCategories = [
+    { value: "TRACTOR", text: "Tractor" },
+    { value: "COMBINE_HARVESTER", text: "Combine Harvester" },
+    { value: "FORAGE_HARVESTER", text: "Forage Harvester" },
+    { value: "SUGARCANE_HARVESTER", text: "Sugarcane Harvester" },
+    { value: "TRUCK", text: "Truck" },
+    { value: "VAN", text: "Van" },
+    { value: "LORRY", text: "Lorry" },
+    { value: "TRAILER", text: "Trailer" },
+    { value: "SEED_DRILL", text: "Seed Drill" },
+    { value: "PLANTER", text: "Planter" },
+    { value: "TRANSPLANTER", text: "Transplanter" },
+    { value: "WATER_TANKER", text: "Water Tanker" },
+    { value: "IRRIGATION_TRUCK", text: "Irrigation Truck" },
+    { value: "SPRAYER", text: "Sprayer" },
+    { value: "DUSTER", text: "Duster" },
+  ];
 
+  const loadVehicleCategories = () => {
+    const $categoryFilter = $("#categoryFilter");
+    $categoryFilter.empty();
+    $categoryFilter.append(
+      '<option value="" disabled selected hidden>Category</option>'
+    );
+    vehicleCategories.forEach((category) => {
+      $categoryFilter.append(
+        $("<option>", {
+          value: category.value,
+          text: category.text,
+        })
+      );
+    });
+  };
+
+  const loadVehicleCategoriesForPopup = () => {
     $categorySelect.empty();
     $categorySelect.append(
       '<option value="" disabled selected hidden>Category</option>'
@@ -352,6 +392,7 @@ $(document).ready(function () {
           true
         );
         $("#staff").append(customOption).trigger("change");
+        $("#staff").val("");
         $("#staff").prop("disabled", true);
       } else {
         $("#staff").prop("disabled", false);
@@ -408,6 +449,7 @@ $(document).ready(function () {
 
   // Initialize page
   loadVehicleData();
+  loadVehicleCategories();
 });
 
 const hideButtons = () => {
