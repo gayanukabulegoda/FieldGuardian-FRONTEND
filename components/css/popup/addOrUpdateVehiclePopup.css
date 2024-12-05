@@ -116,7 +116,7 @@
   font-size: 13px;
   line-height: 18.2px;
   background: var(--white);
-   height: 48px;
+  height: 48px;
 }
 
 .form-group select,

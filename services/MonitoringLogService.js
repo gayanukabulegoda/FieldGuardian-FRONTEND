@@ -111,6 +111,22 @@ const MonitoringLogService = {
       },
     });
   },
+
+  filterMonitoringLogs: function (filterDTO) {
+    return $.ajax({
+      url: `${config.baseURL}${config.version}/monitoring-log/filter`,
+      type: "POST",
+      contentType: "application/json",
+      data: JSON.stringify(filterDTO),
+      success: function (response) {
+        return response;
+      },
+      error: function (xhr, status, error) {
+        console.error("Error during monitoring log filtering:", error);
+        throw new Error("Failed to filter monitoring logs");
+      },
+    });
+  },
 };
 
 export default MonitoringLogService;

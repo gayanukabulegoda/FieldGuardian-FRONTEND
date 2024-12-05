@@ -120,6 +120,22 @@ const StaffService = {
       },
     });
   },
+
+  filterStaff: function (filterDTO) {
+    return $.ajax({
+      url: `${config.baseURL}${config.version}/staff/filter`,
+      type: "POST",
+      contentType: "application/json",
+      data: JSON.stringify(filterDTO),
+      success: function (response) {
+        return response;
+      },
+      error: function (xhr, status, error) {
+        console.error("Error during staff filtering:", error);
+        throw new Error("Failed to filter staff");
+      },
+    });
+  },
 };
 
 export default StaffService;

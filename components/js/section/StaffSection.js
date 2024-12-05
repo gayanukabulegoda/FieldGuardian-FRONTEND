@@ -15,7 +15,7 @@ $(document).ready(function () {
     }
   }
 
-  async function loadStaffData(filters = {}) {
+  async function loadStaffData() {
     try {
       const staffData = await getAllStaffMembers();
       renderStaffTable(staffData);
@@ -25,6 +25,34 @@ $(document).ready(function () {
     } catch (error) {
       console.error("Error loading staff data:", error);
     }
+  }
+
+  async function loadTableWithFilteredData(filters = {}) {
+    try {
+      const staffData = await StaffService.filterStaff(filters);
+      if (staffData.length === 0) {
+        alert("No staff member for your search!");
+        clearSearchInputs();
+        loadStaffData();
+      } else {
+        renderStaffTable(staffData);
+        clearSearchInputs();
+      }
+      if (JSON.parse(localStorage.getItem("role")) === "SCIENTIST") {
+        hideButtons();
+      }
+    } catch (error) {
+      console.error("Error loading staff data:", error);
+      alert("No staff member for your search!");
+      clearSearchInputs();
+      loadStaffData();
+    }
+  }
+
+  function clearSearchInputs() {
+    $("#searchName").val("");
+    $("#designationFilter").val("");
+    $("#genderFilter").val("");
   }
 
   function formatDesignationText(text) {
@@ -82,7 +110,7 @@ $(document).ready(function () {
       designation: $("#designationFilter").val(),
       gender: $("#genderFilter").val(),
     };
-    loadStaffData(filters);
+    loadTableWithFilteredData(filters);
   });
 
   // Action button handlers

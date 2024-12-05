@@ -5,13 +5,39 @@ $(document).ready(function () {
   if (JSON.parse(localStorage.getItem("role")) === "ADMINISTRATIVE") {
     hideButtons();
   }
-  async function loadMonitoringData(filters = {}) {
+  async function loadMonitoringData() {
     try {
       const monitoringData = await getAllMonitoringLogData();
       renderMonitoringTable(monitoringData);
     } catch (error) {
       console.error("Error during monitoring logs retrieval:", error);
     }
+  }
+
+  async function loadTableWithFilteredData(filters = {}) {
+    try {
+      const monitoringData = await MonitoringLogService.filterMonitoringLogs(
+        filters
+      );
+      if (monitoringData.length === 0) {
+        alert("No monitoring log found for your search!");
+        clearSearchInputs();
+        loadMonitoringData();
+      } else {
+        renderMonitoringTable(monitoringData);
+        clearSearchInputs();
+      }
+    } catch (error) {
+      console.error("Error during monitoring logs retrieval:", error);
+      alert("No monitoring log found for your search!");
+      clearSearchInputs();
+      loadMonitoringData();
+    }
+  }
+
+  function clearSearchInputs() {
+    $("#searchField").val("");
+    $("#dateFilter").val("");
   }
 
   // Truncate text to a specific character limit
@@ -74,7 +100,13 @@ $(document).ready(function () {
       field: $("#searchField").val(),
       date: $("#dateFilter").val(),
     };
-    loadMonitoringData(filters);
+    if (!filters.field && !filters.date) {
+      alert("Select a value to search!");
+      clearSearchInputs();
+      loadMonitoringData();
+    } else {
+      loadTableWithFilteredData(filters);
+    }
   });
 
   // Action button handlers

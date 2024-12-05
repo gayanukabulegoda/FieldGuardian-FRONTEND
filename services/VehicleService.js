@@ -78,6 +78,22 @@ const VehicleService = {
       },
     });
   },
+
+  filterVehicles: function (filterDTO) {
+    return $.ajax({
+      url: `${config.baseURL}${config.version}/vehicle/filter`,
+      type: "POST",
+      contentType: "application/json",
+      data: JSON.stringify(filterDTO),
+      success: function (response) {
+        return response;
+      },
+      error: function (xhr, status, error) {
+        console.error("Error during vehicle filtering:", error);
+        throw new Error("Failed to filter vehicles");
+      },
+    });
+  },
 };
 
 export default VehicleService;
