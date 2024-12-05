@@ -65,8 +65,9 @@ Green Shadow (Pvt) Ltd. is a mid-scale farm specializing in root crops and cerea
 - **Equipment**: Oversees the agricultural equipment used in various operations.
 
 ### User Interface
+<br>
 
-![Design-Thumbnail](assets\images\fieldguardian-readme-preview.png)
+![Design-Thumbnail](/assets/images/fieldguardian-readme-preview.png)
 
 - Clean interface built with **HTML**, **CSS**, and **Bootstrap**.
 - Dynamic elements for user interaction powered by **JavaScript**.
