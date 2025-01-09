@@ -4,10 +4,10 @@
 <br />
 <div align="center">
   <a href="https://github.com/gayanukabulegoda/FieldGuardian-FRONTEND">
-    <img src="/assets/images/fieldguardian-logo-for-readme.png" alt="FieldGuardian Logo" width="90" height="90">
+    <img src="/public/images/fieldguardian-logo-for-readme.png" alt="FieldGuardian Logo" width="90" height="90">
   </a>
 
-  <h2 align="center">FieldGuardian-FRONTEND</h2>
+<h2 align="center">FieldGuardian-FRONTEND</h2>
 
   <p align="center">
     Welcome to the <strong>FieldGuardian</strong> frontend repository! This frontend application serves as the user interface for a comprehensive crop monitoring system for <strong>Green Shadow (Pvt) Ltd</strong>. It enables efficient management of fields, crops, staff, vehicles, and equipment, ensuring high-quality production and streamlined operations.
@@ -67,7 +67,7 @@ Green Shadow (Pvt) Ltd. is a mid-scale farm specializing in root crops and cerea
 ### User Interface
 <br>
 
-![Design-Thumbnail](/assets/images/fieldguardian-readme-preview.png)
+![Design-Thumbnail](/public/images/fieldguardian-readme-preview.png)
 
 - Clean interface built with **HTML**, **CSS**, and **Bootstrap**.
 - Dynamic elements for user interaction powered by **JavaScript**.
