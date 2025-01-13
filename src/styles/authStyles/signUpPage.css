@@ -138,6 +138,7 @@
     padding: 0.5rem 1rem;
     font-size: 12.5px;
     color: var(--text-dark);
+    margin-bottom: 1rem;
 }
 
 .auth-form-control:focus {
@@ -146,12 +147,12 @@
     box-shadow: 0 0 5px var(--text-field-focus);
 }
 
-.password-group .auth-form-control {
-    padding-right: 2.5rem;
-}
-
 .password-group {
     position: relative;
+}
+
+.password-group .auth-form-control {
+    padding-right: 2.5rem;
 }
 
 .auth-password-toggle {
@@ -160,24 +161,6 @@
     right: 0.8rem;
     transform: translateY(-50%);
     cursor: pointer;
-}
-
-.forgot-password {
-    color: var(--text-gray);
-    font-size: 13px;
-    font-weight: 450;
-    text-decoration: none;
-    margin-bottom: 10px;
-    display: inline-block;
-}
-
-.forgot-password:hover {
-    text-decoration: none;
-    color: var(--primary-green);
-}
-
-.text-end {
-    text-align: right;
 }
 
 .btn-auth {
@@ -191,39 +174,39 @@
     font-weight: 600;
     font-size: 12.5px;
     padding: 0.5rem 1rem;
-    margin-bottom: 2rem;
+    margin: 1rem 0 2rem 0;
     text-transform: uppercase;
-    border: none;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.btn-signin:hover {
+.btn-signup:hover {
     background-color: var(--primary-green);
+    color: var(--white);
 }
 
-.btn-signin:focus {
+.btn-signup:focus {
     outline: none;
     box-shadow: 0 0 5px var(--text-field-focus);
 }
 
-.signup-prompt {
+.signin-prompt {
     text-align: center;
     font-size: 13px;
 }
 
-.signup-prompt span {
+.signin-prompt span {
     color: var(--text-dark);
     font-weight: 500;
 }
 
-.signup-link {
+.auth-link {
     color: var(--primary-green);
     font-weight: 500;
     text-decoration: none;
     margin-left: 0.5rem;
 }
 
-.signup-link:hover {
+.auth-link:hover {
     text-decoration: none;
     color: #246127;
 }

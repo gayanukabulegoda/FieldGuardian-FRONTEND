@@ -1,10 +1,12 @@
 export interface UserRequestDTO {
-    email: string;
+    username: string;
     password: string;
+    email?: string;
 }
 
 export interface AuthResponse {
     token: string;
+    refreshToken: string;
 }
 
 export interface ValidationResponse {
