@@ -1,20 +1,19 @@
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {useDispatch} from 'react-redux';
-import {setEmail} from '../store/slices/authSlice';
-import {AuthLayout} from '../components/auth/AuthLayout';
-import {AuthInput} from '../components/auth/AuthInput';
-import {AuthButton} from '../components/auth/AuthButton';
-import {AuthPrompt} from '../components/auth/AuthPrompt';
-import '../styles/authStyles/signUpPage.css';
+import {setEmail} from '../../store/slices/authSlice.ts';
+import {AuthLayout} from '../../components/auth/AuthLayout.tsx';
+import {AuthInput} from '../../components/auth/AuthInput.tsx';
+import {AuthButton} from '../../components/auth/AuthButton.tsx';
+import {AuthPrompt} from '../../components/auth/AuthPrompt.tsx';
+import '../../styles/authStyles/forgotPasswordPage.css';
 
-export const SignUpPage = () => {
+export const ForgotPasswordPage = () => {
     const [formData, setFormData] = useState({
-        email: '',
-        password: '',
+        newPassword: '',
         confirmPassword: '',
     });
-    const [showPassword, setShowPassword] = useState(false);
+    const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -42,24 +41,22 @@ export const SignUpPage = () => {
         e.preventDefault();
         setError(null);
 
-        const {email, password, confirmPassword} = formData;
+        const {newPassword, confirmPassword} = formData;
+        const email = localStorage.getItem('email');
 
-        // Email validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            setError('Please enter a valid email address.');
+        if (!email) {
+            setError('Email not found. Please try again.');
             return;
         }
 
-        // Password validation
-        if (!validatePassword(password)) {
+        if (!validatePassword(newPassword)) {
             setError(
                 'Password must be at least 8 characters long and contain uppercase, lowercase, numbers, and special characters.'
             );
             return;
         }
 
-        if (password !== confirmPassword) {
+        if (newPassword !== confirmPassword) {
             setError('Passwords do not match.');
             return;
         }
@@ -67,33 +64,28 @@ export const SignUpPage = () => {
         setLoading(true);
         try {
             dispatch(setEmail(email));
-            localStorage.setItem('userSignUpRequestDTO', JSON.stringify({email, password}));
+            localStorage.setItem(
+                'resetPasswordRequestDTO',
+                JSON.stringify({email, password: newPassword})
+            );
             navigate('/otpverification');
-        } catch (err) {
-            setError('Failed to process signup. Please try again.');
+        } catch {
+            setError('Failed to process password reset. Please try again.');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <AuthLayout subtitle="Sign up to streamline crop management and enhance field productivity.">
-            <form className="signup-form" onSubmit={handleSubmit}>
-                <AuthInput
-                    type="email"
-                    placeholder="Email"
-                    value={formData.email}
-                    onChange={(e) => setFormData(prev => ({...prev, email: e.target.value}))}
-                    required
-                />
-
+        <AuthLayout subtitle="Reset your password to regain access to field insights and resource management.">
+            <form className="reset-form" onSubmit={handleSubmit}>
                 <AuthInput
                     isPassword
-                    placeholder="Password"
-                    value={formData.password}
-                    onChange={(e) => setFormData(prev => ({...prev, password: e.target.value}))}
-                    showPassword={showPassword}
-                    onTogglePassword={() => setShowPassword(!showPassword)}
+                    placeholder="New Password"
+                    value={formData.newPassword}
+                    onChange={(e) => setFormData(prev => ({...prev, newPassword: e.target.value}))}
+                    showPassword={showNewPassword}
+                    onTogglePassword={() => setShowNewPassword(!showNewPassword)}
                     required
                 />
 
@@ -114,12 +106,12 @@ export const SignUpPage = () => {
                 )}
 
                 <AuthButton type="submit" isLoading={loading}>
-                    SIGN UP
+                    RESET PASSWORD
                 </AuthButton>
             </form>
 
             <AuthPrompt
-                text="Already have an account?"
+                text="Remembered your password?"
                 linkText="Sign In Now"
                 linkTo="/signin"
             />

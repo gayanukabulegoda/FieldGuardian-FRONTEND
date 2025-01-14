@@ -1,15 +1,15 @@
 import React, {useState, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
-import {requestOtp} from '../store/slices/authSlice';
-import type {AppDispatch, RootState} from '../store/store';
-import authService from '../services/authService';
-import userService from "../services/userService.ts";
-import {AuthLayout} from '../components/auth/AuthLayout';
-import {OtpInput} from '../components/auth/OtpInput';
-import {AuthButton} from '../components/auth/AuthButton';
-import {AuthPrompt} from '../components/auth/AuthPrompt';
-import '../styles/authStyles/otpVerificationPage.css';
+import {requestOtp} from '../../store/slices/authSlice.ts';
+import type {AppDispatch, RootState} from '../../store/store.ts';
+import authService from '../../services/authService.ts';
+import userService from "../../services/userService.ts";
+import {AuthLayout} from '../../components/auth/AuthLayout.tsx';
+import {OtpInput} from '../../components/auth/OtpInput.tsx';
+import {AuthButton} from '../../components/auth/AuthButton.tsx';
+import {AuthPrompt} from '../../components/auth/AuthPrompt.tsx';
+import '../../styles/authStyles/otpVerificationPage.css';
 
 export const OtpVerificationPage = () => {
     const [otp, setOtp] = useState('');

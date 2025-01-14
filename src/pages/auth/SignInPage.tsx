@@ -1,13 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
-import {signIn, validateToken} from '../store/slices/authSlice';
-import type {AppDispatch, RootState} from '../store/store';
-import {AuthLayout} from '../components/auth/AuthLayout';
-import {AuthInput} from '../components/auth/AuthInput';
-import {AuthButton} from '../components/auth/AuthButton';
-import {AuthPrompt} from '../components/auth/AuthPrompt';
-import '../styles/authStyles/signInPage.css'
+import {signIn, validateToken} from '../../store/slices/authSlice.ts';
+import type {AppDispatch, RootState} from '../../store/store.ts';
+import {AuthLayout} from '../../components/auth/AuthLayout.tsx';
+import {AuthInput} from '../../components/auth/AuthInput.tsx';
+import {AuthButton} from '../../components/auth/AuthButton.tsx';
+import {AuthPrompt} from '../../components/auth/AuthPrompt.tsx';
+import '../../styles/authStyles/signInPage.css';
 
 const SignInPage = () => {
     const [email, setEmail] = useState('');
