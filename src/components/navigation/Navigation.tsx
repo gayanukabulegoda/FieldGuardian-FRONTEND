@@ -2,8 +2,12 @@ import {useNavigate, useLocation} from 'react-router-dom';
 import {useDispatch} from 'react-redux';
 import {logout} from '../../store/slices/authSlice';
 import {Settings, LogOut} from 'lucide-react';
-import {UserProfileSection} from "./UserProfileSection.tsx";
-import styles from '../../styles/pageStyles/homePage.module.css';
+import {UserProfileSection} from "./UserProfileSection";
+import styles from '../../styles/homePage.module.css';
+
+interface NavigationProps {
+    onSettingsClick: () => void;
+}
 
 interface NavItem {
     label: string;
@@ -20,7 +24,7 @@ const navItems: NavItem[] = [
     {label: 'Monitoring Log', path: '/monitoring'},
 ];
 
-export const Navigation = () => {
+export const Navigation = ({onSettingsClick}: NavigationProps) => {
     const navigate = useNavigate();
     const location = useLocation();
     const dispatch = useDispatch();
@@ -47,7 +51,7 @@ export const Navigation = () => {
                 {navItems.map((item) => (
                     <button
                         key={item.path}
-                        className={`${styles.navItem} ${location.pathname === item.path ? 'active' : ''}`}
+                        className={`${styles.navItem} ${location.pathname === item.path ? styles.active : ''}`}
                         onClick={() => navigate(item.path)}
                     >
                         {item.label}
@@ -58,7 +62,7 @@ export const Navigation = () => {
             <div className={styles.userProfile}>
                 <UserProfileSection/>
                 <div className={styles.profileActions}>
-                    <button className={styles.actionBtn} onClick={() => navigate('/settings')}>
+                    <button className={styles.actionBtn} onClick={onSettingsClick}>
                         <Settings size={24} style={{color: 'var(--primary-green)'}}/>
                     </button>
                     <button className={styles.actionBtn} onClick={handleLogout}>

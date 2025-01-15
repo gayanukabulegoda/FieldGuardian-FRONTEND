@@ -1,7 +1,7 @@
 import {useSelector} from 'react-redux';
 import {RootState} from '../../store/store';
 import {formatDate} from '../../utils/dateUtils';
-import styles from '../../styles/pageStyles/homePage.module.css';
+import styles from '../../styles/homePage.module.css';
 
 interface HeaderProps {
     onProfileClick: () => void;

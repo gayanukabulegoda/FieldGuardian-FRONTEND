@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
+import {useEffect} from 'react';
+import {Outlet, useNavigate} from 'react-router-dom';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../store/store';
 
 export const RootLayout = () => {
     const navigate = useNavigate();
@@ -9,7 +9,7 @@ export const RootLayout = () => {
 
     useEffect(() => {
         if (!isAuthenticated) {
-            navigate('/signin');
+            // navigate('/signin');
         }
     }, [isAuthenticated, navigate]);
 
@@ -17,5 +17,5 @@ export const RootLayout = () => {
         return null;
     }
 
-    return <Outlet />;
+    return <Outlet/>;
 };

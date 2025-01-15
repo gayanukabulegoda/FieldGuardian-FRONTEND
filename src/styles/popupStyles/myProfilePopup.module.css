@@ -11,7 +11,7 @@
     background: var(--white);
     border-radius: 20px;
     box-shadow: 0px 4px 18.3px rgba(0, 0, 0, 0.25);
-    display: none;
+    display: block;
 }
 
 .popupContent {
@@ -21,7 +21,7 @@
     height: 100%;
 }
 
-#profilePopup .profileCard {
+.profileCard {
     background: var(--white);
     border-radius: 8px;
     padding: 20px 20px 10px;
@@ -31,24 +31,24 @@
     position: relative;
 }
 
-#profilePopup .profileImage {
+.profileImage {
     width: 74px;
     height: 74px;
     margin-bottom: 15px;
 }
 
-#profilePopup .profileImage img {
+.profileImage img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-#profilePopup .profileInfo {
+.profileInfo {
     text-align: center;
     margin-bottom: 15px;
 }
 
-#profilePopup .profileName {
+.profileName {
     color: var(--primary-green);
     font-size: 18px;
     font-weight: 400;
@@ -56,7 +56,7 @@
     margin: 0;
 }
 
-#profilePopup .profileEmail {
+.profileEmail {
     color: var(--primary-green);
     font-size: 12px;
     line-height: 16.8px;
@@ -85,7 +85,7 @@
     line-height: 21px;
 }
 
-#profilePopup .closeBtn {
+.closeBtn {
     width: 48px;
     height: 48px;
     border: none;
@@ -98,42 +98,47 @@
     transition: background-color 0.3s ease;
 }
 
-#profilePopup .closeBtn:hover {
+.closeBtn:hover {
     background-color: var(--hover-red);
 }
 
-#profilePopup .closeBtn:focus {
+.closeBtn:focus {
     outline: none;
 }
 
-#profilePopup .closeIcon {
+.closeIcon {
     width: 24px;
     height: 24px;
     color: #3d3e3e;
     transition: color 0.3s ease;
 }
 
-#profilePopup .closeBtn:hover .closeIcon {
+.closeBtn:hover .closeIcon {
     content: url("/public/icons/close-icon-red.svg");
 }
 
 @media (max-width: 800px) {
-    .profile-popup {
+    .profilePopup {
         max-width: 350px;
         max-height: 320px;
     }
 
-    #profilePopup .profileImage {
+    .popupContent {
+        width: 90%;
+        max-width: 300px;
+    }
+
+    .profileImage {
         width: 60px;
         height: 60px;
     }
 
-    #profilePopup .profileName {
+    .profileName {
         font-size: 18px;
         line-height: 24px;
     }
 
-    #profilePopup .profileEmail {
+    .profileEmail {
         font-size: 11px;
     }
 
@@ -149,7 +154,7 @@
         font-size: 13px;
     }
 
-    #profilePopup .closeBtn {
+    .closeBtn {
         width: 40px;
         height: 40px;
     }

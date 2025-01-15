@@ -1,7 +1,7 @@
 import {useSelector} from 'react-redux';
 import {RootState} from '../../store/store';
 import {truncateText} from '../../utils/textUtils';
-import styles from '../../styles/pageStyles/homePage.module.css';
+import styles from '../../styles/homePage.module.css';
 
 export const UserProfileSection = () => {
     let user = useSelector((state: RootState) => state.user.currentUser);

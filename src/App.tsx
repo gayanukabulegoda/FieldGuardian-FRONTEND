@@ -4,7 +4,6 @@ import {SignUpPage} from "./pages/auth/SignUpPage.tsx";
 import {ForgotPasswordPage} from "./pages/auth/ForgotPasswordPage.tsx";
 import {OtpVerificationPage} from "./pages/auth/OtpVerificationPage.tsx";
 import {HomePage} from "./pages/HomePage.tsx";
-import {RootLayout} from "./components/navigation/RootLayout.tsx";
 import {DashboardPage} from "./pages/sections/DashboardPage.tsx";
 import {StaffPage} from "./pages/sections/StaffPage.tsx";
 import {FieldPage} from "./pages/sections/FieldPage.tsx";
@@ -17,26 +16,24 @@ function App() {
     const routes = createBrowserRouter([
         {
             path: '/',
-            element: <RootLayout />,
+            element: <HomePage/>,
             children: [
-                { path: 'dashboard', element: <DashboardPage /> },
-                { path: 'staff', element: <StaffPage /> },
-                { path: 'field', element: <FieldPage /> },
-                { path: 'crop', element: <CropPage /> },
-                { path: 'equipment', element: <EquipmentPage /> },
-                { path: 'vehicle', element: <VehiclePage /> },
-                { path: 'monitoring', element: <MonitoringPage /> },
-                // { path: '', element: <HomePage /> }
+                {path: 'dashboard', element: <DashboardPage/>},
+                {path: 'staff', element: <StaffPage/>},
+                {path: 'field', element: <FieldPage/>},
+                {path: 'crop', element: <CropPage/>},
+                {path: 'equipment', element: <EquipmentPage/>},
+                {path: 'vehicle', element: <VehiclePage/>},
+                {path: 'monitoring', element: <MonitoringPage/>},
             ]
         },
-        { path: '/signin', element: <SignInPage /> },
-        { path: '/signup', element: <SignUpPage /> },
-        { path: '/forgotpassword', element: <ForgotPasswordPage /> },
-        { path: '/otpverification', element: <OtpVerificationPage /> },
-        {path: '/home', element: <HomePage/>},
+        {path: '/signin', element: <SignInPage/>},
+        {path: '/signup', element: <SignUpPage/>},
+        {path: '/forgotpassword', element: <ForgotPasswordPage/>},
+        {path: '/otpverification', element: <OtpVerificationPage/>},
     ]);
 
-    return <RouterProvider router={routes} />;
+    return <RouterProvider router={routes}/>;
 }
 
 export default App;

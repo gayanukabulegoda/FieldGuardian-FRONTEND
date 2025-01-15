@@ -1,5 +1,4 @@
 import {useSelector} from 'react-redux';
-import {X} from 'lucide-react';
 import {RootState} from '../store/store.ts';
 import styles from '../styles/popupStyles/myProfilePopup.module.css';
 
@@ -9,7 +8,13 @@ interface ProfileModalProps {
 }
 
 export const MyProfilePopup = ({isOpen, onClose}: ProfileModalProps) => {
-    const {currentUser} = useSelector((state: RootState) => state.user);
+    let {currentUser} = useSelector((state: RootState) => state.user);
+    currentUser = {
+        name: "John Doe",
+        email: "grbulegoda@gmail.com",
+        gender: 'MALE',
+        role: "MANAGER"
+    }
 
     if (!isOpen) return null;
 
@@ -36,7 +41,11 @@ export const MyProfilePopup = ({isOpen, onClose}: ProfileModalProps) => {
                         <div className={styles.roleBorder}></div>
                     </div>
                     <button className={styles.closeBtn} onClick={onClose}>
-                        <X size={24}/>
+                        <img
+                            src="/public/icons/close-icon-black.svg"
+                            alt="close-icon"
+                            className={styles.closeIcon}
+                        />
                     </button>
                 </div>
             </div>

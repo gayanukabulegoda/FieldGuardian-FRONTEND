@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {useSelector} from 'react-redux';
-import {X, Settings, Eye, EyeOff} from 'lucide-react';
+import {Eye, EyeOff} from 'lucide-react';
 import {RootState} from '../store/store.ts';
 // import { validatePassword } from '../../utils/validation';
 import userService from '../services/userService.ts';
@@ -52,12 +52,20 @@ export const UpdatePasswordPopup = ({isOpen, onClose}: PasswordModalProps) => {
             <div className={styles.popupHeader}>
                 <div className={styles.headerContent}>
                     <div className={styles.headerIcon}>
-                        <Settings className={styles.settingsIcon}/>
+                        <img
+                            src="/public/icons/settings-icon-green.svg"
+                            alt="settings-icon"
+                            className={styles.settingsIcon}
+                        />
                     </div>
                     <h1 className={styles.headerTitle}>Update Password</h1>
                 </div>
                 <button className={styles.closeBtn} onClick={onClose}>
-                    <X size={24}/>
+                    <img
+                        src="/public/icons/close-icon-black.svg"
+                        alt="close-icon"
+                        className={styles.closeIcon}
+                    />
                 </button>
             </div>
             <div className={styles.popupContent}>
@@ -89,7 +97,10 @@ export const UpdatePasswordPopup = ({isOpen, onClose}: PasswordModalProps) => {
                                 className={styles.togglePassword}
                                 onClick={() => setShowPassword(!showPassword)}
                             >
-                                {showPassword ? <EyeOff size={20}/> : <Eye size={20}/>}
+                                {showPassword
+                                    ? <EyeOff size={20} style={{color: 'var(--primary-green)'}}/>
+                                    : <Eye size={20} style={{color: 'var(--primary-green)'}}/>
+                                }
                             </button>
                         </div>
                         <div className={styles.formGroup}>
@@ -105,7 +116,10 @@ export const UpdatePasswordPopup = ({isOpen, onClose}: PasswordModalProps) => {
                                 className={styles.togglePassword}
                                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                             >
-                                {showConfirmPassword ? <EyeOff size={20}/> : <Eye size={20}/>}
+                                {showConfirmPassword
+                                    ? <EyeOff size={20} style={{color: 'var(--primary-green)'}}/>
+                                    : <Eye size={20} style={{color: 'var(--primary-green)'}}/>
+                                }
                             </button>
                         </div>
                         <button type="submit" className={styles.updateBtn}>
