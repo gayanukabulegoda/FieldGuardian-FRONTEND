@@ -5,7 +5,7 @@ export const truncateText = (text: string, limit: number): string => {
     return text;
 };
 
-export const formatDesignationText = (text: string): string => {
+export const formatText = (text: string): string => {
     return text
         .split('_')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())

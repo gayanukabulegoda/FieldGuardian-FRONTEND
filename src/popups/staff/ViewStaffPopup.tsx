@@ -1,5 +1,5 @@
 import {Staff} from '../../types/staff';
-import {formatDate, formatDesignationText} from '../../utils/textUtils';
+import {formatDate, formatText} from '../../utils/textUtils';
 import styles from '../../styles/sectionStyles/staffSection.module.css';
 
 interface ViewStaffPopupProps {
@@ -66,11 +66,11 @@ export const ViewStaffPopup = ({isOpen, onClose, staff}: ViewStaffPopupProps) =>
                     <div className={styles.detailRow}>
                         <div className={styles.detailGroup}>
                             <label>Gender:</label>
-                            <span>{formatDesignationText(staff.gender)}</span>
+                            <span>{formatText(staff.gender)}</span>
                         </div>
                         <div className={styles.detailGroup}>
                             <label>Designation:</label>
-                            <span>{formatDesignationText(staff.designation)}</span>
+                            <span>{formatText(staff.designation)}</span>
                         </div>
                     </div>
                 </div>

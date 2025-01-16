@@ -1,194 +1,132 @@
+import {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {AppDispatch, RootState} from '../../store/store';
+import {
+    fetchAllEquipment,
+    filterEquipment,
+    addEquipment,
+    updateEquipment,
+    deleteEquipment
+} from '../../store/slices/equipmentSlice';
+import {EquipmentTable} from '../../components/equipment/EquipmentTable';
+import {EquipmentFilters} from '../../components/equipment/EquipmentFilters';
+import {AddEditEquipmentPopup} from '../../popups/equipment/AddEditEquipmentPopup';
+import {ViewEquipmentPopup} from '../../popups/equipment/ViewEquipmentPopup';
+import {DeleteConfirmationPopup} from '../../popups/DeleteConfirmationPopup';
+import {Equipment, EquipmentDTO} from '../../types/equipment';
 import styles from '../../styles/sectionStyles/equipmentSection.module.css';
 
 export const EquipmentPage = () => {
+    const dispatch = useDispatch<AppDispatch>();
+    const {equipment, loading} = useSelector((state: RootState) => state.equipment);
+    const {staff} = useSelector((state: RootState) => state.staff);
+    const {fields} = useSelector((state: RootState) => state.field);
+    const userRole = useSelector((state: RootState) => state.user.currentUser?.role);
+
+    const [selectedEquipment, setSelectedEquipment] = useState<Equipment | null>(null);
+    const [showAddEdit, setShowAddEdit] = useState(false);
+    const [showView, setShowView] = useState(false);
+    const [showDelete, setShowDelete] = useState(false);
+    const [equipmentToDelete, setEquipmentToDelete] = useState<string | null>(null);
+
+    useEffect(() => {
+        // dispatch(fetchAllEquipment());
+    }, [dispatch]);
+
+    const handleSearch = (filters: any) => {
+        dispatch(filterEquipment(filters));
+    };
+
+    const handleAdd = () => {
+        setSelectedEquipment(null);
+        setShowAddEdit(true);
+    };
+
+    const handleEdit = (equipment: Equipment) => {
+        setSelectedEquipment(equipment);
+        setShowAddEdit(true);
+    };
+
+    const handleView = (equipment: Equipment) => {
+        setSelectedEquipment(equipment);
+        setShowView(true);
+    };
+
+    const handleDelete = (id: string) => {
+        setEquipmentToDelete(id);
+        setShowDelete(true);
+    };
+
+    const handleSave = async (equipmentData: EquipmentDTO) => {
+        if (selectedEquipment) {
+            await dispatch(updateEquipment({id: selectedEquipment.id, equipmentDTO: equipmentData}));
+        } else {
+            await dispatch(addEquipment(equipmentData));
+        }
+        setShowAddEdit(false);
+        dispatch(fetchAllEquipment());
+    };
+
+    const confirmDelete = async () => {
+        if (equipmentToDelete) {
+            await dispatch(deleteEquipment(equipmentToDelete));
+            setShowDelete(false);
+            setEquipmentToDelete(null);
+        }
+    };
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
     return (
-        <div className={styles.body}>
-            <div className={styles.equipmentContainer}>
-                <div className="equipment-header">
-                    <h1 className="page-title">Equipment Details</h1>
-                    <div className="header-buttons">
-                        <button className="btn btn-popup-action" id="addBtn">Add</button>
+        <div className={styles.equipmentContainer}>
+            <div className={styles.equipmentHeader}>
+                <h1 className={styles.pageTitle}>Equipment Details</h1>
+                {userRole !== 'SCIENTIST' && (
+                    <div className={styles.headerButtons}>
+                        <button className={styles.btnPopupAction} onClick={handleAdd}>
+                            Add
+                        </button>
                     </div>
-                </div>
-
-                <div className="search-section">
-                    <div className="search-input">
-                        <input type="text" placeholder="Search by name" id="searchName"/>
-                        <img
-                            src="/public/icons/search-icon.svg"
-                            alt="search-icon"
-                            className="search-icon"
-                        />
-                    </div>
-
-                    <select className="filter-select" id="statusFilter">
-                        <option value="" disabled selected hidden>Status</option>
-                        <option value="AVAILABLE">Available</option>
-                        <option value="IN_USE">In Use</option>
-                        <option value="UNDER_MAINTENANCE">Under Maintenance</option>
-                    </select>
-
-                    <button className="search-btn" id="searchBtn">Search</button>
-                </div>
-
-                <div className="table-container">
-                    <div className="table-header">
-                        <div className="th-name">Name</div>
-                        <div className="th-type">Type</div>
-                        <div className="th-status">Status</div>
-                        <div className="th-field">Field</div>
-                        <div className="th-action">Action</div>
-                    </div>
-
-                    <div className="table-body" id="equipmentTableBody">
-                        {/*Table rows will be dynamically added here*/}
-                    </div>
-                </div>
+                )}
             </div>
 
-            {/*Delete confirmation popup*/}
-            <div className="delete-popup" id="deleteConfirmationPopup">
-                <div className="popup-header">
-                    <div className="header-content">
-                        <div className="header-icon">
-                            <img
-                                src="/public/icons/delete-confirmation-popup-icon.svg"
-                                alt="delete-icon"
-                            />
-                        </div>
-                        <h1 className="header-title">Delete Confirmation</h1>
-                    </div>
-                    <button className="close-btn" id="closeDeletePopupBtn">
-                        <img
-                            src="/public/icons/close-icon-black.svg"
-                            alt="close-icon"
-                            className="close-icon"
-                        />
-                    </button>
-                </div>
-                <div className="popup-content">
-                    <p className="confirmation-text">
-                        Do you really want to delete these records?<br/>
-                        This process cannot be undone.
-                    </p>
-                    <button className="confirm-btn" id="confirmDeleteBtn">CONFIRM</button>
-                </div>
-            </div>
+            <EquipmentFilters onSearch={handleSearch}/>
 
-            {/*Add/Update equipment popup*/}
-            <div className="add-equipment-popup" id="addEquipmentPopup">
-                <div className="popup-header">
-                    <div className="header-content">
-                        <div className="header-icon">
-                            <img
-                                src="/public/icons/equipment-popup-icon.svg"
-                                alt="equipment-icon"
-                            />
-                        </div>
-                        <h1 className="header-title" id="popupTitle">Add Equipment</h1>
-                    </div>
-                    <button className="close-btn" id="closeBtn">
-                        <img
-                            src="/public/icons/close-icon-black.svg"
-                            alt="close-icon"
-                            className="close-icon"
-                        />
-                    </button>
-                </div>
-                <div className="popup-content">
-                    <form id="equipmentForm" className="equipment-form">
-                        <input type="hidden" id="actionType" value="add"/>
-                        <input type="hidden" id="equipmentId" name="equipmentId"/>
-                        <div className="form-group">
-                            <input type="text" id="name" placeholder="Name" required/>
-                        </div>
-                        <div className="form-group">
-                            <select id="type" required>
-                                <option value="" disabled selected hidden>Type</option>
-                            </select>
-                            <img
-                                src="/public/icons/drop-down-icon.svg"
-                                alt="dropdown"
-                                className="input-icon dropdown-icon"
-                            />
-                        </div>
-                        <div className="form-group">
-                            <select id="status" className="optional">
-                                <option value="" disabled selected hidden>Status</option>
-                            </select>
-                            <img
-                                src="/public/icons/drop-down-icon.svg"
-                                alt="dropdown"
-                                className="input-icon dropdown-icon"
-                            />
-                        </div>
-                        <div className="form-group">
-                            <select id="staff" className="optional">
-                                <option value="" disabled selected hidden>
-                                    Staff (Optional)
-                                </option>
-                            </select>
-                            <img
-                                src="/public/icons/drop-down-icon.svg"
-                                alt="dropdown"
-                                className="input-icon dropdown-icon"
-                            />
-                        </div>
-                        <div className="save-btn-container">
-                            <button type="submit" className="save-btn" id="saveBtn">SAVE</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+            <EquipmentTable
+                equipment={equipment}
+                onDelete={handleDelete}
+                onEdit={handleEdit}
+                onView={handleView}
+                isScientist={userRole === 'SCIENTIST'}
+            />
 
-            {/*View equipment popup*/}
-            <div className="view-equipment-popup" id="viewEquipmentPopup">
-                <div className="popup-header">
-                    <div className="header-content">
-                        <div className="header-icon">
-                            <img
-                                src="/public/icons/equipment-popup-icon.svg"
-                                alt="equipment-icon"
-                            />
-                        </div>
-                        <h1 className="header-title">View Equipment</h1>
-                    </div>
-                    <button className="close-btn" id="closeViewBtn">
-                        <img
-                            src="/public/icons/close-icon-black.svg"
-                            alt="close-icon"
-                            className="close-icon"
-                        />
-                    </button>
-                </div>
-                <div className="popup-content">
-                    <div className="equipment-details">
-                        <div className="details-row">
-                            <label>Name :</label>
-                            <span id="viewName"></span>
-                        </div>
-                        <div className="details-row">
-                            <label>Type :</label>
-                            <span id="viewType"></span>
-                        </div>
-                        <div className="details-row">
-                            <label>Status :</label>
-                            <span id="viewStatus"></span>
-                        </div>
-                        <div className="details-row">
-                            <label>Staff :</label>
-                            <span id="viewStaff"></span>
-                        </div>
-                        <div className="details-row">
-                            <label>Field :</label>
-                            <span id="viewField"></span>
-                        </div>
-                        <div className="button-container">
-                            <button className="close-button" id="closeButton">CLOSE</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {showAddEdit && (
+                <AddEditEquipmentPopup
+                    isOpen={showAddEdit}
+                    onClose={() => setShowAddEdit(false)}
+                    onSave={handleSave}
+                    equipment={selectedEquipment || undefined}
+                    staffMembers={staff}
+                />
+            )}
+
+            {showView && selectedEquipment && (
+                <ViewEquipmentPopup
+                    isOpen={showView}
+                    onClose={() => setShowView(false)}
+                    equipment={selectedEquipment}
+                    staffMembers={staff}
+                    fields={fields}
+                />
+            )}
+
+            <DeleteConfirmationPopup
+                isOpen={showDelete}
+                onClose={() => setShowDelete(false)}
+                onConfirm={confirmDelete}
+            />
         </div>
     );
 };

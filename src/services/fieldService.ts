@@ -1,14 +1,8 @@
 import {api} from './api';
+import {Field} from '../types/field';
 
 interface FieldSaveDTO {
     [key: string]: any;
-}
-
-interface Field {
-    id: string;
-    name: string;
-    extentSize: number;
-    fieldImage1: string;
 }
 
 const FieldService = {
