@@ -1,0 +1,269 @@
+.body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.dashboardContainer {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+            288deg,
+            var(--lighter-green) 39%,
+            var(--light-green) 85%
+    );
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+/* ------- Left Column - Stats Cards ------- */
+.statsColumn {
+    flex: 1.3;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: hidden;
+}
+
+.statCard {
+    background: var(--white);
+    border-radius: 10px;
+    padding: 10px 8px 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 6px solid var(--primary-green);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    flex: 1;
+}
+
+.statInfo {
+    flex: 1;
+    margin-right: 5px;
+}
+
+.statTitle {
+    color: var(--primary-green);
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.statSubtitle {
+    color: var(--text-gray);
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.statValue {
+    background: var(--light-green);
+    padding: 10px 20px;
+    border-radius: 10px;
+    color: var(--primary-green);
+    font-size: 24px;
+    font-weight: 500;
+}
+
+/* ------- Middle Column - Pie Chart ------- */
+.chartSection {
+    flex: 1.5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--white);
+    border-radius: 10px;
+    padding: 30px 10px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.chartTitle {
+    color: var(--primary-green);
+    font-size: 24px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.chartOuterContainer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: var(--light-green);
+    border-radius: 8px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.chartContainer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-width: 400px;
+    max-height: 280px;
+    margin: 0 auto;
+}
+
+.chartLogo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+}
+
+.chartLegend {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px 25px;
+    margin-top: 12%;
+}
+
+.legendItem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.legendColor {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.legendText {
+    color: var(--text-gray);
+    font-size: 14px;
+}
+
+/* ------- Right Column ------- */
+.rightColumn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: hidden;
+}
+
+.cultivationAreas {
+    background: var(--white);
+    border-radius: 15px;
+    padding: 10px;
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.areasTitle {
+    color: var(--primary-green);
+    text-align: center;
+    font-size: 20px;
+    margin: 8px 0 20px;
+}
+
+.areasList {
+    max-height: calc(61vh - 120px);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.areaItem {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 10px;
+    background: var(--gray-bg);
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.areaItem:hover {
+    background: var(--light-green);
+}
+
+.areaImage {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.areaInfo {
+    flex: 1;
+}
+
+.areaName {
+    color: var(--text-dark);
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.areaExtent {
+    color: var(--text-gray);
+    font-size: 14px;
+}
+
+/* ------- Quote Section ------- */
+.quoteSection {
+    background: var(--white);
+    padding: 8px;
+    border-radius: 10px;
+    border-left: 6px solid var(--primary-green);
+    flex: 0 0 auto;
+}
+
+.quoteContainer {
+    background: var(--light-green);
+    border-radius: 9px;
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.quoteLogo {
+    width: 60px;
+}
+
+.quoteText {
+    color: var(--primary-green);
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.rightColumn .quoteSection {
+    border: none;
+}
+
+.rightColumn .quoteContainer {
+    flex-direction: column-reverse;
+}
+
+/* ------- Scrollbar Styling ------- */
+.areasList::-webkit-scrollbar {
+    width: 6px;
+}
+
+.areasList::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.areasList::-webkit-scrollbar-thumb {
+    background: var(--text-gray);
+    border-radius: 10px;
+}
+
+.areasList::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-green);
+}
