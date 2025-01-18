@@ -2,8 +2,10 @@ import {useState} from 'react';
 import {useSelector} from 'react-redux';
 import {Eye, EyeOff} from 'lucide-react';
 import {RootState} from '../store/store.ts';
-// import { validatePassword } from '../../utils/validation';
+import {validatePassword} from '../utils/validation.ts';
 import userService from '../services/userService.ts';
+import {PopupHeader} from "../components/common/PopupHeader.tsx";
+import {ActionButton} from "../components/common/ActionButton.tsx";
 import styles from '../styles/popupStyles/updatePasswordPopup.module.css';
 
 interface PasswordModalProps {
@@ -25,10 +27,10 @@ export const UpdatePasswordPopup = ({isOpen, onClose}: PasswordModalProps) => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // if (!validatePassword(formData.password)) {
-        //     alert('Password must be at least 8 characters long and contain uppercase, lowercase, numbers, and special characters.');
-        //     return;
-        // }
+        if (!validatePassword(formData.password)) {
+            alert('Password must be at least 8 characters long and contain uppercase, lowercase, numbers, and special characters.');
+            return;
+        }
 
         if (formData.password !== formData.confirmPassword) {
             alert('Passwords do not match');
@@ -49,25 +51,12 @@ export const UpdatePasswordPopup = ({isOpen, onClose}: PasswordModalProps) => {
 
     return (
         <div className={styles.updatePasswordPopup}>
-            <div className={styles.popupHeader}>
-                <div className={styles.headerContent}>
-                    <div className={styles.headerIcon}>
-                        <img
-                            src="/public/icons/settings-icon-green.svg"
-                            alt="settings-icon"
-                            className={styles.settingsIcon}
-                        />
-                    </div>
-                    <h1 className={styles.headerTitle}>Update Password</h1>
-                </div>
-                <button className={styles.closeBtn} onClick={onClose}>
-                    <img
-                        src="/public/icons/close-icon-black.svg"
-                        alt="close-icon"
-                        className={styles.closeIcon}
-                    />
-                </button>
-            </div>
+            <PopupHeader
+                title="Update Password"
+                variant="primary"
+                icon="/public/icons/settings-icon-green.svg"
+                onClose={onClose}
+            />
             <div className={styles.popupContent}>
                 <div className={styles.profileCard}>
                     <div className={styles.profileInfo}>
@@ -122,9 +111,7 @@ export const UpdatePasswordPopup = ({isOpen, onClose}: PasswordModalProps) => {
                                 }
                             </button>
                         </div>
-                        <button type="submit" className={styles.updateBtn}>
-                            UPDATE PASSWORD
-                        </button>
+                        <ActionButton type="submit" variant='success'>UPDATE PASSWORD</ActionButton>
                     </form>
                 </div>
             </div>

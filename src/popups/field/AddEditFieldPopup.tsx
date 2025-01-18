@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 import {Field, FieldDTO, FieldStaff, FieldEquipment} from '../../types/field';
 import {truncateText} from '../../utils/textUtils';
-import styles from '../../styles/popupStyles/fieldPopup.module.css';
+import styles from '../../styles/popupStyles/addEdit/addEditFieldPopup.module.css';
 
 interface AddEditFieldPopupProps {
     isOpen: boolean;
@@ -75,116 +75,118 @@ export const AddEditFieldPopup = ({
     if (!isOpen) return null;
 
     return (
-        <div className={styles.popup} onClick={onClose}>
-            <div className={styles.popupContent} onClick={handleContentClick}>
-                <div className={styles.popupHeader}>
-                    <h2>{field ? 'Update Field' : 'Add Field'}</h2>
-                    <button className={styles.closeBtn} onClick={onClose}>×</button>
+        <div className={styles.addFieldPopup} id="addFieldPopup">
+            <div className={styles.popupHeader}>
+                <div className="header-content">
+                    <div className="header-icon">
+                        <img src="/public/icons/field-popup-icon.svg" alt="field-icon"/>
+                    </div>
+                    <h1 className="header-title" id="popupTitle">Add Field</h1>
                 </div>
-                <form onSubmit={handleSubmit}>
-                    <div className={styles.formGrid}>
-                        <div className={styles.formGroup}>
-                            <input
-                                type="text"
-                                placeholder="Name"
-                                value={formData.name}
-                                onChange={e => setFormData(prev => ({...prev, name: e.target.value}))}
-                                required
-                            />
-                        </div>
-                        <div className={styles.formGroup}>
-                            <input
-                                type="text"
-                                placeholder="Location (Paste google map url)"
-                                value={formData.location}
-                                onChange={e => setFormData(prev => ({...prev, location: e.target.value}))}
-                                required
-                            />
-                        </div>
-                        <div className={styles.formGroup}>
-                            <input
-                                type="number"
-                                placeholder="Extent size (sq. m)"
-                                value={formData.extentSize}
-                                onChange={e => setFormData(prev => ({...prev, extentSize: Number(e.target.value)}))}
-                                required
-                            />
-                        </div>
-                        <div className={styles.imageUploadSection}>
-                            <div className={styles.imageUploadContainer}>
-                                <input
-                                    type="file"
-                                    accept=".png,.jpg,.jpeg"
-                                    onChange={e => handleImageChange(e, 1)}
-                                />
-                                {previewImage1 && (
-                                    <img src={previewImage1} alt="Preview 1" className={styles.imagePreview}/>
-                                )}
+                <button className="close-btn" id="closeBtn">
+                    <img
+                        src="/public/icons/close-icon-black.svg"
+                        alt="close-icon"
+                        className="close-icon"
+                    />
+                </button>
+            </div>
+            <div className="popup-content">
+                <form id="addFieldForm" className="field-form">
+                    <input type="hidden" id="actionType" value="add"/>
+                    <input type="hidden" id="fieldCode" name="fieldCode"/>
+                    <div className="form-container">
+                        <div className="form-fields">
+                            <div className="form-group">
+                                <input type="text" id="name" placeholder="Name" required/>
                             </div>
-                            <div className={styles.imageUploadContainer}>
+                            <div className="form-group">
                                 <input
-                                    type="file"
-                                    accept=".png,.jpg,.jpeg"
-                                    onChange={e => handleImageChange(e, 2)}
+                                    type="number"
+                                    id="extentSize"
+                                    placeholder="Extent size (sq. m)"
+                                    step="0.01"
+                                    required
                                 />
-                                {previewImage2 && (
-                                    <img src={previewImage2} alt="Preview 2" className={styles.imagePreview}/>
-                                )}
+                            </div>
+                            <div className="form-group">
+                                <input
+                                    type="text"
+                                    id="location"
+                                    placeholder="Location (Paste google map url)"
+                                    required
+                                />
+                            </div>
+                            <div className="image-upload-section">
+                                <div className="image-upload-container">
+                                    <input
+                                        type="file"
+                                        id="fieldImage1"
+                                        accept=".png,.jpg,.jpeg"
+                                        className="file-input"
+                                    />
+                                    <div className="upload-area" id="uploadArea1">
+                                        <div className="upload-content">
+                                            <img
+                                                src="/public/icons/add-image-icon.svg"
+                                                alt="add-image"
+                                                className="upload-icon"
+                                            />
+                                            <p className="upload-text">Select your file</p>
+                                            <p className="upload-subtext">png, jpg, jpeg accepted</p>
+                                            <p className="upload-size">(Maximum file size : 10MB)</p>
+                                        </div>
+                                        <div className="preview-container" id="previewContainer1">
+                                            <img id="imagePreview1" src="" alt="preview"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="image-upload-container">
+                                    <input
+                                        type="file"
+                                        id="fieldImage2"
+                                        accept=".png,.jpg,.jpeg"
+                                        className="file-input"
+                                    />
+                                    <div className="upload-area" id="uploadArea2">
+                                        <div className="upload-content">
+                                            <img
+                                                src="/public/icons/add-image-icon.svg"
+                                                alt="add-image"
+                                                className="upload-icon"
+                                            />
+                                            <p className="upload-text">Select your file</p>
+                                            <p className="upload-subtext">png, jpg, jpeg accepted</p>
+                                            <p className="upload-size">(Maximum file size : 10MB)</p>
+                                        </div>
+                                        <div className="preview-container" id="previewContainer2">
+                                            <img id="imagePreview2" src="" alt="preview"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="selection-fields">
+                            <div className="selection-section">
+                                <h2 className="section-title" id="staffSelectionTitle">
+                                    Select Staff (Optional)
+                                </h2>
+                                <div className="selection-container" id="staffContainer">
+                                    {/*Staff rows will be dynamically added here*/}
+                                </div>
+                            </div>
+                            <div className="selection-section">
+                                <h2 className="section-title" id="equipmentSelectionTitle">
+                                    Select Equipments (Optional)
+                                </h2>
+                                <div className="selection-container" id="equipmentContainer">
+                                    {/*Equipment rows will be dynamically added here*/}
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div className={styles.selectionSection}>
-                        <h3>Staff Members</h3>
-                        <div className={styles.selectionGrid}>
-                            {staffMembers.map(staff => (
-                                <div key={staff.id} className={styles.selectionItem}>
-                                    <input
-                                        type="checkbox"
-                                        id={`staff-${staff.id}`}
-                                        checked={selectedStaff.includes(staff.id)}
-                                        onChange={e => {
-                                            if (e.target.checked) {
-                                                setSelectedStaff(prev => [...prev, staff.id]);
-                                            } else {
-                                                setSelectedStaff(prev => prev.filter(id => id !== staff.id));
-                                            }
-                                        }}
-                                    />
-                                    <label htmlFor={`staff-${staff.id}`}>
-                                        {truncateText(`${staff.firstName} ${staff.lastName}`, 30)}
-                                    </label>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                    <div className={styles.selectionSection}>
-                        <h3>Equipment</h3>
-                        <div className={styles.selectionGrid}>
-                            {equipment.map(item => (
-                                <div key={item.id} className={styles.selectionItem}>
-                                    <input
-                                        type="checkbox"
-                                        id={`equipment-${item.id}`}
-                                        checked={selectedEquipment.includes(item.id)}
-                                        onChange={e => {
-                                            if (e.target.checked) {
-                                                setSelectedEquipment(prev => [...prev, item.id]);
-                                            } else {
-                                                setSelectedEquipment(prev => prev.filter(id => id !== item.id));
-                                            }
-                                        }}
-                                    />
-                                    <label htmlFor={`equipment-${item.id}`}>
-                                        {truncateText(item.name, 30)}
-                                    </label>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                    <div className={styles.formActions}>
-                        <button type="submit" className={styles.submitBtn}>
-                            {field ? 'Update' : 'Save'}
-                        </button>
+                    <div className="save-btn-container">
+                        <button type="submit" className="save-btn" id="saveBtn">SAVE</button>
                     </div>
                 </form>
             </div>

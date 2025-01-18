@@ -1,41 +1,42 @@
-import styles from '../styles/sectionStyles/staffSection.module.css';
+import React from 'react';
+import {ActionButton} from '../components/common/ActionButton.tsx';
+import {PopupHeader} from '../components/common/PopupHeader';
+import styles from '../styles/popupStyles/deleteConfirmationPopup.module.css';
 
 interface DeleteConfirmationPopupProps {
     isOpen: boolean;
     onClose: () => void;
     onConfirm: () => void;
+    title?: string;
+    message?: string;
 }
 
-export const DeleteConfirmationPopup = ({
-                                            isOpen,
-                                            onClose,
-                                            onConfirm
-                                        }: DeleteConfirmationPopupProps) => {
+export const DeleteConfirmationPopup: React.FC<DeleteConfirmationPopupProps> = ({
+                                                                                    isOpen,
+                                                                                    onClose,
+                                                                                    onConfirm,
+                                                                                    title = 'Delete Confirmation',
+                                                                                    message = 'Do you really want to delete these records? This process cannot be undone.'
+                                                                                }) => {
     if (!isOpen) return null;
 
-    const handleContentClick = (e: React.MouseEvent) => {
-        e.stopPropagation();
-    };
-
     return (
-        <div className={styles.popup} onClick={onClose}>
-            <div className={styles.popupContent} onClick={handleContentClick}>
-                <div className={styles.popupHeader}>
-                    <h2>Delete Confirmation</h2>
-                    <button className={styles.closeBtn} onClick={onClose}>×</button>
-                </div>
-                <div className={styles.confirmationContent}>
-                    <p>Do you really want to delete this staff member?</p>
-                    <p>This process cannot be undone.</p>
-                </div>
-                <div className={styles.popupActions}>
-                    <button onClick={onConfirm} className={styles.deleteBtn}>
-                        Confirm Delete
-                    </button>
-                    <button onClick={onClose} className={styles.cancelBtn}>
-                        Cancel
-                    </button>
-                </div>
+        <div className={styles.deletePopup} id="deleteConfirmationPopup">
+            <PopupHeader
+                title={title}
+                variant="danger"
+                icon="/public/icons/delete-confirmation-popup-icon.svg"
+                onClose={onClose}
+            />
+            <div className={styles.popupContent}>
+                <p className={styles.confirmationText}>{message}</p>
+                <ActionButton
+                    variant="danger"
+                    onClick={onConfirm}
+                    id="confirmDeleteBtn"
+                >
+                    CONFIRM
+                </ActionButton>
             </div>
         </div>
     );

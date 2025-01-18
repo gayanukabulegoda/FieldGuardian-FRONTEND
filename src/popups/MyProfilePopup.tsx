@@ -1,6 +1,7 @@
 import {useSelector} from 'react-redux';
 import {RootState} from '../store/store.ts';
 import styles from '../styles/popupStyles/myProfilePopup.module.css';
+import {CloseButton} from "../components/common/CloseButton.tsx";
 
 interface ProfileModalProps {
     isOpen: boolean;
@@ -8,13 +9,7 @@ interface ProfileModalProps {
 }
 
 export const MyProfilePopup = ({isOpen, onClose}: ProfileModalProps) => {
-    let {currentUser} = useSelector((state: RootState) => state.user);
-    currentUser = {
-        name: "John Doe",
-        email: "grbulegoda@gmail.com",
-        gender: 'MALE',
-        role: "MANAGER"
-    }
+    const {currentUser} = useSelector((state: RootState) => state.user);
 
     if (!isOpen) return null;
 
@@ -40,13 +35,7 @@ export const MyProfilePopup = ({isOpen, onClose}: ProfileModalProps) => {
                         <span className={styles.roleText}>{currentUser?.role}</span>
                         <div className={styles.roleBorder}></div>
                     </div>
-                    <button className={styles.closeBtn} onClick={onClose}>
-                        <img
-                            src="/public/icons/close-icon-black.svg"
-                            alt="close-icon"
-                            className={styles.closeIcon}
-                        />
-                    </button>
+                    <CloseButton onClick={onClose} />
                 </div>
             </div>
         </div>

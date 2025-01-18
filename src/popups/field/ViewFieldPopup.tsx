@@ -1,6 +1,6 @@
 import {Field, FieldStaff, FieldEquipment} from '../../types/field';
 import {truncateText} from '../../utils/textUtils';
-import styles from '../../styles/popupStyles/fieldPopup.module.css';
+import styles from '../../styles/popupStyles/view/viewFieldPopup.module.css';
 
 interface ViewFieldPopupProps {
     isOpen: boolean;
@@ -38,79 +38,71 @@ export const ViewFieldPopup = ({
     };
 
     return (
-        <div className={styles.popup} onClick={onClose}>
-            <div className={styles.popupContent} onClick={handleContentClick}>
-                <div className={styles.popupHeader}>
-                    <h2>View Field</h2>
-                    <button className={styles.closeBtn} onClick={onClose}>×</button>
+        <div className={styles.viewFieldPopup} id="viewFieldPopup">
+            <div className="popup-header">
+                <div className="header-content">
+                    <div className="header-icon">
+                        <img src="/public/icons/field-popup-icon.svg" alt="field-icon"/>
+                    </div>
+                    <h1 className="header-title">View Field</h1>
                 </div>
-                <div className={styles.fieldDetails}>
-                    <div className={styles.detailRow}>
-                        <label>Name:</label>
-                        <span>{field.name}</span>
-                    </div>
-                    <div className={styles.detailRow}>
-                        <label>Extent Size:</label>
-                        <span>{field.extentSize} sq. m</span>
-                    </div>
-                    <div className={styles.detailRow}>
-                        <label>Location:</label>
-                        <a href={googleMapsLink} target="_blank" rel="noopener noreferrer"
-                           className={styles.locationLink}>
-                            View in Google Maps
-                        </a>
-                    </div>
-                    <div className={styles.imageSection}>
-                        {field.fieldImage1 && (
-                            <img
-                                src={`data:image/jpeg;base64,${field.fieldImage1}`}
-                                alt="Field 1"
-                                className={styles.fieldImage}
-                            />
-                        )}
-                        {field.fieldImage2 && (
-                            <img
-                                src={`data:image/jpeg;base64,${field.fieldImage2}`}
-                                alt="Field 2"
-                                className={styles.fieldImage}
-                            />
-                        )}
-                    </div>
-                    <div className={styles.relatedSection}>
-                        <h3>Staff Members</h3>
-                        <div className={styles.relatedList}>
-                            {staffMembers.length > 0 ? (
-                                staffMembers.map(staff => (
-                                    <div key={staff.id} className={styles.relatedItem}>
-                                        <span>{truncateText(`${staff.firstName} ${staff.lastName}`, 30)}</span>
-                                        <span>{staff.contactNo}</span>
-                                    </div>
-                                ))
-                            ) : (
-                                <div className={styles.noData}>No staff members assigned</div>
-                            )}
+                <button className="close-btn" id="closeViewBtn">
+                    <img
+                        src="/public/icons/close-icon-black.svg"
+                        alt="close-icon"
+                        className="close-icon"
+                    />
+                </button>
+            </div>
+            <div className="popup-content">
+                <div className="field-details">
+                    <div className="details-container">
+                        <div className="details-section">
+                            <div className="details-row">
+                                <label>Name :</label>
+                                <span id="viewName"></span>
+                            </div>
+                            <div className="details-row">
+                                <label>Extent size (sq. m) :</label>
+                                <span id="viewExtentSize"></span>
+                            </div>
+                            <div className="details-row">
+                                <label>Location :</label>
+                                <a
+                                    href="#"
+                                    id="viewLocation"
+                                    target="_blank"
+                                    className="location-link"
+                                >Click to open in map ↗</a
+                                >
+                            </div>
+                            <div className="image-section">
+                                <div className="preview-container" id="previewViewContainer1">
+                                    <img id="viewFieldImage1" src="" alt="field"/>
+                                </div>
+                                <div className="preview-container" id="previewViewContainer2">
+                                    <img id="viewFieldImage2" src="" alt="field"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="selection-section">
+                            <div className="selection-group">
+                                <h2 className="section-title">Staff Members</h2>
+                                <div className="selection-container" id="staffViewContainer">
+                                    {/*Staff rows will be dynamically added here*/}
+                                </div>
+                            </div>
+                            <div className="selection-group">
+                                <h2 className="section-title">Equipments</h2>
+                                <div className="selection-container" id="equipmentViewContainer">
+                                    {/*Equipment rows will be dynamically added here*/}
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div className={styles.relatedSection}>
-                        <h3>Equipment</h3>
-                        <div className={styles.relatedList}>
-                            {equipment.length > 0 ? (
-                                equipment.map(item => (
-                                    <div key={item.id} className={styles.relatedItem}>
-                                        <span>{truncateText(item.name, 30)}</span>
-                                        <span>{item.type}</span>
-                                    </div>
-                                ))
-                            ) : (
-                                <div className={styles.noData}>No equipment assigned</div>
-                            )}
-                        </div>
+                    <div className="button-container">
+                        <button className="close-button" id="closeButton">CLOSE</button>
                     </div>
-                </div>
-                <div className={styles.popupActions}>
-                    <button onClick={onClose} className={styles.closeButton}>
-                        Close
-                    </button>
                 </div>
             </div>
         </div>

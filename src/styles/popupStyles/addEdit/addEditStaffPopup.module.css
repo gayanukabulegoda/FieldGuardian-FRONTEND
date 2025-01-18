@@ -1,0 +1,111 @@
+.addStaffPopup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    width: 100%;
+    max-width: 900px;
+    background: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0px 4px 18.3px rgba(0, 0, 0, 0.25);
+    display: block;
+}
+
+.popupContent {
+    padding: 15px;
+    background: var(--light-green-popup-bg);
+    border-radius: 12px;
+    margin: 0 15px 15px;
+}
+
+.staffForm {
+    background: var(--white);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.formRow {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 5px;
+}
+
+.formGroup {
+    flex: 1;
+    position: relative;
+}
+
+.formGroup input,
+.formGroup select {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1px solid var(--primary-green);
+    border-radius: 32px;
+    color: var(--text-gray);
+    font-size: 13px;
+    line-height: 18.2px;
+    background: var(--white);
+}
+
+.formGroup input[type="date"] {
+    cursor: text;
+    -webkit-appearance: none; /* Hide default date icon in Safari */
+    -moz-appearance: textfield; /* Hide default date icon in Firefox */
+    appearance: none; /* Hide default date icon in other browsers */
+}
+
+.formGroup input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0; /* Hide default date icon in Chrome */
+}
+
+.formGroup select {
+    appearance: none;
+    padding-right: 40px;
+    cursor: pointer;
+}
+
+.formGroup input:focus,
+.formGroup select:focus {
+    outline: none;
+    border-color: transparent;
+    box-shadow: 0 0 0 1.5px var(--text-field-focus);
+}
+
+.inputIcon {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    pointer-events: none;
+}
+
+.saveBtnContainer {
+    display: flex;
+    justify-content: center;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .addStaffPopup {
+        max-width: 95%;
+        margin: 0 10px;
+    }
+
+    .formRow {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .staffForm {
+        padding: 15px;
+    }
+
+    .formGroup input,
+    .formGroup select {
+        padding: 11px 14px;
+    }
+}

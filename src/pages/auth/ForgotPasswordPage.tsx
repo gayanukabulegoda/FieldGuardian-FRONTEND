@@ -6,6 +6,7 @@ import {AuthLayout} from '../../components/auth/AuthLayout.tsx';
 import {AuthInput} from '../../components/auth/AuthInput.tsx';
 import {AuthButton} from '../../components/auth/AuthButton.tsx';
 import {AuthPrompt} from '../../components/auth/AuthPrompt.tsx';
+import {validatePassword} from "../../utils/validation.ts";
 import '../../styles/authStyles/forgotPasswordPage.css';
 
 export const ForgotPasswordPage = () => {
@@ -20,22 +21,6 @@ export const ForgotPasswordPage = () => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
-    const validatePassword = (password: string) => {
-        const minLength = 8;
-        const hasUpperCase = /[A-Z]/.test(password);
-        const hasLowerCase = /[a-z]/.test(password);
-        const hasNumbers = /\d/.test(password);
-        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-
-        return (
-            password.length >= minLength &&
-            hasUpperCase &&
-            hasLowerCase &&
-            hasNumbers &&
-            hasSpecialChar
-        );
-    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
