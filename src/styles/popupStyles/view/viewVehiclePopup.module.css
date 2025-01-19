@@ -1,0 +1,158 @@
+.viewVehiclePopup {
+    position: fixed;
+    top: 7%;
+    left: 15%;
+    z-index: 1000;
+    width: 100%;
+    max-width: 900px;
+    background: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0px 4px 18.3px rgba(0, 0, 0, 0.25);
+    display: block;
+}
+
+.popupContent {
+    padding: 15px;
+    background: var(--light-green-popup-bg);
+    border-radius: 12px;
+    margin: 0 15px 15px;
+}
+
+.vehicleDetails {
+    background: var(--white);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.detailsContainer {
+    display: flex;
+    gap: 20px;
+}
+
+.detailsSection {
+    flex: 1;
+    padding-top: 12px;
+}
+
+.remarkField {
+    flex: 1;
+}
+
+.detailsRow {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.detailsRow label {
+    color: var(--text-gray);
+    font-size: 14px;
+    margin-right: 8px;
+    min-width: 140px;
+}
+
+.detailsRow span {
+    color: var(--text-dark);
+    font-size: 14px;
+    flex: 1;
+    border-bottom: 1px solid var(--text-gray);
+    padding-bottom: 4px;
+    white-space: nowrap;
+    cursor: help;
+    position: relative;
+}
+
+.remarkRow {
+    display: flex;
+    flex-direction: column;
+}
+
+.remarkRow textarea {
+    width: 100%;
+    height: 200px;
+    padding: 13px 16px;
+    border: 1px solid var(--text-gray);
+    border-style: dotted;
+    border-radius: 8px;
+    color: var(--text-dark);
+    font-size: 14px;
+    line-height: 1.5;
+    background: var(--white);
+    resize: none;
+    overflow-y: auto;
+    cursor: default;
+}
+
+.remarkRow textarea:focus {
+    outline: none;
+    border-color: var(--text-gray);
+    box-shadow: none;
+}
+
+.detailsRow span:hover::after {
+    content: attr(data-full-text);
+    position: absolute;
+    left: 0;
+    bottom: 100%;
+    background: var(--white);
+    color: var(--text-dark);
+    padding: 5px;
+    border: 1px solid var(--text-gray);
+    border-radius: 4px;
+    white-space: normal;
+    z-index: 10;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 300px;
+    word-wrap: break-word;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+/* Scrollbar Styling */
+.viewVehiclePopup textarea::-webkit-scrollbar {
+    width: 6px;
+}
+
+.viewVehiclePopup textarea::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.viewVehiclePopup textarea::-webkit-scrollbar-thumb {
+    background: var(--text-gray);
+    border-radius: 3px;
+}
+
+.viewVehiclePopup textarea::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-btn-bg);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .viewVehiclePopup {
+        max-width: 95%;
+        margin: 0 10px;
+    }
+
+    .detailsContainer {
+        flex-direction: column;
+    }
+
+    .vehicleDetails {
+        padding: 15px;
+    }
+
+    .detailsRow {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .detailsRow label {
+        margin-bottom: 4px;
+    }
+}

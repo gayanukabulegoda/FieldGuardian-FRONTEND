@@ -1,0 +1,290 @@
+.addMonitoringPopup {
+    position: fixed;
+    top: 2%;
+    left: 15%;
+    z-index: 1000;
+    width: 100%;
+    max-width: 900px;
+    max-height: 98vh;
+    background: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0px 4px 18.3px rgba(0, 0, 0, 0.25);
+    display: block;
+}
+
+.popupContent {
+    padding: 15px;
+    background: var(--light-green-popup-bg);
+    border-radius: 12px;
+    margin: 0 15px 15px;
+}
+
+.monitoringForm {
+    background: var(--white);
+    border-radius: 8px;
+    padding: 20px;
+    overflow-y: auto;
+    max-height: calc(95vh - 100px);
+}
+
+.formContainer {
+    display: flex;
+    gap: 20px;
+}
+
+.formFields {
+    flex: 1;
+}
+
+.formGroup {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.formGroup select {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1px solid var(--primary-green);
+    border-radius: 32px;
+    color: var(--text-gray);
+    font-size: 13px;
+    line-height: 18.2px;
+    background: var(--white);
+    appearance: none;
+    cursor: pointer;
+}
+
+.formGroup textarea {
+    width: 100%;
+    height: 180px;
+    padding: 13px 16px;
+    border: 1px solid var(--primary-green);
+    border-radius: 12px;
+    color: var(--text-gray);
+    font-size: 13px;
+    line-height: 18.2px;
+    background: var(--white);
+    resize: none;
+    overflow-y: auto;
+}
+
+.formGroup select:focus,
+.formGroup textarea:focus {
+    outline: none;
+    border-color: transparent;
+    box-shadow: 0 0 0 1.5px var(--text-field-focus);
+}
+
+.charCount {
+    position: absolute;
+    right: 16px;
+    bottom: 10px;
+    color: var(--text-gray);
+    font-size: 12px;
+}
+
+.inputIcon {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    pointer-events: none;
+}
+
+.imageUploadContainer {
+    margin-top: 15px;
+}
+
+.fileInput {
+    display: none;
+}
+
+.uploadArea {
+    width: 100%;
+    height: 210px;
+    border: 1px dashed var(--primary-green);
+    border-radius: 8px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.uploadContent {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 1;
+    pointer-events: none;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 8px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.uploadArea:hover .upload-content {
+    opacity: 1;
+}
+
+.uploadIcon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 10px;
+}
+
+.uploadText {
+    color: var(--primary-green);
+    font-size: 16px;
+    margin: 0 0 5px;
+}
+
+.uploadSubtext,
+.uploadSize {
+    color: var(--text-gray);
+    font-size: 12px;
+    margin: 0;
+}
+
+.previewContainer {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+}
+
+.previewContainer img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.selectionFields {
+    flex: 1;
+}
+
+.selectionSection {
+    margin-bottom: 20px;
+}
+
+.sectionTitle {
+    color: var(--text-gray);
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0 0 10px;
+}
+
+.selectionContainer {
+    background: var(--neutral-bg);
+    border-radius: 8px;
+    height: 200px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.selectionRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    margin-bottom: 5px;
+    background: var(--white);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.selectionRow:hover {
+    background-color: var(--light-green);
+}
+
+.selectionRow.selected {
+    background-color: var(--light-green-popup-bg);
+}
+
+.selectionInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.selectionName {
+    color: var(--text-dark);
+    font-size: 14px;
+}
+
+.selectionDetail {
+    color: var(--text-gray);
+    font-size: 12px;
+}
+
+.saveBtnContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/* Scrollbar Styling */
+.monitoringForm::-webkit-scrollbar,
+.formGroup textarea::-webkit-scrollbar,
+.selectionContainer::-webkit-scrollbar {
+    width: 6px;
+}
+
+.monitoringForm::-webkit-scrollbar-track,
+.formGroup textarea::-webkit-scrollbar-track,
+.selectionContainer::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.monitoringForm::-webkit-scrollbar-thumb,
+.formGroup textarea::-webkit-scrollbar-thumb,
+.selectionContainer::-webkit-scrollbar-thumb {
+    background: var(--text-gray);
+    border-radius: 3px;
+}
+
+.monitoringForm::-webkit-scrollbar-thumb {
+    background: var(--primary-green);
+}
+
+.monitoringForm::-webkit-scrollbar-thumb:hover,
+.formGroup textarea::-webkit-scrollbar-thumb:hover,
+.selectionContainer::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-btn-bg);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .addMonitoringPopup {
+        max-width: 95%;
+        margin: 0 10px;
+    }
+
+    .formContainer {
+        flex-direction: column;
+    }
+
+    .monitoringForm {
+        padding: 15px;
+    }
+
+    .formGroup select,
+    .formGroup textarea {
+        padding: 11px 14px;
+    }
+
+    .uploadArea {
+        height: 150px;
+    }
+
+    .selectionContainer {
+        height: 150px;
+    }
+}

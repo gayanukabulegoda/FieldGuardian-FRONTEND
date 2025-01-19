@@ -1,0 +1,275 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.homeBody {
+    background: linear-gradient(
+            288deg,
+            var(--lighter-green) 39%,
+            var(--light-green) 85%
+    );
+    min-height: 100vh;
+}
+
+.blurBackground {
+    filter: blur(5px);
+    transition: filter 0.3s ease;
+    pointer-events: none;
+}
+
+/* --- Container Layout --- */
+.appContainer {
+    display: flex;
+    max-width: 1920px;
+    max-height: 1080px;
+    height: 100vh;
+    margin: 0 auto;
+    padding: 10px;
+    gap: 12px;
+}
+
+/* --- Sidebar Styles --- */
+.sidebar {
+    width: 240px;
+    background: var(--white);
+    border-radius: 20px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.logoSection {
+    height: 127px;
+    background: var(--light-green);
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logoBox {
+    padding-right: 10px;
+}
+
+.logoBox > img {
+    width: 100%;
+    height: 100%;
+}
+
+.logoContainer {
+    position: relative;
+    width: 120px;
+    height: 95px;
+}
+
+/* --- Navigation Menu --- */
+.navMenu {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.navItem {
+    width: 100%;
+    height: 42px;
+    background: var(--neutral-bg);
+    border: none;
+    border-radius: 14px;
+    color: var(--dark-green);
+    font-size: 14px;
+    line-height: 19.6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.navItem:hover,
+.navItem.active {
+    background: var(--light-green);
+    color: var(--primary-green);
+}
+
+.navItem:focus {
+    outline: none;
+}
+
+.navItem i {
+    width: 18px;
+    height: 18px;
+}
+
+/* --- User Profile Section --- */
+.userProfile {
+    margin-top: auto;
+    background: var(--light-green);
+    border-radius: 10px;
+    padding: 20px 20px 14px;
+    text-align: center;
+}
+
+.profileImage {
+    width: 52px;
+    height: 52px;
+    margin: 0 auto 15px;
+}
+
+.profileImage img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profileInfo {
+    margin-bottom: 20px;
+}
+
+.profileName {
+    color: var(--primary-green);
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+.profileEmail {
+    color: var(--primary-green);
+    font-size: 10px;
+    margin: 0;
+}
+
+.profileName,
+.profileEmail {
+    white-space: nowrap;
+}
+
+.profileActions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.actionBtn {
+    width: 50px;
+    height: 48px;
+    background: var(--neutral-bg);
+    border: 0.5px solid var(--primary-green);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.actionBtn:hover {
+    background: var(--light-green);
+}
+
+.actionBtn:focus {
+    outline: none;
+}
+
+.actionBtn i {
+    color: var(--dark-green);
+    width: 24px;
+    height: 24px;
+}
+
+/* --- Main Content Area --- */
+.mainContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* --- Header Styles --- */
+.header {
+    height: 85px;
+    background: var(--white);
+    border-radius: 20px;
+    padding: 20px 34px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.headerWelcome h1 {
+    color: var(--primary-green);
+    font-size: 23px;
+    line-height: 32px;
+    margin-bottom: 5px;
+}
+
+.currentDate {
+    color: var(--primary-green);
+    font-size: 14px;
+    line-height: 22.4px;
+    margin: 0;
+}
+
+.headerProfile {
+    width: 60px;
+    height: 60px;
+    background: var(--lighter-green);
+    border-radius: 50%;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.headerProfile img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--white);
+}
+
+/* --- Content Frame --- */
+.contentFrame {
+    flex: 1;
+    background: linear-gradient(
+            288deg,
+            var(--lighter-green) 39%,
+            var(--light-green) 85%
+    );
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+#contentFrame {
+    width: 100%;
+    height: 100%;
+    border: none;
+    animation: fadeInSlideUp 0.5s ease-in-out;
+}
+
+@keyframes fadeInSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    background: var(--light-green);
+    color: var(--primary-green);
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 800px) {
+    .app-container {
+        transform: scale(0.8);
+        transform-origin: top left;
+    }
+}

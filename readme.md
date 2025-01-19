@@ -4,13 +4,13 @@
 <br />
 <div align="center">
   <a href="https://github.com/gayanukabulegoda/FieldGuardian-FRONTEND">
-    <img src="/assets/images/fieldguardian-logo-for-readme.png" alt="FieldGuardian Logo" width="90" height="90">
+    <img src="/public/images/fieldguardian-logo-for-readme.png" alt="FieldGuardian Logo" width="90" height="90">
   </a>
 
-  <h2 align="center">FieldGuardian-FRONTEND</h2>
+<h2 align="center">FieldGuardian-FRONTEND</h2>
 
   <p align="center">
-    Welcome to the <strong>FieldGuardian</strong> frontend repository! This frontend application serves as the user interface for a comprehensive crop monitoring system for <strong>Green Shadow (Pvt) Ltd</strong>. It enables efficient management of fields, crops, staff, vehicles, and equipment, ensuring high-quality production and streamlined operations.
+    Welcome to the <strong>FieldGuardian</strong> frontend repository! This application serves as the user interface for a comprehensive crop monitoring system for <strong>Green Shadow (Pvt) Ltd</strong>. It enables efficient management of fields, crops, staff, vehicles, and equipment, ensuring high-quality production and streamlined operations.
     <br />
     <br />
     <a href="https://www.figma.com/community/file/1446518272759848087/field-guardian-ui">View Design</a>
@@ -42,6 +42,9 @@
       <a href="#api-documentation">API Documentation</a>
     </li>
     <li>
+      <a href="#screenshots">Screenshots</a>
+    </li>
+    <li>
       <a href="#figma-design">Figma Design</a>
     </li>
     <li>
@@ -64,22 +67,27 @@ Green Shadow (Pvt) Ltd. is a mid-scale farm specializing in root crops and cerea
 - **Vehicle**: Manages vehicles assigned to staff for monitoring and supporting agricultural operations.
 - **Equipment**: Oversees the agricultural equipment used in various operations.
 
+## Screenshots
+
+Project UI screenshots are available [here](https://drive.google.com/drive/folders/1oZ4I9ftrmonxfzLR2avdwC0jfoCfX4jY?usp=sharing).
+
 ### User Interface
 <br>
 
-![Design-Thumbnail](/assets/images/fieldguardian-readme-preview.png)
+![Design-Thumbnail](/public/images/fieldguardian-readme-preview.png)
 
-- Clean interface built with **HTML**, **CSS**, and **Bootstrap**.
-- Dynamic elements for user interaction powered by **JavaScript**.
+- Modern UI built with **React**, **Vite**, **Bootstrap**, and **TypeScript**.
+- State management powered by **Redux**.
+- API interactions handled efficiently using **Axios**.
 
 ### Built With
 
-This project was developed using a variety of modern web technologies and libraries to ensure a responsive and dynamic user experience.
+This project is developed using modern web technologies to ensure a dynamic and scalable user experience.
 
-- [![HTML][HTML.com]][HTML-url]
-- [![CSS][CSS.com]][CSS-url]
-- [![JavaScript][JavaScript.com]][JavaScript-url]
-- [![JQuery][JQuery.com]][JQuery-url]
+- [![React][React.com]][React-url]
+- [![Vite][Vite.com]][Vite-url]
+- [![TypeScript][TypeScript.com]][TypeScript-url]
+- [![Redux][Redux.com]][Redux-url]
 - [![Bootstrap][Bootstrap.com]][Bootstrap-url]
 - [![Axios][Axios.com]][Axios-url]
 
@@ -89,21 +97,16 @@ This project was developed using a variety of modern web technologies and librar
 
 ## Getting Started
 
-Follow these steps to set up the project locally and get it running on your machine. The instructions will guide you through the process of cloning the repository, and configuring any required settings.
+Follow these steps to set up the project locally and get it running on your machine.
 
 ### Prerequisites
 
-Before setting up the project, make sure you have the following tools and libraries installed or configured as needed:
+Before setting up the project, ensure you have the following tools installed:
 
-- **Axios**  
-  Axios is already included in the project. No additional installation is required.
-
-- **Bootstrap**  
-  Bootstrap has already been downloaded and set up for the project.
+- **Node.js** (Latest LTS version recommended)
+- **Vite** (Pre-configured in the project)
 
 ### Installation
-
-Follow these steps to install and set up the project on your local machine:
 
 1. **Clone the repository**
 
@@ -111,10 +114,22 @@ Follow these steps to install and set up the project on your local machine:
    git clone https://github.com/gayanukabulegoda/FieldGuardian-FRONTEND.git
    ```
 
-2. **Change git remote URL to avoid accidental pushes to the base project**
+2. **Navigate to the project directory**
+
    ```sh
-   git remote set-url origin github_username/repo_name
-   git remote -v # confirm the changes
+   cd FieldGuardian-FRONTEND
+   ```
+
+3. **Install dependencies**
+
+   ```sh
+   npm install
+   ```
+
+4. **Run the development server**
+
+   ```sh
+   npm run dev
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -141,36 +156,29 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-##
+---
 
-<div align="center">
-<a href="https://github.com/gayanukabulegoda" target="_blank"><img src = "https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white"></a>
-<a href="https://git-scm.com/" target="_blank"><img src = "https://img.shields.io/badge/Git-100000?style=for-the-badge&logo=git&logoColor=white"></a>
-<a href="https://html.com/html5/" target="_blank"><img src = "https://img.shields.io/badge/HTML5-100000?style=for-the-badge&logo=HTML5&logoColor=white"></a>
-<a href="https://css3.com/" target="_blank"><img src = "https://img.shields.io/badge/CSS3-100000?style=for-the-badge&logo=CSS3&logoColor=white"></a>
-<a href="https://www.javascript.com/" target="_blank"><img src = "https://img.shields.io/badge/JavaScript-100000?style=for-the-badge&logo=JavaScript&logoColor=white"></a>
-<a href="https://jquery.com/" target="_blank"><img src = "https://img.shields.io/badge/jQuery-100000?style=for-the-badge&logo=jQuery&logoColor=white"></a>
-<a href="https://api.jquery.com/category/ajax/" target="_blank"><img src = "https://img.shields.io/badge/AJAX-100000?style=for-the-badge&logo=Crowdsource&logoColor=white"></a>
-<a href="https://www.javascript.com/" target="_blank"><img src = "https://img.shields.io/badge/JavaScript-100000?style=for-the-badge&logo=JavaScript&logoColor=white"></a>
-<a href="https://jquery.com/" target="_blank"><img src = "https://img.shields.io/badge/jQuery-100000?style=for-the-badge&logo=jQuery&logoColor=white"></a>
-<a href="https://getbootstrap.com/" target="_blank"><img src = "https://img.shields.io/badge/Bootstrap-100000?style=for-the-badge&logo=bootstrap&logoColor=white"></a>
-</div> <br>
+### 🚧 Project Status: Under Conversion
+This project is currently being converted to React, Vite, TypeScript, Bootstrap, Redux, and Axios. Some features may be incomplete or undergoing updates.
+
+---
+
 <p align="center">
-  &copy; 2024 Gayanuka Bulegoda
+  &copy; 2025 Gayanuka Bulegoda
 </p>
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[HTML.com]: https://img.shields.io/badge/HTML-E34F26?style=for-the-badge&logo=html5&logoColor=white
-[HTML-url]: https://developer.mozilla.org/en-US/docs/Web/HTML
-[CSS.com]: https://img.shields.io/badge/CSS-1572B6?style=for-the-badge&logo=css3&logoColor=white
-[CSS-url]: https://developer.mozilla.org/en-US/docs/Web/CSS
-[JavaScript.com]: https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black
-[JavaScript-url]: https://developer.mozilla.org/en-US/docs/Web/JavaScript
-[JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
-[JQuery-url]: https://jquery.com
-[Axios.com]: https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white
+[React.com]: https://img.shields.io/badge/-React-61DAFB?style=for-the-badge&logo=react&logoColor=white
+[React-url]: https://reactjs.org/
+[Vite.com]: https://img.shields.io/badge/-Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white
+[Vite-url]: https://vitejs.dev/
+[TypeScript.com]: https://img.shields.io/badge/-TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white
+[TypeScript-url]: https://www.typescriptlang.org/
+[Redux.com]: https://img.shields.io/badge/-Redux-764ABC?style=for-the-badge&logo=redux&logoColor=white
+[Redux-url]: https://redux.js.org/
+[Bootstrap.com]: https://img.shields.io/badge/-Bootstrap-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white
+[Bootstrap-url]: https://getbootstrap.com/
+[Axios.com]: https://img.shields.io/badge/-Axios-56A7F7?style=for-the-badge&logo=axios&logoColor=white
 [Axios-url]: https://axios-http.com/
-[Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
-[Bootstrap-url]: https://getbootstrap.com

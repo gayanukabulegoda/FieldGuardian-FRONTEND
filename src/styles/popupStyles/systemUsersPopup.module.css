@@ -1,0 +1,144 @@
+.systemUsersPopup {
+    position: fixed;
+    top: 48%;
+    left: 55%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    max-width: 1040px;
+    max-height: 100vh;
+    width: 100%;
+    background: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0px 4px 18.3px rgba(0, 0, 0, 0.25);
+    display: block;
+}
+
+.popupContainer {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.popupHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 8px 8px 15px 18px;
+    padding: 0;
+}
+
+.popupTitle {
+    color: var(--primary-green);
+    font-size: 21px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.tableContainer {
+    background: var(--light-green-popup-bg);
+    padding: 10px;
+    border-radius: 12px;
+}
+
+.usersTable {
+    background: var(--white);
+    padding: 10px;
+    border-radius: 8px;
+    overflow-y: hidden;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(90vh - 120px);
+}
+
+.usersTable .tableHeader {
+    display: grid;
+    grid-template-columns: 1.8fr 1.5fr 2.5fr 0.8fr;
+    padding: 12px 20px;
+    background: var(--neutral-bg);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    color: var(--text-gray);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.usersTable .tableBody {
+    flex: 1;
+    margin-bottom: 0;
+    overflow-y: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+}
+
+.usersTable .tableBody::-webkit-scrollbar {
+    display: none;
+}
+
+.usersTable .tableRow {
+    display: grid;
+    grid-template-columns: 1.8fr 1.5fr 2.5fr 0.8fr;
+    padding: 12px 20px;
+    background: var(--gray-bg);
+    border-radius: 8px;
+    align-items: center;
+    font-size: 14px;
+    color: var(--text-light-gray);
+}
+
+.usersTable .tableRow:hover {
+    background: var(--neutral-bg);
+}
+
+.usersTable .deleteBtn {
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.usersTable .deleteBtn img {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.2s ease;
+}
+
+.usersTable .deleteBtn:hover img {
+    transform: scale(1.2);
+    content: url("/public/icons/delete-icon-red.svg");
+}
+
+.usersTable .deleteBtn:focus {
+    outline: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .popupContainer {
+        width: 95%;
+        padding: 16px;
+    }
+
+    .popupTitle {
+        font-size: 20px;
+    }
+
+    .usersTable .tableHeader,
+    .usersTable .tableRow {
+        font-size: 12px;
+        padding: 10px 12px;
+    }
+
+    .usersTable .tableHeader {
+        grid-template-columns: 1.5fr 1fr 2fr 0.5fr;
+    }
+
+    .usersTable .tableRow {
+        grid-template-columns: 1.5fr 1fr 2fr 0.5fr;
+    }
+}
