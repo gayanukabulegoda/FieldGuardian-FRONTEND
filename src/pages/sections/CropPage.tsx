@@ -4,16 +4,15 @@ import {AppDispatch, RootState} from '../../store/store';
 import {
     fetchAllCrops,
     filterCrops,
-    addCrop,
-    updateCrop,
     deleteCrop
 } from '../../store/slices/cropSlice';
 import {CropTable} from '../../components/crop/CropTable';
 import {CropFilters} from '../../components/crop/CropFilters';
-import {AddEditCropPopup} from '../../popups/crop/AddEditCropPopup';
-import {ViewCropPopup} from '../../popups/crop/ViewCropPopup';
+import {AddEditCropPopup} from '../../popups/addEdit/AddEditCropPopup.tsx';
+import {ViewCropPopup} from '../../popups/view/ViewCropPopup.tsx';
 import {DeleteConfirmationPopup} from '../../popups/DeleteConfirmationPopup';
-import {Crop, CropDTO} from '../../types/crop';
+import {Portal} from '../../components/portal/Portal';
+import {Crop} from '../../types/crop';
 import styles from '../../styles/sectionStyles/cropSection.module.css';
 
 export const CropPage = () => {
@@ -56,30 +55,28 @@ export const CropPage = () => {
         setShowDelete(true);
     };
 
-    const handleSave = async (cropData: CropDTO) => {
-        if (selectedCrop) {
-            await dispatch(updateCrop({id: selectedCrop.code, cropDTO: cropData}));
-        } else {
-            await dispatch(addCrop(cropData));
-        }
-        setShowAddEdit(false);
-        dispatch(fetchAllCrops());
-    };
-
     const confirmDelete = async () => {
         if (cropToDelete) {
-            await dispatch(deleteCrop(cropToDelete));
-            setShowDelete(false);
-            setCropToDelete(null);
+            try {
+                await dispatch(deleteCrop(cropToDelete)).unwrap();
+                setShowDelete(false);
+                setCropToDelete(null);
+                dispatch(fetchAllCrops());
+            } catch (error) {
+                console.error('Error deleting crop:', error);
+                alert('Failed to delete crop');
+            }
         }
     };
+
+    const isAnyPopupOpen = showDelete || showAddEdit || showView;
 
     if (loading) {
         return <div>Loading...</div>;
     }
 
     return (
-        <div className={styles.cropContainer}>
+        <div className={`${styles.cropContainer} ${isAnyPopupOpen ? styles.blurBackground : ''}`}>
             <div className={styles.cropHeader}>
                 <h1 className={styles.pageTitle}>Crop Details</h1>
                 {userRole !== 'ADMINISTRATIVE' && (
@@ -104,30 +101,37 @@ export const CropPage = () => {
                 isAdministrative={userRole === 'ADMINISTRATIVE'}
             />
 
-            {showAddEdit && (
-                <AddEditCropPopup
-                    isOpen={showAddEdit}
-                    onClose={() => setShowAddEdit(false)}
-                    onSave={handleSave}
-                    crop={selectedCrop || undefined}
-                    fields={fields}
-                />
-            )}
+            <Portal>
+                {showAddEdit && (
+                    <AddEditCropPopup
+                        isOpen={showAddEdit}
+                        onClose={() => setShowAddEdit(false)}
+                        crop={selectedCrop || undefined}
+                        fields={fields}
+                    />
+                )}
+            </Portal>
 
-            {showView && selectedCrop && (
-                <ViewCropPopup
-                    isOpen={showView}
-                    onClose={() => setShowView(false)}
-                    crop={selectedCrop}
-                    fields={fields}
-                />
-            )}
+            <Portal>
+                {showView && selectedCrop && (
+                    <ViewCropPopup
+                        isOpen={showView}
+                        onClose={() => setShowView(false)}
+                        crop={selectedCrop}
+                        fields={fields}
+                    />
+                )}
+            </Portal>
 
-            <DeleteConfirmationPopup
-                isOpen={showDelete}
-                onClose={() => setShowDelete(false)}
-                onConfirm={confirmDelete}
-            />
+            <Portal>
+                <DeleteConfirmationPopup
+                    isOpen={showDelete}
+                    onClose={() => setShowDelete(false)}
+                    onConfirm={confirmDelete}
+                    title="Delete Crop"
+                    message="Do you really want to delete this crop? This process cannot be undone."
+                />
+            </Portal>
         </div>
     );
 };

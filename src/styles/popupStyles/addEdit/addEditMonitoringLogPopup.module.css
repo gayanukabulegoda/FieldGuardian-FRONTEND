@@ -1,7 +1,7 @@
-.addFieldPopup {
+.addMonitoringPopup {
     position: fixed;
-    top: 5%;
-    left: 28%;
+    top: 2%;
+    left: 15%;
     z-index: 1000;
     width: 100%;
     max-width: 900px;
@@ -20,7 +20,7 @@
     margin: 0 15px 15px;
 }
 
-.fieldForm {
+.monitoringForm {
     background: var(--white);
     border-radius: 8px;
     padding: 20px;
@@ -42,7 +42,7 @@
     margin-bottom: 15px;
 }
 
-.formGroup input {
+.formGroup select {
     width: 100%;
     padding: 13px 16px;
     border: 1px solid var(--primary-green);
@@ -51,22 +51,51 @@
     font-size: 13px;
     line-height: 18.2px;
     background: var(--white);
+    appearance: none;
+    cursor: pointer;
 }
 
-.formGroup input:focus {
+.formGroup textarea {
+    width: 100%;
+    height: 180px;
+    padding: 13px 16px;
+    border: 1px solid var(--primary-green);
+    border-radius: 12px;
+    color: var(--text-gray);
+    font-size: 13px;
+    line-height: 18.2px;
+    background: var(--white);
+    resize: none;
+    overflow-y: auto;
+}
+
+.formGroup select:focus,
+.formGroup textarea:focus {
     outline: none;
     border-color: transparent;
     box-shadow: 0 0 0 1.5px var(--text-field-focus);
 }
 
-.imageUploadSection {
-    display: flex;
-    gap: 20px;
-    margin-top: 20px;
+.charCount {
+    position: absolute;
+    right: 16px;
+    bottom: 10px;
+    color: var(--text-gray);
+    font-size: 12px;
+}
+
+.inputIcon {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    pointer-events: none;
 }
 
 .imageUploadContainer {
-    flex: 1;
+    margin-top: 15px;
 }
 
 .fileInput {
@@ -75,7 +104,7 @@
 
 .uploadArea {
     width: 100%;
-    height: 270px;
+    height: 210px;
     border: 1px dashed var(--primary-green);
     border-radius: 8px;
     cursor: pointer;
@@ -87,7 +116,6 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 80%;
     transform: translate(-50%, -50%);
     text-align: center;
     z-index: 1;
@@ -99,7 +127,7 @@
     transition: opacity 0.3s ease;
 }
 
-.uploadArea:hover .uploadContent {
+.uploadArea:hover .upload-content {
     opacity: 1;
 }
 
@@ -128,7 +156,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    display: flex;
+    display: none;
 }
 
 .previewContainer img {
@@ -199,37 +227,42 @@
 .saveBtnContainer {
     display: flex;
     justify-content: center;
+    margin-top: 20px;
 }
 
 /* Scrollbar Styling */
-.fieldForm::-webkit-scrollbar,
+.monitoringForm::-webkit-scrollbar,
+.formGroup textarea::-webkit-scrollbar,
 .selectionContainer::-webkit-scrollbar {
     width: 6px;
 }
 
-.fieldForm::-webkit-scrollbar-track,
+.monitoringForm::-webkit-scrollbar-track,
+.formGroup textarea::-webkit-scrollbar-track,
 .selectionContainer::-webkit-scrollbar-track {
     background: transparent;
 }
 
-.fieldForm::-webkit-scrollbar-thumb,
+.monitoringForm::-webkit-scrollbar-thumb,
+.formGroup textarea::-webkit-scrollbar-thumb,
 .selectionContainer::-webkit-scrollbar-thumb {
     background: var(--text-gray);
     border-radius: 3px;
 }
 
-.fieldForm::-webkit-scrollbar-thumb {
+.monitoringForm::-webkit-scrollbar-thumb {
     background: var(--primary-green);
 }
 
-.fieldForm::-webkit-scrollbar-thumb:hover,
+.monitoringForm::-webkit-scrollbar-thumb:hover,
+.formGroup textarea::-webkit-scrollbar-thumb:hover,
 .selectionContainer::-webkit-scrollbar-thumb:hover {
     background: var(--primary-btn-bg);
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
-    .addFieldPopup {
+    .addMonitoringPopup {
         max-width: 95%;
         margin: 0 10px;
     }
@@ -238,16 +271,13 @@
         flex-direction: column;
     }
 
-    .fieldForm {
+    .monitoringForm {
         padding: 15px;
     }
 
-    .formGroup input {
+    .formGroup select,
+    .formGroup textarea {
         padding: 11px 14px;
-    }
-
-    .imageUpload-section {
-        flex-direction: column;
     }
 
     .uploadArea {

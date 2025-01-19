@@ -1,5 +1,5 @@
 import {Crop} from '../../types/crop';
-import {truncateText} from '../../utils/textUtils';
+import {formatText, truncateText} from '../../utils/textUtils';
 import styles from '../../styles/sectionStyles/cropSection.module.css';
 
 interface CropTableProps {
@@ -25,8 +25,8 @@ export const CropTable = ({crops, onDelete, onEdit, onView, isAdministrative}: C
                     <div key={crop.code} className={styles.tableRow}>
                         <div>{truncateText(crop.commonName, 28)}</div>
                         <div>{truncateText(crop.scientificName, 28)}</div>
-                        <div>{truncateText(crop.category, 18)}</div>
-                        <div>{truncateText(crop.season, 16)}</div>
+                        <div>{truncateText(formatText(crop.category), 18)}</div>
+                        <div>{truncateText(formatText(crop.season), 16)}</div>
                         <div className={styles.actionButtons}>
                             {!isAdministrative && (
                                 <>

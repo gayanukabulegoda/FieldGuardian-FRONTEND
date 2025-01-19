@@ -6,7 +6,15 @@ interface FieldState {
     fields: Field[];
     loading: boolean;
     error: string | null;
+    selectedField: Field | null;
 }
+
+// const initialState: FieldState = {
+//     fields: [],
+//     loading: false,
+//     error: null,
+//     selectedField: null,
+// };
 
 const initialState: FieldState = {
     fields: [
@@ -76,7 +84,8 @@ const initialState: FieldState = {
         },
     ],
     loading: false,
-    error: null
+    error: null,
+    selectedField: null,
 };
 
 export const fetchAllFields = createAsyncThunk(
@@ -111,7 +120,14 @@ export const deleteField = createAsyncThunk(
 const fieldSlice = createSlice({
     name: 'field',
     initialState,
-    reducers: {},
+    reducers: {
+        setSelectedField: (state, action) => {
+            state.selectedField = action.payload;
+        },
+        clearSelectedField: (state) => {
+            state.selectedField = null;
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchAllFields.pending, (state) => {
@@ -138,7 +154,7 @@ const fieldSlice = createSlice({
             .addCase(deleteField.fulfilled, (state, action) => {
                 state.fields = state.fields.filter(f => f.code !== action.payload);
             });
-    }
+    },
 });
 
 export default fieldSlice.reducer;

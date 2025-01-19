@@ -69,7 +69,7 @@ Green Shadow (Pvt) Ltd. is a mid-scale farm specializing in root crops and cerea
 
 ## Screenshots
 
-Project UI screenshots are available [here](https://drive.google.com/your-screenshots-link).
+Project UI screenshots are available [here](https://drive.google.com/drive/folders/1oZ4I9ftrmonxfzLR2avdwC0jfoCfX4jY?usp=sharing).
 
 ### User Interface
 <br>

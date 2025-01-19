@@ -1,7 +1,7 @@
-import {Equipment} from '../../types/equipment';
-import {Staff} from '../../types/staff';
-import {Field} from '../../types/field';
-import {truncateText, formatText} from '../../utils/textUtils';
+import {Equipment} from '../../types/equipment.ts';
+import {Staff} from '../../types/staff.ts';
+import {Field} from '../../types/field.ts';
+import {truncateText, formatText} from '../../utils/textUtils.ts';
 import styles from '../../styles/sectionStyles/equipmentSection.module.css';
 
 interface ViewEquipmentPopupProps {

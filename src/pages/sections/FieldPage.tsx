@@ -9,10 +9,11 @@ import {
 } from '../../store/slices/fieldSlice';
 import {FieldTable} from '../../components/field/FieldTable';
 import {FieldFilters} from '../../components/field/FieldFilters';
-import {AddEditFieldPopup} from '../../popups/field/AddEditFieldPopup';
-import {ViewFieldPopup} from '../../popups/field/ViewFieldPopup';
+import {AddEditFieldPopup} from '../../popups/addEdit/AddEditFieldPopup.tsx';
+import {ViewFieldPopup} from '../../popups/view/ViewFieldPopup.tsx';
 import {DeleteConfirmationPopup} from '../../popups/DeleteConfirmationPopup';
 import {Field, FieldDTO} from '../../types/field';
+import {Portal} from "../../components/portal/Portal.ts";
 import styles from '../../styles/sectionStyles/fieldSection.module.css';
 
 export const FieldPage = () => {
@@ -56,29 +57,42 @@ export const FieldPage = () => {
     };
 
     const handleSave = async (fieldData: FieldDTO) => {
-        if (selectedField) {
-            await dispatch(updateField({id: selectedField.code, fieldDTO: fieldData}));
-        } else {
-            await dispatch(addField(fieldData));
+        try {
+            if (selectedField) {
+                await dispatch(updateField({id: selectedField.code, fieldDTO: fieldData})).unwrap();
+            } else {
+                await dispatch(addField(fieldData)).unwrap();
+            }
+            setShowAddEdit(false);
+            dispatch(fetchAllFields());
+        } catch (error) {
+            console.error('Error saving field:', error);
+            alert('Failed to save field');
         }
-        setShowAddEdit(false);
-        dispatch(fetchAllFields());
     };
 
     const confirmDelete = async () => {
         if (fieldToDelete) {
-            await dispatch(deleteField(fieldToDelete));
-            setShowDelete(false);
-            setFieldToDelete(null);
+            try {
+                await dispatch(deleteField(fieldToDelete)).unwrap();
+                setShowDelete(false);
+                setFieldToDelete(null);
+                dispatch(fetchAllFields());
+            } catch (error) {
+                console.error('Error deleting field:', error);
+                alert('Failed to delete field');
+            }
         }
     };
+
+    const isAnyPopupOpen = showDelete || showAddEdit || showView;
 
     if (loading) {
         return <div>Loading...</div>;
     }
 
     return (
-        <div className={styles.fieldContainer}>
+        <div className={`${styles.fieldContainer} ${isAnyPopupOpen ? styles.blurBackground : ''}`}>
             <div className={styles.fieldHeader}>
                 <h1 className={styles.pageTitle}>Field Details</h1>
                 {userRole !== 'ADMINISTRATIVE' && (
@@ -100,28 +114,40 @@ export const FieldPage = () => {
                 isAdministrative={userRole === 'ADMINISTRATIVE'}
             />
 
-            {showAddEdit && (
-                <AddEditFieldPopup
-                    isOpen={showAddEdit}
-                    onClose={() => setShowAddEdit(false)}
-                    onSave={handleSave}
-                    field={selectedField || undefined}
-                />
-            )}
+            <Portal>
+                {showAddEdit && (
+                    <AddEditFieldPopup
+                        isOpen={showAddEdit}
+                        onClose={() => setShowAddEdit(false)}
+                        onSave={handleSave}
+                        field={selectedField || undefined}
+                        staffMembers={[]} // Add staff members data
+                        equipment={[]} // Add equipment data
+                    />
+                )}
+            </Portal>
 
-            {showView && selectedField && (
-                <ViewFieldPopup
-                    isOpen={showView}
-                    onClose={() => setShowView(false)}
-                    field={selectedField}
-                />
-            )}
+            <Portal>
+                {showView && selectedField && (
+                    <ViewFieldPopup
+                        isOpen={showView}
+                        onClose={() => setShowView(false)}
+                        field={selectedField}
+                        staffMembers={[]} // Add staff members data
+                        equipment={[]} // Add equipment data
+                    />
+                )}
+            </Portal>
 
-            <DeleteConfirmationPopup
-                isOpen={showDelete}
-                onClose={() => setShowDelete(false)}
-                onConfirm={confirmDelete}
-            />
+            <Portal>
+                <DeleteConfirmationPopup
+                    isOpen={showDelete}
+                    onClose={() => setShowDelete(false)}
+                    onConfirm={confirmDelete}
+                    title="Delete Field"
+                    message="Do you really want to delete this field? This process cannot be undone."
+                />
+            </Portal>
         </div>
     );
 };

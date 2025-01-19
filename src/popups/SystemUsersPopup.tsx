@@ -1,11 +1,11 @@
 import React from 'react';
 import {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {AppDispatch, RootState} from '../../store/store';
-import {fetchAllUsers} from '../../store/slices/userSlice';
-import {truncateText} from '../../utils/textUtils';
-import {CloseButton} from "../../components/common/CloseButton.tsx";
-import styles from '../../styles/popupStyles/systemUsersPopup.module.css';
+import {AppDispatch, RootState} from '../store/store.ts';
+import {fetchAllUsers} from '../store/slices/userSlice.ts';
+import {truncateText} from '../utils/textUtils.ts';
+import {CloseButton} from "../components/common/CloseButton.tsx";
+import styles from '../styles/popupStyles/systemUsersPopup.module.css';
 
 interface SystemUsersPopupProps {
     isOpen: boolean;
@@ -34,7 +34,7 @@ export const SystemUsersPopup: React.FC<SystemUsersPopupProps> = ({
             <div className={styles.popupContainer}>
                 <div className={styles.popupHeader}>
                     <h2 className={styles.popupTitle}>System Users</h2>
-                    <CloseButton onClick={onClose} />
+                    <CloseButton onClick={onClose}/>
                 </div>
 
                 <div className={styles.tableContainer}>
@@ -62,7 +62,7 @@ export const SystemUsersPopup: React.FC<SystemUsersPopupProps> = ({
                                                 title="Delete"
                                             >
                                                 <img
-                                                    src="/public/icons/delete-icon-silver.svg"
+                                                    src="/icons/delete-icon-silver.svg"
                                                     alt="delete-icon"
                                                 />
                                             </button>

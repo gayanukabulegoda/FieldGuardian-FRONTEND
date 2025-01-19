@@ -13,6 +13,8 @@ export interface FieldDTO {
     extentSize: number;
     fieldImage1?: File;
     fieldImage2?: File;
+    staffIds?: string[];
+    equipmentIds?: string[];
 }
 
 export interface FieldFilters {
@@ -31,4 +33,9 @@ export interface FieldEquipment {
     id: string;
     name: string;
     type: string;
+}
+
+export interface Coordinates {
+    lat: string;
+    lng: string;
 }

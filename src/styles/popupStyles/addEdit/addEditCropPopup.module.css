@@ -1,11 +1,11 @@
-.addFieldPopup {
+.addCropPopup {
     position: fixed;
-    top: 5%;
-    left: 28%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     z-index: 1000;
     width: 100%;
     max-width: 900px;
-    max-height: 98vh;
     background: var(--white);
     border-radius: 20px;
     overflow: hidden;
@@ -20,12 +20,10 @@
     margin: 0 15px 15px;
 }
 
-.fieldForm {
+.cropForm {
     background: var(--white);
     border-radius: 8px;
     padding: 20px;
-    overflow-y: auto;
-    max-height: calc(95vh - 100px);
 }
 
 .formContainer {
@@ -42,7 +40,8 @@
     margin-bottom: 15px;
 }
 
-.formGroup input {
+.formGroup input,
+.formGroup select {
     width: 100%;
     padding: 13px 16px;
     border: 1px solid var(--primary-green);
@@ -53,16 +52,27 @@
     background: var(--white);
 }
 
-.formGroup input:focus {
+.formGroup select {
+    appearance: none;
+    padding-right: 40px;
+    cursor: pointer;
+}
+
+.formGroup input:focus,
+.formGroup select:focus {
     outline: none;
     border-color: transparent;
     box-shadow: 0 0 0 1.5px var(--text-field-focus);
 }
 
-.imageUploadSection {
-    display: flex;
-    gap: 20px;
-    margin-top: 20px;
+.inputIcon {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    pointer-events: none;
 }
 
 .imageUploadContainer {
@@ -75,7 +85,8 @@
 
 .uploadArea {
     width: 100%;
-    height: 270px;
+    height: 100%;
+    min-height: 276px;
     border: 1px dashed var(--primary-green);
     border-radius: 8px;
     cursor: pointer;
@@ -87,7 +98,6 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 80%;
     transform: translate(-50%, -50%);
     text-align: center;
     z-index: 1;
@@ -128,7 +138,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    display: flex;
+    display: block;
 }
 
 .previewContainer img {
@@ -137,99 +147,15 @@
     object-fit: cover;
 }
 
-.selectionFields {
-    flex: 1;
-}
-
-.selectionSection {
-    margin-bottom: 20px;
-}
-
-.sectionTitle {
-    color: var(--text-gray);
-    font-size: 14px;
-    font-weight: 400;
-    margin: 0 0 10px;
-}
-
-.selectionContainer {
-    background: var(--neutral-bg);
-    border-radius: 8px;
-    height: 200px;
-    overflow-y: auto;
-    padding: 10px;
-}
-
-.selectionRow {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 15px;
-    margin-bottom: 5px;
-    background: var(--white);
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.selectionRow:hover {
-    background-color: var(--light-green);
-}
-
-.selectionRow.selected {
-    background-color: var(--light-green-popup-bg);
-}
-
-.selectionInfo {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.selectionName {
-    color: var(--text-dark);
-    font-size: 14px;
-}
-
-.selectionDetail {
-    color: var(--text-gray);
-    font-size: 12px;
-}
-
 .saveBtnContainer {
     display: flex;
     justify-content: center;
-}
-
-/* Scrollbar Styling */
-.fieldForm::-webkit-scrollbar,
-.selectionContainer::-webkit-scrollbar {
-    width: 6px;
-}
-
-.fieldForm::-webkit-scrollbar-track,
-.selectionContainer::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.fieldForm::-webkit-scrollbar-thumb,
-.selectionContainer::-webkit-scrollbar-thumb {
-    background: var(--text-gray);
-    border-radius: 3px;
-}
-
-.fieldForm::-webkit-scrollbar-thumb {
-    background: var(--primary-green);
-}
-
-.fieldForm::-webkit-scrollbar-thumb:hover,
-.selectionContainer::-webkit-scrollbar-thumb:hover {
-    background: var(--primary-btn-bg);
+    margin-top: 20px;
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
-    .addFieldPopup {
+    .addCropPopup {
         max-width: 95%;
         margin: 0 10px;
     }
@@ -238,23 +164,16 @@
         flex-direction: column;
     }
 
-    .fieldForm {
+    .cropForm {
         padding: 15px;
     }
 
-    .formGroup input {
+    .formGroup input,
+    .formGroup select {
         padding: 11px 14px;
     }
 
-    .imageUpload-section {
-        flex-direction: column;
-    }
-
     .uploadArea {
-        height: 150px;
-    }
-
-    .selectionContainer {
-        height: 150px;
+        min-height: 200px;
     }
 }

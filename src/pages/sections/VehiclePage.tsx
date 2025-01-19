@@ -10,8 +10,8 @@ import {
 } from '../../store/slices/vehicleSlice';
 import {VehicleTable} from '../../components/vehicle/VehicleTable';
 import {VehicleFilters} from '../../components/vehicle/VehicleFilters';
-import {AddEditVehiclePopup} from '../../popups/vehicle/AddEditVehiclePopup';
-import {ViewVehiclePopup} from '../../popups/vehicle/ViewVehiclePopup';
+import {AddEditVehiclePopup} from '../../popups/addEdit/AddEditVehiclePopup.tsx';
+import {ViewVehiclePopup} from '../../popups/view/ViewVehiclePopup.tsx';
 import {DeleteConfirmationPopup} from '../../popups/DeleteConfirmationPopup';
 import {Vehicle, VehicleDTO} from '../../types/vehicle';
 import styles from '../../styles/sectionStyles/vehicleSection.module.css';

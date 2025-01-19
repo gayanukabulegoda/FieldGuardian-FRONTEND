@@ -18,3 +18,13 @@ export const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
 }
+
+export const validateContactNumber = (contactNumber: string) => {
+    const contactNumberRegex = /^\+?[\d\s-]{10,}$/;
+    return contactNumberRegex.test(contactNumber);
+}
+
+export const validateLocation = (location: string) => {
+    const locationRegex = /^Point \[x=(-?\d+\.\d+), y=(-?\d+\.\d+)\]$/;
+    return location.match(locationRegex);
+}

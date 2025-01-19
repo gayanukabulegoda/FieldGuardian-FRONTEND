@@ -12,9 +12,9 @@ import {
 import {deleteUser} from '../../store/slices/userSlice';
 import {StaffTable} from '../../components/staff/StaffTable';
 import {StaffFilters} from '../../components/staff/StaffFilters';
-import {AddEditStaffPopup} from '../../popups/staff/AddEditStaffPopup';
-import {ViewStaffPopup} from '../../popups/staff/ViewStaffPopup';
-import {SystemUsersPopup} from '../../popups/staff/SystemUsersPopup';
+import {AddEditStaffPopup} from '../../popups/addEdit/AddEditStaffPopup.tsx';
+import {ViewStaffPopup} from '../../popups/view/ViewStaffPopup.tsx';
+import {SystemUsersPopup} from '../../popups/SystemUsersPopup.tsx';
 import {DeleteConfirmationPopup} from '../../popups/DeleteConfirmationPopup';
 import {Staff, StaffDTO} from '../../types/staff';
 import {Portal} from "../../components/portal/Portal.ts";

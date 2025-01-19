@@ -1,6 +1,6 @@
-import {Vehicle} from '../../types/vehicle';
-import {Staff} from '../../types/staff';
-import {truncateText, formatText} from '../../utils/textUtils';
+import {Vehicle} from '../../types/vehicle.ts';
+import {Staff} from '../../types/staff.ts';
+import {truncateText, formatText} from '../../utils/textUtils.ts';
 import styles from '../../styles/sectionStyles/vehicleSection.module.css';
 
 interface ViewVehiclePopupProps {

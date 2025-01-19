@@ -1,7 +1,7 @@
-import {MonitoringLogDTO, MonitoringLog} from '../../types/monitoringLog';
-import {Field} from '../../types/field';
-import {Staff} from '../../types/staff';
-import {Crop} from '../../types/crop';
+import {MonitoringLogDTO, MonitoringLog} from '../../types/monitoringLog.ts';
+import {Field} from '../../types/field.ts';
+import {Staff} from '../../types/staff.ts';
+import {Crop} from '../../types/crop.ts';
 
 interface AddEditMonitoringLogPopupProps {
     isOpen: boolean;

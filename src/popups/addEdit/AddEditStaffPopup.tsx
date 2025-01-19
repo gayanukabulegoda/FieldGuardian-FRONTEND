@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import {Staff, StaffDTO, Gender, Designation} from '../../types/staff';
-import {formatDate} from '../../utils/textUtils';
-import {Input} from '../../components/common/Input';
-import {Select} from '../../components/common/Select';
+import {Staff, StaffDTO, Gender, Designation} from '../../types/staff.ts';
+import {formatDate} from '../../utils/textUtils.ts';
+import {Input} from '../../components/common/Input.tsx';
+import {Select} from '../../components/common/Select.tsx';
 import {ActionButton} from '../../components/common/ActionButton.tsx';
-import {PopupHeader} from '../../components/common/PopupHeader';
+import {PopupHeader} from '../../components/common/PopupHeader.tsx';
+import {validateContactNumber, validateEmail} from "../../utils/validation.ts";
 import styles from '../../styles/popupStyles/addEdit/addEditStaffPopup.module.css';
 
 interface AddEditStaffPopupProps {
@@ -59,14 +60,12 @@ export const AddEditStaffPopup: React.FC<AddEditStaffPopupProps> = ({
     };
 
     const validateForm = (data: StaffDTO): boolean => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(data.email)) {
+        if (!validateEmail(data.email)) {
             alert('Please enter a valid email address');
             return false;
         }
 
-        const phoneRegex = /^\+?[\d\s-]{10,}$/;
-        if (!phoneRegex.test(data.contactNo)) {
+        if (!validateContactNumber(data.contactNo)) {
             alert('Please enter a valid contact number (E.g. 0771234567)');
             return false;
         }
@@ -209,7 +208,7 @@ export const AddEditStaffPopup: React.FC<AddEditStaffPopupProps> = ({
                                 ]}
                                 required
                             >
-                                <option value="" disabled>Select Gender</option>
+                                <option value="" disabled selected hidden>Select Gender</option>
                             </Select>
                             <Select
                                 value={formData.designation}
@@ -220,12 +219,12 @@ export const AddEditStaffPopup: React.FC<AddEditStaffPopupProps> = ({
                                 options={designations.map(d => ({value: d, label: d}))}
                                 required
                             >
-                                <option value="" disabled>Select Designation</option>
+                                <option value="" disabled selected hidden>Select Designation</option>
                             </Select>
                         </div>
                         <div className={styles.saveBtnContainer}>
                             <ActionButton type="submit">
-                                {staff ? 'Update' : 'Save'}
+                                {staff ? 'UPDATE' : 'SAVE'}
                             </ActionButton>
                         </div>
                     </form>

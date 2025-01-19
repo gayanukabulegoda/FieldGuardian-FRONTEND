@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
-import {Equipment, EquipmentDTO, EquipmentType, EquipmentStatus} from '../../types/equipment';
-import {Staff} from '../../types/staff';
+import {Equipment, EquipmentDTO, EquipmentType, EquipmentStatus} from '../../types/equipment.ts';
+import {Staff} from '../../types/staff.ts';
 import styles from '../../styles/sectionStyles/equipmentSection.module.css';
 
 interface AddEditEquipmentPopupProps {

@@ -1,7 +1,7 @@
 .systemUsersPopup {
     position: fixed;
     top: 48%;
-    left: 50%;
+    left: 55%;
     transform: translate(-50%, -50%);
     z-index: 1000;
     max-width: 1040px;
@@ -12,7 +12,6 @@
     overflow: hidden;
     box-shadow: 0px 4px 18.3px rgba(0, 0, 0, 0.25);
     display: block;
-    pointer-events: auto;
 }
 
 .popupContainer {
@@ -34,31 +33,6 @@
     font-size: 21px;
     font-weight: 500;
     margin: 0;
-}
-
-.closeBtn {
-    width: 48px;
-    height: 48px;
-    border: none;
-    background: var(--white);
-    border-radius: 16px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.3s ease;
-}
-
-.closeBtn:hover {
-    background-color: var(--hover-red);
-}
-
-.closeBtn:hover img {
-    content: url("/public/icons/close-icon-red.svg");
-}
-
-.closeBtn:focus {
-    outline: none;
 }
 
 .tableContainer {

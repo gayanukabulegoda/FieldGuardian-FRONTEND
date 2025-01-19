@@ -1,8 +1,8 @@
 import React from 'react';
-import {Staff} from '../../types/staff';
-import {formatDate, formatText} from '../../utils/textUtils';
+import {Staff} from '../../types/staff.ts';
+import {formatDate, formatText} from '../../utils/textUtils.ts';
 import {ActionButton} from '../../components/common/ActionButton.tsx';
-import {PopupHeader} from '../../components/common/PopupHeader';
+import {PopupHeader} from '../../components/common/PopupHeader.tsx';
 import styles from '../../styles/popupStyles/view/viewStaffPopup.module.css';
 
 interface ViewStaffPopupProps {
@@ -57,7 +57,7 @@ export const ViewStaffPopup: React.FC<ViewStaffPopupProps> = ({isOpen, onClose, 
                             <DetailRow label="Designation" value={formatText(staff.designation)}/>
                         </div>
                         <div className={styles.buttonContainer}>
-                            <ActionButton onClick={onClose}>Close</ActionButton>
+                            <ActionButton onClick={onClose}>CLOSE</ActionButton>
                         </div>
                     </div>
                 </div>

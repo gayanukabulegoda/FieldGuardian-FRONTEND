@@ -1,11 +1,13 @@
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {useSelector} from 'react-redux';
 import {Eye, EyeOff} from 'lucide-react';
-import {RootState} from '../store/store.ts';
-import {validatePassword} from '../utils/validation.ts';
-import userService from '../services/userService.ts';
-import {PopupHeader} from "../components/common/PopupHeader.tsx";
-import {ActionButton} from "../components/common/ActionButton.tsx";
+import {RootState} from '../store/store';
+import {validatePassword} from '../utils/validation';
+import userService from '../services/userService';
+import {PopupHeader} from '../components/common/PopupHeader';
+import {ActionButton} from '../components/common/ActionButton';
+import {Input} from '../components/common/Input';
+import {ProfileImage} from '../components/profile/ProfileImage';
 import styles from '../styles/popupStyles/updatePasswordPopup.module.css';
 
 interface PasswordModalProps {
@@ -13,39 +15,52 @@ interface PasswordModalProps {
     onClose: () => void;
 }
 
-export const UpdatePasswordPopup = ({isOpen, onClose}: PasswordModalProps) => {
+interface PasswordForm {
+    password: string;
+    confirmPassword: string;
+}
+
+export const UpdatePasswordPopup: React.FC<PasswordModalProps> = ({isOpen, onClose}) => {
     const {currentUser} = useSelector((state: RootState) => state.user);
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<PasswordForm>({
         password: '',
         confirmPassword: ''
     });
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [errors, setErrors] = useState<Partial<Record<keyof PasswordForm, string>>>({});
 
-    if (!isOpen) return null;
+    if (!isOpen || !currentUser) return null;
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const validateForm = (): boolean => {
+        const newErrors: Partial<Record<keyof PasswordForm, string>> = {};
 
         if (!validatePassword(formData.password)) {
-            alert('Password must be at least 8 characters long and contain uppercase, lowercase, numbers, and special characters.');
-            return;
+            newErrors.password = 'Password must be at least 8 characters and contain uppercase, lowercase, numbers, and special characters';
         }
 
         if (formData.password !== formData.confirmPassword) {
-            alert('Passwords do not match');
-            return;
+            newErrors.confirmPassword = 'Passwords do not match';
         }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!validateForm()) return;
 
         try {
             await userService.updateUser({
-                email: currentUser?.email || '',
+                email: currentUser.email,
                 password: formData.password
             });
             alert('Password updated successfully');
             onClose();
-        } catch {
-            alert('Failed to update password. Please try again.');
+        } catch (error) {
+            console.error('Error updating password:', error);
+            alert('Failed to update password');
         }
     };
 
@@ -60,26 +75,21 @@ export const UpdatePasswordPopup = ({isOpen, onClose}: PasswordModalProps) => {
             <div className={styles.popupContent}>
                 <div className={styles.profileCard}>
                     <div className={styles.profileInfo}>
-                        <div className={styles.profileImage}>
-                            <img
-                                src={currentUser?.gender === 'FEMALE'
-                                    ? '/images/default_female_user_profile_pic.jpg'
-                                    : '/images/default_male_user_profile_pic.jpg'}
-                                alt="Profile"
-                                className={styles.roundedCircle}
-                            />
-                        </div>
-                        <h2 className={styles.profileName}>{currentUser?.name}</h2>
-                        <p className={styles.profileEmail}>{currentUser?.email}</p>
+                        <ProfileImage gender={currentUser.gender} size="medium"/>
+                        <h2 className={styles.profileName}>{currentUser.name}</h2>
+                        <p className={styles.profileEmail}>{currentUser.email}</p>
                     </div>
                     <form className={styles.passwordForm} onSubmit={handleSubmit}>
                         <div className={styles.formGroup}>
-                            <input
+                            <Input
                                 type={showPassword ? 'text' : 'password'}
-                                className={styles.formControl}
                                 placeholder="New Password"
                                 value={formData.password}
-                                onChange={(e) => setFormData(prev => ({...prev, password: e.target.value}))}
+                                onChange={(e) => setFormData(prev => ({
+                                    ...prev,
+                                    password: e.target.value
+                                }))}
+                                error={errors.password}
                             />
                             <button
                                 type="button"
@@ -93,12 +103,15 @@ export const UpdatePasswordPopup = ({isOpen, onClose}: PasswordModalProps) => {
                             </button>
                         </div>
                         <div className={styles.formGroup}>
-                            <input
+                            <Input
                                 type={showConfirmPassword ? 'text' : 'password'}
-                                className={styles.formControl}
                                 placeholder="Confirm Password"
                                 value={formData.confirmPassword}
-                                onChange={(e) => setFormData(prev => ({...prev, confirmPassword: e.target.value}))}
+                                onChange={(e) => setFormData(prev => ({
+                                    ...prev,
+                                    confirmPassword: e.target.value
+                                }))}
+                                error={errors.confirmPassword}
                             />
                             <button
                                 type="button"
@@ -111,7 +124,9 @@ export const UpdatePasswordPopup = ({isOpen, onClose}: PasswordModalProps) => {
                                 }
                             </button>
                         </div>
-                        <ActionButton type="submit" variant='success'>UPDATE PASSWORD</ActionButton>
+                        <ActionButton type="submit" variant="success">
+                            UPDATE PASSWORD
+                        </ActionButton>
                     </form>
                 </div>
             </div>
