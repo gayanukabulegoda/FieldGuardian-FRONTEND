@@ -8,13 +8,7 @@ interface HeaderProps {
 }
 
 export const Header = ({onProfileClick}: HeaderProps) => {
-    let user = useSelector((state: RootState) => state.user.currentUser);
-    user = {
-        name: "John Doe",
-        email: "grbulegoda@gmail.com",
-        gender: 'MALE',
-        role: "MANAGER"
-    }
+    const user = useSelector((state: RootState) => state.user.currentUser);
     return (
         <header className={styles.header}>
             <div className={styles.headerWelcome}>

@@ -10,8 +10,8 @@ import {
 } from '../../store/slices/equipmentSlice';
 import {EquipmentTable} from '../../components/equipment/EquipmentTable';
 import {EquipmentFilters} from '../../components/equipment/EquipmentFilters';
-import {AddEditEquipmentPopup} from '../../popups/equipment/AddEditEquipmentPopup';
-import {ViewEquipmentPopup} from '../../popups/equipment/ViewEquipmentPopup';
+import {AddEditEquipmentPopup} from '../../popups/addEdit/AddEditEquipmentPopup.tsx';
+import {ViewEquipmentPopup} from '../../popups/view/ViewEquipmentPopup.tsx';
 import {DeleteConfirmationPopup} from '../../popups/DeleteConfirmationPopup';
 import {Equipment, EquipmentDTO} from '../../types/equipment';
 import styles from '../../styles/sectionStyles/equipmentSection.module.css';

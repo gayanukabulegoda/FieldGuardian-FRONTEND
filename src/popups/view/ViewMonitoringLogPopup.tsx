@@ -1,4 +1,4 @@
-import {MonitoringLog} from '../../types/monitoringLog';
+import {MonitoringLog} from '../../types/monitoringLog.ts';
 import styles from '../../styles/sectionStyles/monitoringLogSection.module.css';
 import {Field} from "../../types/field.ts";
 import {Staff} from "../../types/staff.ts";

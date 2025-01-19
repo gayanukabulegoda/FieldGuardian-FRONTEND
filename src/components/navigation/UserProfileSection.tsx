@@ -4,13 +4,7 @@ import {truncateText} from '../../utils/textUtils';
 import styles from '../../styles/homePage.module.css';
 
 export const UserProfileSection = () => {
-    let user = useSelector((state: RootState) => state.user.currentUser);
-    user = {
-        name: "John Doe",
-        email: "grbulegoda@gmail.com",
-        gender: 'MALE',
-        role: "MANAGER"
-    }
+    const user = useSelector((state: RootState) => state.user.currentUser);
 
     const profileImage = user?.gender === 'FEMALE'
         ? '/images/default_female_user_profile_pic.jpg'

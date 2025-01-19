@@ -1,0 +1,38 @@
+.closeBtn {
+    width: 48px;
+    height: 48px;
+    border: none;
+    background: var(--white);
+    border-radius: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.closeBtn:hover {
+    background-color: var(--hover-red);
+}
+
+.closeBtn:focus {
+    outline: none;
+}
+
+.closeIcon {
+    width: 24px;
+    height: 24px;
+    transition: all 0.3s ease;
+}
+
+.closeBtn:hover .closeIcon {
+    content: url("/public/icons/close-icon-red.svg");
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .closeBtn {
+        width: 40px;
+        height: 40px;
+    }
+}

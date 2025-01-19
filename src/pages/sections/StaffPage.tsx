@@ -9,12 +9,15 @@ import {
     updateStaff,
     deleteStaff
 } from '../../store/slices/staffSlice';
+import {deleteUser} from '../../store/slices/userSlice';
 import {StaffTable} from '../../components/staff/StaffTable';
 import {StaffFilters} from '../../components/staff/StaffFilters';
-import {AddEditStaffPopup} from '../../popups/staff/AddEditStaffPopup';
-import {ViewStaffPopup} from '../../popups/staff/ViewStaffPopup';
+import {AddEditStaffPopup} from '../../popups/addEdit/AddEditStaffPopup.tsx';
+import {ViewStaffPopup} from '../../popups/view/ViewStaffPopup.tsx';
+import {SystemUsersPopup} from '../../popups/SystemUsersPopup.tsx';
 import {DeleteConfirmationPopup} from '../../popups/DeleteConfirmationPopup';
 import {Staff, StaffDTO} from '../../types/staff';
+import {Portal} from "../../components/portal/Portal.ts";
 import styles from '../../styles/sectionStyles/staffSection.module.css';
 
 export const StaffPage = () => {
@@ -22,11 +25,15 @@ export const StaffPage = () => {
     const {staff, designations, loading} = useSelector((state: RootState) => state.staff);
     const userRole = useSelector((state: RootState) => state.user.currentUser?.role);
 
+    // State for managing popups
     const [selectedStaff, setSelectedStaff] = useState<Staff | null>(null);
     const [showAddEdit, setShowAddEdit] = useState(false);
     const [showView, setShowView] = useState(false);
     const [showDelete, setShowDelete] = useState(false);
+    const [showUsers, setShowUsers] = useState(false);
+    const [showUserDelete, setShowUserDelete] = useState(false);
     const [staffToDelete, setStaffToDelete] = useState<string | null>(null);
+    const [userToDelete, setUserToDelete] = useState<string | null>(null);
 
     useEffect(() => {
         // dispatch(fetchAllStaff());
@@ -35,11 +42,6 @@ export const StaffPage = () => {
 
     const handleSearch = (filters: any) => {
         dispatch(filterStaff(filters));
-    };
-
-    const handleUsers = () => {
-        // setSelectedStaff(null);
-        // setShowAddEdit(true);
     };
 
     const handleAdd = () => {
@@ -62,35 +64,66 @@ export const StaffPage = () => {
         setShowDelete(true);
     };
 
+    const handleUserDelete = (email: string) => {
+        setUserToDelete(email);
+        setShowUserDelete(true);
+    };
+
     const handleSave = async (staffData: StaffDTO) => {
-        if (selectedStaff) {
-            await dispatch(updateStaff({id: selectedStaff.id, staffDTO: staffData}));
-        } else {
-            await dispatch(addStaff(staffData));
+        try {
+            if (selectedStaff) {
+                await dispatch(updateStaff({id: selectedStaff.id, staffDTO: staffData})).unwrap();
+            } else {
+                await dispatch(addStaff(staffData)).unwrap();
+            }
+            setShowAddEdit(false);
+            dispatch(fetchAllStaff());
+        } catch (error) {
+            console.error('Error saving staff:', error);
+            alert('Failed to save staff member');
         }
-        setShowAddEdit(false);
-        dispatch(fetchAllStaff());
     };
 
     const confirmDelete = async () => {
         if (staffToDelete) {
-            await dispatch(deleteStaff(staffToDelete));
-            setShowDelete(false);
-            setStaffToDelete(null);
+            try {
+                await dispatch(deleteStaff(staffToDelete)).unwrap();
+                setShowDelete(false);
+                setStaffToDelete(null);
+                dispatch(fetchAllStaff());
+            } catch (error) {
+                console.error('Error deleting staff:', error);
+                alert('Failed to delete staff member');
+            }
         }
     };
+
+    const confirmUserDelete = async () => {
+        if (userToDelete) {
+            try {
+                await dispatch(deleteUser(userToDelete)).unwrap();
+                setShowUserDelete(false);
+                setUserToDelete(null);
+            } catch (error) {
+                console.error('Error deleting user:', error);
+                alert('Failed to delete user');
+            }
+        }
+    };
+
+    const isAnyPopupOpen = showUsers || showDelete || showAddEdit || showView || showUserDelete;
 
     if (loading) {
         return <div>Loading...</div>;
     }
 
     return (
-        <div className={styles.staffContainer}>
+        <div className={`${styles.staffContainer} ${isAnyPopupOpen ? styles.blurBackground : ''}`}>
             <div className={styles.staffHeader}>
                 <h1 className={styles.pageTitle}>Staff Members</h1>
                 {userRole !== 'SCIENTIST' && (
                     <div className={styles.headerButtons}>
-                        <button className={styles.btnPopupAction} onClick={handleUsers}>
+                        <button className={styles.btnPopupAction} onClick={() => setShowUsers(true)}>
                             Users
                         </button>
                         <button className={styles.btnPopupAction} onClick={handleAdd}>
@@ -113,29 +146,57 @@ export const StaffPage = () => {
                 isScientist={userRole === 'SCIENTIST'}
             />
 
-            {showAddEdit && (
-                <AddEditStaffPopup
-                    isOpen={showAddEdit}
-                    onClose={() => setShowAddEdit(false)}
-                    onSave={handleSave}
-                    staff={selectedStaff || undefined}
-                    designations={designations}
-                />
-            )}
+            <Portal>
+                {showAddEdit && (
+                    <AddEditStaffPopup
+                        isOpen={showAddEdit}
+                        onClose={() => setShowAddEdit(false)}
+                        onSave={handleSave}
+                        staff={selectedStaff || undefined}
+                        designations={designations}
+                    />
+                )}
+            </Portal>
 
-            {showView && selectedStaff && (
-                <ViewStaffPopup
-                    isOpen={showView}
-                    onClose={() => setShowView(false)}
-                    staff={selectedStaff}
-                />
-            )}
+            <Portal>
+                {showView && selectedStaff && (
+                    <ViewStaffPopup
+                        isOpen={showView}
+                        onClose={() => setShowView(false)}
+                        staff={selectedStaff}
+                    />
+                )}
+            </Portal>
 
-            <DeleteConfirmationPopup
-                isOpen={showDelete}
-                onClose={() => setShowDelete(false)}
-                onConfirm={confirmDelete}
-            />
+            <Portal>
+                {showUsers && (
+                    <SystemUsersPopup
+                        isOpen={showUsers}
+                        onClose={() => setShowUsers(false)}
+                        onDeleteUser={handleUserDelete}
+                    />
+                )}
+            </Portal>
+
+            <Portal>
+                <DeleteConfirmationPopup
+                    isOpen={showDelete}
+                    onClose={() => setShowDelete(false)}
+                    onConfirm={confirmDelete}
+                    title="Delete Staff Member"
+                    message="Do you really want to delete this staff member? This process cannot be undone."
+                />
+            </Portal>
+
+            <Portal>
+                <DeleteConfirmationPopup
+                    isOpen={showUserDelete}
+                    onClose={() => setShowUserDelete(false)}
+                    onConfirm={confirmUserDelete}
+                    title="Delete User"
+                    message="Do you really want to delete this user? This process cannot be undone."
+                />
+            </Portal>
         </div>
     );
 };

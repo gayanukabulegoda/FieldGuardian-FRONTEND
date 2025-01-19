@@ -1,0 +1,49 @@
+.popupHeader {
+    padding: 14px 14px 14px 26px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.headerContent {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.headerIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.headerIcon img {
+    width: 36px;
+    height: 36px;
+}
+
+.headerTitle {
+    color: var(--primary-green);
+    font-size: 23px;
+    font-weight: 400;
+    margin: 0;
+}
+
+.dangerHeaderTitle {
+    color: var(--primary-red);
+    font-size: 23px;
+    font-weight: 400;
+    margin: 0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .popupHeader {
+        padding: 10px 10px 10px 22px;
+    }
+
+    .headerTitle,
+    .dangerHeaderTitle{
+        font-size: 17px;
+    }
+}

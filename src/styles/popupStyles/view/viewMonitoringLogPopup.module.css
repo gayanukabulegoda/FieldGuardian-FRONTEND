@@ -1,0 +1,244 @@
+.viewMonitoringPopup {
+    position: fixed;
+    top: 2%;
+    left: 15%;
+    z-index: 1000;
+    width: 100%;
+    max-width: 900px;
+    max-height: 98vh;
+    background: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0px 4px 18.3px rgba(0, 0, 0, 0.25);
+    display: block;
+}
+
+.popupContent {
+    padding: 15px;
+    background: var(--light-green-popup-bg);
+    border-radius: 12px;
+    margin: 0 15px 15px;
+}
+
+.monitoringDetails {
+    background: var(--white);
+    border-radius: 8px;
+    padding: 20px;
+    overflow-y: auto;
+    max-height: calc(95vh - 100px);
+}
+
+.detailsContainer {
+    display: flex;
+    gap: 20px;
+}
+
+.detailsSection {
+    flex: 1;
+    padding-top: 12.5px;
+}
+
+.detailsRow {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.detailsRow label {
+    color: var(--text-gray);
+    font-size: 14px;
+    margin-right: 8px;
+    min-width: 100px;
+}
+
+.detailsRow span {
+    color: var(--text-dark);
+    font-size: 14px;
+    flex: 1;
+    border-bottom: 1px solid var(--text-gray);
+    padding-bottom: 4px;
+    white-space: nowrap;
+    cursor: help;
+    position: relative;
+}
+
+.observationRow {
+    display: flex;
+    flex-direction: column;
+}
+
+.observationRow textarea {
+    width: 100%;
+    height: 150px;
+    padding: 13px 16px;
+    border: 1px solid var(--text-gray);
+    border-style: dotted;
+    border-radius: 8px;
+    color: var(--text-dark);
+    font-size: 14px;
+    line-height: 1.5;
+    background: var(--white);
+    resize: none;
+    overflow-y: auto;
+    cursor: default;
+}
+
+.observationRow textarea:focus {
+    outline: none;
+    border-color: var(--text-gray);
+    box-shadow: none;
+}
+
+.detailsRow span:hover::after {
+    content: attr(data-full-text);
+    position: absolute;
+    left: 0;
+    bottom: 100%;
+    background: var(--white);
+    color: var(--text-dark);
+    padding: 5px;
+    border: 1px solid var(--text-gray);
+    border-radius: 4px;
+    white-space: normal;
+    z-index: 10;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 300px;
+    word-wrap: break-word;
+}
+
+.imageSection {
+    margin-top: 20px;
+}
+
+.previewContainer {
+    width: 100%;
+    height: 220px;
+    border: 1px solid var(--text-gray);
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+.previewContainer img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.selectionSection {
+    flex: 1;
+}
+
+.selectionGroup {
+    margin-bottom: 20px;
+}
+
+.sectionTitle {
+    color: var(--text-gray);
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0 0 10px;
+}
+
+.selectionContainer {
+    background: var(--neutral-bg);
+    border-radius: 8px;
+    height: 200px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.selectionRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    margin-bottom: 5px;
+    background: var(--white);
+    border-radius: 6px;
+}
+
+.selectionInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.selectionName {
+    color: var(--text-dark);
+    font-size: 14px;
+}
+
+.selectionDetail {
+    color: var(--text-gray);
+    font-size: 12px;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: center;
+}
+
+/* Scrollbar Styling */
+.viewMonitoringPopup textarea::-webkit-scrollbar,
+.monitoringDetails::-webkit-scrollbar,
+.selectionContainer::-webkit-scrollbar {
+    width: 6px;
+}
+
+.viewMonitoringPopup textarea::-webkit-scrollbar-track,
+.monitoringDetails::-webkit-scrollbar-track,
+.selectionContainer::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.viewMonitoringPopup textarea::-webkit-scrollbar-thumb,
+.monitoringDetails::-webkit-scrollbar-thumb,
+.selectionContainer::-webkit-scrollbar-thumb {
+    background: var(--text-gray);
+    border-radius: 3px;
+}
+
+.monitoringDetails::-webkit-scrollbar-thumb {
+    background: var(--primary-green);
+}
+
+.viewMonitoringPopup textarea::-webkit-scrollbar-thumb:hover,
+.monitoringDetails::-webkit-scrollbar-thumb:hover,
+.selectionContainer::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-btn-bg);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .viewMonitoringPopup {
+        max-width: 95%;
+        margin: 0 10px;
+    }
+
+    .detailsContainer {
+        flex-direction: column;
+    }
+
+    .monitoringDetails {
+        padding: 15px;
+    }
+
+    .previewContainer {
+        height: 200px;
+    }
+
+    .selectionContainer {
+        height: 150px;
+    }
+
+    .detailsRow {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .detailsRow label {
+        margin-bottom: 4px;
+    }
+}

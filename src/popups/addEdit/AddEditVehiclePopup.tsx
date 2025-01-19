@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
-import {Vehicle, VehicleDTO, VehicleCategory, VehicleStatus, FuelType} from '../../types/vehicle';
-import {Staff} from '../../types/staff';
+import {Vehicle, VehicleDTO, VehicleCategory, VehicleStatus, FuelType} from '../../types/vehicle.ts';
+import {Staff} from '../../types/staff.ts';
 import styles from '../../styles/sectionStyles/vehicleSection.module.css';
 
 interface AddEditVehiclePopupProps {

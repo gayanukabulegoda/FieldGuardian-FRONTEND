@@ -1,9 +1,13 @@
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {useSelector} from 'react-redux';
 import {Eye, EyeOff} from 'lucide-react';
-import {RootState} from '../store/store.ts';
-// import { validatePassword } from '../../utils/validation';
-import userService from '../services/userService.ts';
+import {RootState} from '../store/store';
+import {validatePassword} from '../utils/validation';
+import userService from '../services/userService';
+import {PopupHeader} from '../components/common/PopupHeader';
+import {ActionButton} from '../components/common/ActionButton';
+import {Input} from '../components/common/Input';
+import {ProfileImage} from '../components/profile/ProfileImage';
 import styles from '../styles/popupStyles/updatePasswordPopup.module.css';
 
 interface PasswordModalProps {
@@ -11,86 +15,81 @@ interface PasswordModalProps {
     onClose: () => void;
 }
 
-export const UpdatePasswordPopup = ({isOpen, onClose}: PasswordModalProps) => {
+interface PasswordForm {
+    password: string;
+    confirmPassword: string;
+}
+
+export const UpdatePasswordPopup: React.FC<PasswordModalProps> = ({isOpen, onClose}) => {
     const {currentUser} = useSelector((state: RootState) => state.user);
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<PasswordForm>({
         password: '',
         confirmPassword: ''
     });
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [errors, setErrors] = useState<Partial<Record<keyof PasswordForm, string>>>({});
 
-    if (!isOpen) return null;
+    if (!isOpen || !currentUser) return null;
+
+    const validateForm = (): boolean => {
+        const newErrors: Partial<Record<keyof PasswordForm, string>> = {};
+
+        if (!validatePassword(formData.password)) {
+            newErrors.password = 'Password must be at least 8 characters and contain uppercase, lowercase, numbers, and special characters';
+        }
+
+        if (formData.password !== formData.confirmPassword) {
+            newErrors.confirmPassword = 'Passwords do not match';
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
-        // if (!validatePassword(formData.password)) {
-        //     alert('Password must be at least 8 characters long and contain uppercase, lowercase, numbers, and special characters.');
-        //     return;
-        // }
-
-        if (formData.password !== formData.confirmPassword) {
-            alert('Passwords do not match');
-            return;
-        }
+        if (!validateForm()) return;
 
         try {
             await userService.updateUser({
-                email: currentUser?.email || '',
+                email: currentUser.email,
                 password: formData.password
             });
             alert('Password updated successfully');
             onClose();
-        } catch {
-            alert('Failed to update password. Please try again.');
+        } catch (error) {
+            console.error('Error updating password:', error);
+            alert('Failed to update password');
         }
     };
 
     return (
         <div className={styles.updatePasswordPopup}>
-            <div className={styles.popupHeader}>
-                <div className={styles.headerContent}>
-                    <div className={styles.headerIcon}>
-                        <img
-                            src="/public/icons/settings-icon-green.svg"
-                            alt="settings-icon"
-                            className={styles.settingsIcon}
-                        />
-                    </div>
-                    <h1 className={styles.headerTitle}>Update Password</h1>
-                </div>
-                <button className={styles.closeBtn} onClick={onClose}>
-                    <img
-                        src="/public/icons/close-icon-black.svg"
-                        alt="close-icon"
-                        className={styles.closeIcon}
-                    />
-                </button>
-            </div>
+            <PopupHeader
+                title="Update Password"
+                variant="primary"
+                icon="/public/icons/settings-icon-green.svg"
+                onClose={onClose}
+            />
             <div className={styles.popupContent}>
                 <div className={styles.profileCard}>
                     <div className={styles.profileInfo}>
-                        <div className={styles.profileImage}>
-                            <img
-                                src={currentUser?.gender === 'FEMALE'
-                                    ? '/images/default_female_user_profile_pic.jpg'
-                                    : '/images/default_male_user_profile_pic.jpg'}
-                                alt="Profile"
-                                className={styles.roundedCircle}
-                            />
-                        </div>
-                        <h2 className={styles.profileName}>{currentUser?.name}</h2>
-                        <p className={styles.profileEmail}>{currentUser?.email}</p>
+                        <ProfileImage gender={currentUser.gender} size="medium"/>
+                        <h2 className={styles.profileName}>{currentUser.name}</h2>
+                        <p className={styles.profileEmail}>{currentUser.email}</p>
                     </div>
                     <form className={styles.passwordForm} onSubmit={handleSubmit}>
                         <div className={styles.formGroup}>
-                            <input
+                            <Input
                                 type={showPassword ? 'text' : 'password'}
-                                className={styles.formControl}
                                 placeholder="New Password"
                                 value={formData.password}
-                                onChange={(e) => setFormData(prev => ({...prev, password: e.target.value}))}
+                                onChange={(e) => setFormData(prev => ({
+                                    ...prev,
+                                    password: e.target.value
+                                }))}
+                                error={errors.password}
                             />
                             <button
                                 type="button"
@@ -104,12 +103,15 @@ export const UpdatePasswordPopup = ({isOpen, onClose}: PasswordModalProps) => {
                             </button>
                         </div>
                         <div className={styles.formGroup}>
-                            <input
+                            <Input
                                 type={showConfirmPassword ? 'text' : 'password'}
-                                className={styles.formControl}
                                 placeholder="Confirm Password"
                                 value={formData.confirmPassword}
-                                onChange={(e) => setFormData(prev => ({...prev, confirmPassword: e.target.value}))}
+                                onChange={(e) => setFormData(prev => ({
+                                    ...prev,
+                                    confirmPassword: e.target.value
+                                }))}
+                                error={errors.confirmPassword}
                             />
                             <button
                                 type="button"
@@ -122,9 +124,9 @@ export const UpdatePasswordPopup = ({isOpen, onClose}: PasswordModalProps) => {
                                 }
                             </button>
                         </div>
-                        <button type="submit" className={styles.updateBtn}>
+                        <ActionButton type="submit" variant="success">
                             UPDATE PASSWORD
-                        </button>
+                        </ActionButton>
                     </form>
                 </div>
             </div>

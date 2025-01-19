@@ -1,0 +1,231 @@
+.viewFieldPopup {
+    position: fixed;
+    top: 5%;
+    left: 28%;
+    z-index: 1000;
+    width: 100%;
+    max-width: 900px;
+    max-height: 98vh;
+    background: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0px 4px 18.3px rgba(0, 0, 0, 0.25);
+    display: block;
+}
+
+.popupContent {
+    padding: 15px;
+    background: var(--light-green-popup-bg);
+    border-radius: 12px;
+    margin: 0 15px 15px;
+}
+
+.fieldDetails {
+    background: var(--white);
+    border-radius: 8px;
+    padding: 20px;
+    overflow-y: auto;
+    max-height: calc(95vh - 100px);
+}
+
+.detailsContainer {
+    display: flex;
+    gap: 20px;
+}
+
+.detailsSection {
+    flex: 1;
+    padding-top: 12px;
+}
+
+.detailsRow {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.detailsRow label {
+    color: var(--text-gray);
+    font-size: 14px;
+    margin-right: 8px;
+    min-width: 120px;
+}
+
+.detailsRow span {
+    color: var(--text-dark);
+    font-size: 14px;
+    flex: 1;
+    border-bottom: 1px solid var(--text-gray);
+    padding-bottom: 4px;
+    white-space: nowrap;
+    cursor: help;
+    position: relative;
+}
+
+.locationLink {
+    color: var(--primary-green);
+    text-decoration: none;
+    font-size: 14px;
+    border-bottom: 1px solid var(--primary-green);
+    padding-bottom: 4px;
+}
+
+.locationLink:hover {
+    opacity: 0.8;
+}
+
+.detailsRow span:hover::after {
+    content: attr(data-full-text);
+    position: absolute;
+    left: 0;
+    bottom: 100%;
+    background: var(--white);
+    color: var(--text-dark);
+    padding: 5px;
+    border: 1px solid var(--text-gray);
+    border-radius: 4px;
+    white-space: normal;
+    z-index: 10;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 300px;
+    word-wrap: break-word;
+}
+
+.imageSection {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.previewContainer {
+    flex: 1;
+    height: 270px;
+    border: 1px solid var(--text-gray);
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+.previewContainer img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.selectionSection {
+    flex: 1;
+}
+
+.selectionGroup {
+    margin-bottom: 20px;
+}
+
+.sectionTitle {
+    color: var(--text-gray);
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0 0 10px;
+}
+
+.selectionContainer {
+    background: var(--neutral-bg);
+    border-radius: 8px;
+    height: 180px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.selectionRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    margin-bottom: 5px;
+    background: var(--white);
+    border-radius: 6px;
+}
+
+.selectionInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.selectionName {
+    color: var(--text-dark);
+    font-size: 14px;
+}
+
+.selectionDetail {
+    color: var(--text-gray);
+    font-size: 12px;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: center;
+}
+
+/* Scrollbar Styling */
+.fieldDetails::-webkit-scrollbar,
+.selectionContainer::-webkit-scrollbar {
+    width: 6px;
+}
+
+.fieldDetails::-webkit-scrollbar-track,
+.selectionContainer::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.fieldDetails::-webkit-scrollbar-thumb,
+.selectionContainer::-webkit-scrollbar-thumb {
+    background: var(--text-gray);
+    border-radius: 3px;
+}
+
+.fieldDetails::-webkit-scrollbar-thumb {
+    background: var(--primary-green);
+}
+
+.fieldDetails::-webkit-scrollbar-thumb:hover,
+.selectionContainer::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-btn-bg);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .viewFieldPopup {
+        max-width: 95%;
+        margin: 0 10px;
+    }
+
+    .detailsContainer {
+        flex-direction: column;
+    }
+
+    .fieldDetails {
+        padding: 15px;
+    }
+
+    .imageSection {
+        flex-direction: column;
+    }
+
+    .previewcontainer {
+        height: 150px;
+    }
+
+    .selectioncontainer {
+        height: 150px;
+    }
+
+    .detailsrow {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .detailsrow label {
+        margin-bottom: 4px;
+    }
+}

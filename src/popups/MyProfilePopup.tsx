@@ -1,5 +1,7 @@
 import {useSelector} from 'react-redux';
 import {RootState} from '../store/store.ts';
+import {CloseButton} from "../components/common/CloseButton.tsx";
+import {ProfileImage} from "../components/profile/ProfileImage.tsx";
 import styles from '../styles/popupStyles/myProfilePopup.module.css';
 
 interface ProfileModalProps {
@@ -8,29 +10,15 @@ interface ProfileModalProps {
 }
 
 export const MyProfilePopup = ({isOpen, onClose}: ProfileModalProps) => {
-    let {currentUser} = useSelector((state: RootState) => state.user);
-    currentUser = {
-        name: "John Doe",
-        email: "grbulegoda@gmail.com",
-        gender: 'MALE',
-        role: "MANAGER"
-    }
+    const {currentUser} = useSelector((state: RootState) => state.user);
 
-    if (!isOpen) return null;
+    if (!isOpen || !currentUser) return null;
 
     return (
         <div className={styles.profilePopup}>
             <div className={styles.popupContent}>
                 <div className={styles.profileCard}>
-                    <div className={styles.profileImage}>
-                        <img
-                            src={currentUser?.gender === 'FEMALE'
-                                ? '/images/default_female_user_profile_pic.jpg'
-                                : '/images/default_male_user_profile_pic.jpg'}
-                            alt="Profile"
-                            className={styles.roundedCircle}
-                        />
-                    </div>
+                    <ProfileImage gender={currentUser.gender} size="medium"/>
                     <div className={styles.profileInfo}>
                         <h2 className={styles.profileName}>{currentUser?.name}</h2>
                         <p className={styles.profileEmail}>{currentUser?.email}</p>
@@ -40,13 +28,7 @@ export const MyProfilePopup = ({isOpen, onClose}: ProfileModalProps) => {
                         <span className={styles.roleText}>{currentUser?.role}</span>
                         <div className={styles.roleBorder}></div>
                     </div>
-                    <button className={styles.closeBtn} onClick={onClose}>
-                        <img
-                            src="/public/icons/close-icon-black.svg"
-                            alt="close-icon"
-                            className={styles.closeIcon}
-                        />
-                    </button>
+                    <CloseButton onClick={onClose} />
                 </div>
             </div>
         </div>

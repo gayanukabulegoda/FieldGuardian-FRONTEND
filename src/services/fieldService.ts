@@ -1,31 +1,39 @@
 import {api} from './api';
-import {Field} from '../types/field';
-
-interface FieldSaveDTO {
-    [key: string]: any;
-}
+import {Field, FieldDTO} from '../types/field';
 
 const FieldService = {
-    saveField: async (fieldSaveDTO: FieldSaveDTO): Promise<Field> => {
+    saveField: async (fieldDTO: FieldDTO): Promise<Field> => {
         const formData = new FormData();
-        Object.entries(fieldSaveDTO).forEach(([key, value]) => {
-            formData.append(key, value);
+        Object.entries(fieldDTO).forEach(([key, value]) => {
+            if (value instanceof File) {
+                formData.append(key, value);
+            } else {
+                formData.append(key, String(value));
+            }
         });
 
         const response = await api.post<Field>('/field', formData, {
-            headers: {'Content-Type': 'multipart/form-data'}
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
         });
         return response.data;
     },
 
-    updateField: async (id: string, fieldSaveDTO: FieldSaveDTO): Promise<Field> => {
+    updateField: async (id: string, fieldDTO: FieldDTO): Promise<Field> => {
         const formData = new FormData();
-        Object.entries(fieldSaveDTO).forEach(([key, value]) => {
-            formData.append(key, value);
+        Object.entries(fieldDTO).forEach(([key, value]) => {
+            if (value instanceof File) {
+                formData.append(key, value);
+            } else {
+                formData.append(key, String(value));
+            }
         });
 
         const response = await api.patch<Field>(`/field/${id}`, formData, {
-            headers: {'Content-Type': 'multipart/form-data'}
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
         });
         return response.data;
     },

@@ -9,8 +9,8 @@ import {
 } from '../../store/slices/monitoringLogSlice';
 import {MonitoringLogTable} from '../../components/monitoringLog/MonitoringLogTable';
 import {MonitoringLogFilters} from '../../components/monitoringLog/MonitoringLogFilters';
-import {AddEditMonitoringLogPopup} from '../../popups/monitoringLog/AddEditMonitoringLogPopup';
-import {ViewMonitoringLogPopup} from '../../popups/monitoringLog/ViewMonitoringLogPopup';
+import {AddEditMonitoringLogPopup} from '../../popups/addEdit/AddEditMonitoringLogPopup.tsx';
+import {ViewMonitoringLogPopup} from '../../popups/view/ViewMonitoringLogPopup.tsx';
 import {MonitoringLog, MonitoringLogDTO} from '../../types/monitoringLog';
 import styles from '../../styles/sectionStyles/monitoringLogSection.module.css';
 
