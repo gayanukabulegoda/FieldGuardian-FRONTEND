@@ -1,6 +1,6 @@
 .viewEquipmentPopup {
     position: fixed;
-    top: 40%;
+    top: 45%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1000;
@@ -51,7 +51,7 @@
 }
 
 .detailsRow span:hover::after {
-    content: attr(data-full-text);
+    content: attr(title);
     position: absolute;
     left: 0;
     bottom: 100%;

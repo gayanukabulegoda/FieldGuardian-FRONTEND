@@ -25,3 +25,21 @@
 * {
     font-family: "Poppins", sans-serif;
 }
+
+/* React-select custom scrollbar */
+.select__menu-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.select__menu-list::-webkit-scrollbar-track {
+    background: var(--neutral-bg);
+}
+
+.select__menu-list::-webkit-scrollbar-thumb {
+    background: var(--text-gray);
+    border-radius: 4px;
+}
+
+.select__menu-list::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-green);
+}

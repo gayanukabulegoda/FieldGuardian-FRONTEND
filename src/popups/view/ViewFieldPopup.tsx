@@ -51,11 +51,11 @@ export const ViewFieldPopup: React.FC<ViewFieldPopupProps> = ({
                             <div className={styles.detailsSection}>
                                 <div className={styles.detailsRow}>
                                     <label>Name:</label>
-                                    <span>{field.name}</span>
+                                    <span title={field.name}>{field.name}</span>
                                 </div>
                                 <div className={styles.detailsRow}>
                                     <label>Extent size (sq. m):</label>
-                                    <span>{field.extentSize}</span>
+                                    <span title={field.extentSize.toString()}>{field.extentSize}</span>
                                 </div>
                                 <div className={styles.detailsRow}>
                                     <label>Location:</label>

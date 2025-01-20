@@ -1,38 +1,44 @@
-import {useState, useEffect} from 'react';
-import {Equipment, EquipmentDTO, EquipmentType, EquipmentStatus} from '../../types/equipment.ts';
-import {Staff} from '../../types/staff.ts';
-import styles from '../../styles/sectionStyles/equipmentSection.module.css';
+import React, {useState, useEffect} from 'react';
+import {useDispatch} from 'react-redux';
+import {AppDispatch} from '../../store/store';
+import {addEquipment, updateEquipment} from '../../store/slices/equipmentSlice';
+import {Equipment, EquipmentDTO, EquipmentStatus, EquipmentType} from '../../types/equipment';
+import {Staff} from '../../types/staff';
+import {Input} from '../../components/common/Input';
+import {Select} from '../../components/common/Select';
+import {ActionButton} from '../../components/common/ActionButton';
+import {PopupHeader} from '../../components/common/PopupHeader';
+import {EquipmentSelect} from '../../components/equipment/EquipmentSelect';
+import styles from '../../styles/popupStyles/addEdit/addEditEquipmentPopup.module.css';
+import {StaffSelect} from "../../components/staff/StaffSelect.tsx";
 
 interface AddEditEquipmentPopupProps {
     isOpen: boolean;
     onClose: () => void;
-    onSave: (equipmentData: EquipmentDTO) => void;
     equipment?: Equipment;
     staffMembers: Staff[];
 }
 
-const EQUIPMENT_TYPES: EquipmentType[] = [
-    'Tractor', 'Plow', 'Harrow', 'Cultivator', 'Rotavator',
-    'Seed Drill', 'Planter', 'Transplanter', 'Sprinkler System',
-    'Drip Irrigation System', 'Water Pump', 'Sprayer', 'Duster',
-    'Combine Harvester', 'Reaper', 'Thresher', 'Grain Dryer',
-    'Rice Mill', 'Winnower', 'Trailer', 'Farm Truck', 'Power Tiller',
-    'Weeder', 'Mulcher'
+const STATUS_OPTIONS = [
+    {value: 'AVAILABLE', label: 'Available'},
+    {value: 'IN_USE', label: 'In Use'},
+    {value: 'UNDER_MAINTENANCE', label: 'Under Maintenance'}
 ];
 
-export const AddEditEquipmentPopup = ({
-                                          isOpen,
-                                          onClose,
-                                          onSave,
-                                          equipment,
-                                          staffMembers
-                                      }: AddEditEquipmentPopupProps) => {
+export const AddEditEquipmentPopup: React.FC<AddEditEquipmentPopupProps> = ({
+                                                                                isOpen,
+                                                                                onClose,
+                                                                                equipment,
+                                                                                staffMembers
+                                                                            }) => {
+    const dispatch = useDispatch<AppDispatch>();
     const [formData, setFormData] = useState<EquipmentDTO>({
         name: '',
         type: 'Tractor',
         status: undefined,
         assignedStaffId: undefined
     });
+    const [errors, setErrors] = useState<Partial<Record<keyof EquipmentDTO, string>>>({});
 
     useEffect(() => {
         if (equipment) {
@@ -45,87 +51,94 @@ export const AddEditEquipmentPopup = ({
         }
     }, [equipment]);
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        onSave(formData);
+    const validateForm = (): boolean => {
+        const newErrors: Partial<Record<keyof EquipmentDTO, string>> = {};
+
+        if (!formData.name) newErrors.name = 'Name is required';
+        if (!formData.type) newErrors.type = 'Type is required';
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
     };
 
-    const handleContentClick = (e: React.MouseEvent) => {
-        e.stopPropagation();
+    const handleTypeChange = (value: EquipmentType) => {
+        setFormData(prev => ({...prev, type: value}));
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!validateForm()) return;
+
+        try {
+            if (equipment) {
+                await dispatch(updateEquipment({id: equipment.id, equipmentDTO: formData})).unwrap();
+            } else {
+                await dispatch(addEquipment(formData)).unwrap();
+            }
+            onClose();
+        } catch (error) {
+            console.error('Error saving equipment:', error);
+            alert('Failed to save equipment');
+        }
     };
 
     if (!isOpen) return null;
 
     return (
-        <div className={styles.popup} onClick={onClose}>
-            <div className={styles.popupContent} onClick={handleContentClick}>
-                <div className={styles.popupHeader}>
-                    <h2>{equipment ? 'Update Equipment' : 'Add Equipment'}</h2>
-                    <button className={styles.closeBtn} onClick={onClose}>×</button>
-                </div>
-                <form onSubmit={handleSubmit}>
-                    <div className={styles.formGrid}>
-                        <div className={styles.formGroup}>
-                            <input
+        <div className={styles.addEquipmentPopup} onClick={onClose}>
+            <div onClick={e => e.stopPropagation()}>
+                <PopupHeader
+                    title={equipment ? 'Update Equipment' : 'Add Equipment'}
+                    variant="primary"
+                    icon="/public/icons/equipment-popup-icon.svg"
+                    onClose={onClose}
+                />
+                <div className={styles.popupContent}>
+                    <form onSubmit={handleSubmit} className={styles.equipmentForm}>
+                        <div className="form-group">
+                            <Input
                                 type="text"
                                 placeholder="Name"
                                 value={formData.name}
                                 onChange={e => setFormData(prev => ({...prev, name: e.target.value}))}
-                                required
+                                error={errors.name}
                             />
                         </div>
-                        <div className={styles.formGroup}>
-                            <select
+                        <div className="form-group">
+                            <EquipmentSelect
                                 value={formData.type}
-                                onChange={e => setFormData(prev => ({...prev, type: e.target.value as EquipmentType}))}
-                                required
-                            >
-                                <option value="" disabled>Select Type</option>
-                                {EQUIPMENT_TYPES.map(type => (
-                                    <option key={type} value={type}>{type}</option>
-                                ))}
-                            </select>
+                                onChange={handleTypeChange}
+                                error={errors.type}
+                            />
                         </div>
-                        {equipment && (
-                            <div className={styles.formGroup}>
-                                <select
+                        <div className="form-group">
+                            {equipment && (
+                                <Select
                                     value={formData.status}
                                     onChange={e => setFormData(prev => ({
                                         ...prev,
                                         status: e.target.value as EquipmentStatus
                                     }))}
-                                    required
-                                >
-                                    <option value="" disabled>Select Status</option>
-                                    <option value="AVAILABLE">Available</option>
-                                    <option value="IN_USE">In Use</option>
-                                    <option value="UNDER_MAINTENANCE">Under Maintenance</option>
-                                </select>
-                            </div>
-                        )}
-                        <div className={styles.formGroup}>
-                            <select
-                                value={formData.assignedStaffId || ''}
-                                onChange={e => setFormData(prev => ({
-                                    ...prev,
-                                    assignedStaffId: e.target.value || undefined
-                                }))}
-                            >
-                                <option value="">Select Staff (Optional)</option>
-                                {staffMembers.map(staff => (
-                                    <option key={staff.id} value={staff.id}>
-                                        {staff.firstName} {staff.lastName} - {staff.contactNo}
-                                    </option>
-                                ))}
-                            </select>
+                                    options={STATUS_OPTIONS}
+                                    error={errors.status}
+                                />
+                            )}
                         </div>
-                    </div>
-                    <div className={styles.formActions}>
-                        <button type="submit" className={styles.submitBtn}>
-                            {equipment ? 'Update' : 'Save'}
-                        </button>
-                    </div>
-                </form>
+                        <div className="form-group">
+                            <StaffSelect
+                                value={formData.assignedStaffId}
+                                onChange={(value) => setFormData(prev => ({...prev, assignedStaffId: value}))}
+                                staff={staffMembers}
+                                error={errors.assignedStaffId}
+                            />
+                        </div>
+                        <div className={styles.saveBtnContainer}>
+                            <ActionButton type="submit" variant="success">
+                                {equipment ? 'UPDATE' : 'SAVE'}
+                            </ActionButton>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     );

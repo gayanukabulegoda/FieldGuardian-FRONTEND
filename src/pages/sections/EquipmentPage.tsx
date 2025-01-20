@@ -4,8 +4,6 @@ import {AppDispatch, RootState} from '../../store/store';
 import {
     fetchAllEquipment,
     filterEquipment,
-    addEquipment,
-    updateEquipment,
     deleteEquipment
 } from '../../store/slices/equipmentSlice';
 import {EquipmentTable} from '../../components/equipment/EquipmentTable';
@@ -13,7 +11,8 @@ import {EquipmentFilters} from '../../components/equipment/EquipmentFilters';
 import {AddEditEquipmentPopup} from '../../popups/addEdit/AddEditEquipmentPopup.tsx';
 import {ViewEquipmentPopup} from '../../popups/view/ViewEquipmentPopup.tsx';
 import {DeleteConfirmationPopup} from '../../popups/DeleteConfirmationPopup';
-import {Equipment, EquipmentDTO} from '../../types/equipment';
+import {Equipment} from '../../types/equipment';
+import {Portal} from "../../components/portal/Portal.ts";
 import styles from '../../styles/sectionStyles/equipmentSection.module.css';
 
 export const EquipmentPage = () => {
@@ -57,16 +56,6 @@ export const EquipmentPage = () => {
         setShowDelete(true);
     };
 
-    const handleSave = async (equipmentData: EquipmentDTO) => {
-        if (selectedEquipment) {
-            await dispatch(updateEquipment({id: selectedEquipment.id, equipmentDTO: equipmentData}));
-        } else {
-            await dispatch(addEquipment(equipmentData));
-        }
-        setShowAddEdit(false);
-        dispatch(fetchAllEquipment());
-    };
-
     const confirmDelete = async () => {
         if (equipmentToDelete) {
             await dispatch(deleteEquipment(equipmentToDelete));
@@ -75,12 +64,14 @@ export const EquipmentPage = () => {
         }
     };
 
+    const isAnyPopupOpen = showDelete || showAddEdit || showView;
+
     if (loading) {
         return <div>Loading...</div>;
     }
 
     return (
-        <div className={styles.equipmentContainer}>
+        <div className={`${styles.equipmentContainer} ${isAnyPopupOpen ? styles.blurBackground : ''}`}>
             <div className={styles.equipmentHeader}>
                 <h1 className={styles.pageTitle}>Equipment Details</h1>
                 {userRole !== 'SCIENTIST' && (
@@ -102,31 +93,36 @@ export const EquipmentPage = () => {
                 isScientist={userRole === 'SCIENTIST'}
             />
 
-            {showAddEdit && (
-                <AddEditEquipmentPopup
-                    isOpen={showAddEdit}
-                    onClose={() => setShowAddEdit(false)}
-                    onSave={handleSave}
-                    equipment={selectedEquipment || undefined}
-                    staffMembers={staff}
-                />
-            )}
+            <Portal>
+                {showAddEdit && (
+                    <AddEditEquipmentPopup
+                        isOpen={showAddEdit}
+                        onClose={() => setShowAddEdit(false)}
+                        equipment={selectedEquipment || undefined}
+                        staffMembers={staff}
+                    />
+                )}
+            </Portal>
 
-            {showView && selectedEquipment && (
-                <ViewEquipmentPopup
-                    isOpen={showView}
-                    onClose={() => setShowView(false)}
-                    equipment={selectedEquipment}
-                    staffMembers={staff}
-                    fields={fields}
-                />
-            )}
+            <Portal>
+                {showView && selectedEquipment && (
+                    <ViewEquipmentPopup
+                        isOpen={showView}
+                        onClose={() => setShowView(false)}
+                        equipment={selectedEquipment}
+                        staffMembers={staff}
+                        fields={fields}
+                    />
+                )}
+            </Portal>
 
-            <DeleteConfirmationPopup
-                isOpen={showDelete}
-                onClose={() => setShowDelete(false)}
-                onConfirm={confirmDelete}
-            />
+            <Portal>
+                <DeleteConfirmationPopup
+                    isOpen={showDelete}
+                    onClose={() => setShowDelete(false)}
+                    onConfirm={confirmDelete}
+                />
+            </Portal>
         </div>
     );
 };
