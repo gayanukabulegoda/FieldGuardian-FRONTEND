@@ -6,22 +6,22 @@ interface VehicleFiltersProps {
     onSearch: (filters: FilterType) => void;
 }
 
-const VEHICLE_CATEGORIES: { value: VehicleCategory; text: string }[] = [
-    {value: 'TRACTOR', text: 'Tractor'},
-    {value: 'COMBINE_HARVESTER', text: 'Combine Harvester'},
-    {value: 'FORAGE_HARVESTER', text: 'Forage Harvester'},
-    {value: 'SUGARCANE_HARVESTER', text: 'Sugarcane Harvester'},
-    {value: 'TRUCK', text: 'Truck'},
-    {value: 'VAN', text: 'Van'},
-    {value: 'LORRY', text: 'Lorry'},
-    {value: 'TRAILER', text: 'Trailer'},
-    {value: 'SEED_DRILL', text: 'Seed Drill'},
-    {value: 'PLANTER', text: 'Planter'},
-    {value: 'TRANSPLANTER', text: 'Transplanter'},
-    {value: 'WATER_TANKER', text: 'Water Tanker'},
-    {value: 'IRRIGATION_TRUCK', text: 'Irrigation Truck'},
-    {value: 'SPRAYER', text: 'Sprayer'},
-    {value: 'DUSTER', text: 'Duster'}
+const VEHICLE_CATEGORIES: { value: VehicleCategory; label: string }[] = [
+    {value: 'TRACTOR', label: 'Tractor'},
+    {value: 'COMBINE_HARVESTER', label: 'Combine Harvester'},
+    {value: 'FORAGE_HARVESTER', label: 'Forage Harvester'},
+    {value: 'SUGARCANE_HARVESTER', label: 'Sugarcane Harvester'},
+    {value: 'TRUCK', label: 'Truck'},
+    {value: 'VAN', label: 'Van'},
+    {value: 'LORRY', label: 'Lorry'},
+    {value: 'TRAILER', label: 'Trailer'},
+    {value: 'SEED_DRILL', label: 'Seed Drill'},
+    {value: 'PLANTER', label: 'Planter'},
+    {value: 'TRANSPLANTER', label: 'Transplanter'},
+    {value: 'WATER_TANKER', label: 'Water Tanker'},
+    {value: 'IRRIGATION_TRUCK', label: 'Irrigation Truck'},
+    {value: 'SPRAYER', label: 'Sprayer'},
+    {value: 'DUSTER', label: 'Duster'}
 ];
 
 export const VehicleFilters = ({onSearch}: VehicleFiltersProps) => {

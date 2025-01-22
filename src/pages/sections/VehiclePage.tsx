@@ -14,6 +14,7 @@ import {AddEditVehiclePopup} from '../../popups/addEdit/AddEditVehiclePopup.tsx'
 import {ViewVehiclePopup} from '../../popups/view/ViewVehiclePopup.tsx';
 import {DeleteConfirmationPopup} from '../../popups/DeleteConfirmationPopup';
 import {Vehicle, VehicleDTO} from '../../types/vehicle';
+import {Portal} from "../../components/portal/Portal.ts";
 import styles from '../../styles/sectionStyles/vehicleSection.module.css';
 
 export const VehiclePage = () => {
@@ -74,12 +75,14 @@ export const VehiclePage = () => {
         }
     };
 
+    const isAnyPopupOpen = showDelete || showAddEdit || showView;
+
     if (loading) {
         return <div>Loading...</div>;
     }
 
     return (
-        <div className={styles.vehicleContainer}>
+        <div className={`${styles.vehicleContainer} ${isAnyPopupOpen ? styles.blurBackground : ''}`}>
             <div className={styles.vehicleHeader}>
                 <h1 className={styles.pageTitle}>Vehicle Details</h1>
                 {userRole !== 'SCIENTIST' && (
@@ -101,30 +104,36 @@ export const VehiclePage = () => {
                 isScientist={userRole === 'SCIENTIST'}
             />
 
-            {showAddEdit && (
-                <AddEditVehiclePopup
-                    isOpen={showAddEdit}
-                    onClose={() => setShowAddEdit(false)}
-                    onSave={handleSave}
-                    vehicle={selectedVehicle || undefined}
-                    staffMembers={staff}
-                />
-            )}
+            <Portal>
+                {showAddEdit && (
+                    <AddEditVehiclePopup
+                        isOpen={showAddEdit}
+                        onClose={() => setShowAddEdit(false)}
+                        onSave={handleSave}
+                        vehicle={selectedVehicle || undefined}
+                        staffMembers={staff}
+                    />
+                )}
+            </Portal>
 
-            {showView && selectedVehicle && (
-                <ViewVehiclePopup
-                    isOpen={showView}
-                    onClose={() => setShowView(false)}
-                    vehicle={selectedVehicle}
-                    staffMembers={staff}
-                />
-            )}
+            <Portal>
+                {showView && selectedVehicle && (
+                    <ViewVehiclePopup
+                        isOpen={showView}
+                        onClose={() => setShowView(false)}
+                        vehicle={selectedVehicle}
+                        staffMembers={staff}
+                    />
+                )}
+            </Portal>
 
-            <DeleteConfirmationPopup
-                isOpen={showDelete}
-                onClose={() => setShowDelete(false)}
-                onConfirm={confirmDelete}
-            />
+            <Portal>
+                <DeleteConfirmationPopup
+                    isOpen={showDelete}
+                    onClose={() => setShowDelete(false)}
+                    onConfirm={confirmDelete}
+                />
+            </Portal>
         </div>
     );
 };

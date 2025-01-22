@@ -20,6 +20,12 @@
     flex-direction: column;
 }
 
+.blurBackground {
+    filter: blur(5px);
+    transition: filter 0.3s ease;
+    pointer-events: none;
+}
+
 /* --- Vehicle Header --- */
 .vehicleHeader {
     display: flex;

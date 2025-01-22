@@ -1,7 +1,7 @@
 .addMonitoringPopup {
     position: fixed;
-    top: 2%;
-    left: 15%;
+    top: 4%;
+    left: 25%;
     z-index: 1000;
     width: 100%;
     max-width: 900px;
@@ -127,7 +127,7 @@
     transition: opacity 0.3s ease;
 }
 
-.uploadArea:hover .upload-content {
+.uploadArea:hover .uploadContent {
     opacity: 1;
 }
 
@@ -156,7 +156,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    display: none;
+    display: block;
 }
 
 .previewContainer img {

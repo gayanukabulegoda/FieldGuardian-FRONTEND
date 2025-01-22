@@ -1,7 +1,10 @@
-import {Vehicle} from '../../types/vehicle.ts';
-import {Staff} from '../../types/staff.ts';
-import {truncateText, formatText} from '../../utils/textUtils.ts';
-import styles from '../../styles/sectionStyles/vehicleSection.module.css';
+import React from 'react';
+import {Vehicle} from '../../types/vehicle';
+import {Staff} from '../../types/staff';
+import {ActionButton} from '../../components/common/ActionButton.tsx';
+import {PopupHeader} from '../../components/common/PopupHeader.tsx';
+import {truncateText, formatText} from '../../utils/textUtils';
+import styles from '../../styles/popupStyles/view/viewVehiclePopup.module.css';
 
 interface ViewVehiclePopupProps {
     isOpen: boolean;
@@ -10,12 +13,12 @@ interface ViewVehiclePopupProps {
     staffMembers: Staff[];
 }
 
-export const ViewVehiclePopup = ({
-                                     isOpen,
-                                     onClose,
-                                     vehicle,
-                                     staffMembers
-                                 }: ViewVehiclePopupProps) => {
+export const ViewVehiclePopup: React.FC<ViewVehiclePopupProps> = ({
+                                                                      isOpen,
+                                                                      onClose,
+                                                                      vehicle,
+                                                                      staffMembers
+                                                                  }) => {
     if (!isOpen) return null;
 
     const getStaffInfo = (staffId?: string) => {
@@ -24,50 +27,64 @@ export const ViewVehiclePopup = ({
         return staff ? `${staff.firstName} ${staff.lastName} - ${staff.contactNo}` : 'N/A';
     };
 
-    const handleContentClick = (e: React.MouseEvent) => {
-        e.stopPropagation();
-    };
-
     return (
-        <div className={styles.popup} onClick={onClose}>
-            <div className={styles.popupContent} onClick={handleContentClick}>
-                <div className={styles.popupHeader}>
-                    <h2>View Vehicle</h2>
-                    <button className={styles.closeBtn} onClick={onClose}>×</button>
-                </div>
-                <div className={styles.vehicleDetails}>
-                    <div className={styles.detailRow}>
-                        <label>License plate no:</label>
-                        <span>{truncateText(vehicle.licensePlateNumber, 12)}</span>
+        <div className={styles.viewVehiclePopup} onClick={onClose}>
+            <div onClick={e => e.stopPropagation()}>
+                <PopupHeader
+                    title="View Vehicle"
+                    variant="primary"
+                    icon="/public/icons/vehicle-popup-icon.svg"
+                    onClose={onClose}
+                />
+                <div className={styles.popupContent}>
+                    <div className={styles.vehicleDetails}>
+                        <div className={styles.detailsContainer}>
+                            <div className={styles.detailsSection}>
+                                <div className={styles.detailsRow}>
+                                    <label>License plate no:</label>
+                                    <span title={vehicle.licensePlateNumber}>
+                                        {truncateText(vehicle.licensePlateNumber, 12)}
+                                    </span>
+                                </div>
+                                <div className={styles.detailsRow}>
+                                    <label>Category:</label>
+                                    <span title={formatText(vehicle.category)}>
+                                        {truncateText(formatText(vehicle.category), 18)}
+                                    </span>
+                                </div>
+                                <div className={styles.detailsRow}>
+                                    <label>Fuel type:</label>
+                                    <span title={formatText(vehicle.fuelType)}>
+                                        {truncateText(formatText(vehicle.fuelType), 20)}
+                                    </span>
+                                </div>
+                                <div className={styles.detailsRow}>
+                                    <label>Status:</label>
+                                    <span title={formatText(vehicle.status)}>
+                                        {formatText(vehicle.status)}
+                                    </span>
+                                </div>
+                                <div className={styles.detailsRow}>
+                                    <label>Staff Member:</label>
+                                    <span title={getStaffInfo(vehicle.driverId)}>
+                                        {truncateText(getStaffInfo(vehicle.driverId), 30)}
+                                    </span>
+                                </div>
+                            </div>
+                            <div className={styles.remarkField}>
+                                <div className={`${styles.detailsRow} ${styles.remarkRow}`}>
+                                    <label>Remark:</label>
+                                    <textarea
+                                        value={vehicle.remark || 'No remark recorded...'}
+                                        readOnly
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div className={styles.buttonContainer}>
+                            <ActionButton onClick={onClose}>CLOSE</ActionButton>
+                        </div>
                     </div>
-                    <div className={styles.detailRow}>
-                        <label>Category:</label>
-                        <span>{vehicle.category}</span>
-                    </div>
-                    <div className={styles.detailRow}>
-                        <label>Fuel type:</label>
-                        <span>{vehicle.fuelType}</span>
-                    </div>
-                    <div className={styles.detailRow}>
-                        <label>Staff Member:</label>
-                        <span>{truncateText(getStaffInfo(vehicle.driverId), 30)}</span>
-                    </div>
-                    <div className={styles.detailRow}>
-                        <label>Status:</label>
-                        <span>{formatText(vehicle.status)}</span>
-                    </div>
-                    <div className={styles.remarkField}>
-                        <label>Remark:</label>
-                        <textarea
-                            value={vehicle.remark || 'No remark recorded...'}
-                            readOnly
-                        />
-                    </div>
-                </div>
-                <div className={styles.popupActions}>
-                    <button onClick={onClose} className={styles.closeButton}>
-                        Close
-                    </button>
                 </div>
             </div>
         </div>

@@ -4,14 +4,13 @@ import {AppDispatch, RootState} from '../../store/store';
 import {
     fetchAllMonitoringLogs,
     filterMonitoringLogs,
-    addMonitoringLog,
-    updateMonitoringLog
 } from '../../store/slices/monitoringLogSlice';
 import {MonitoringLogTable} from '../../components/monitoringLog/MonitoringLogTable';
 import {MonitoringLogFilters} from '../../components/monitoringLog/MonitoringLogFilters';
 import {AddEditMonitoringLogPopup} from '../../popups/addEdit/AddEditMonitoringLogPopup.tsx';
 import {ViewMonitoringLogPopup} from '../../popups/view/ViewMonitoringLogPopup.tsx';
-import {MonitoringLog, MonitoringLogDTO} from '../../types/monitoringLog';
+import {MonitoringLog} from '../../types/monitoringLog';
+import {Portal} from "../../components/portal/Portal.ts";
 import styles from '../../styles/sectionStyles/monitoringLogSection.module.css';
 
 export const MonitoringPage = () => {
@@ -49,25 +48,14 @@ export const MonitoringPage = () => {
         setShowView(true);
     };
 
-    const handleSave = async (monitoringLogData: MonitoringLogDTO) => {
-        if (selectedLog) {
-            await dispatch(updateMonitoringLog({
-                id: selectedLog.code,
-                monitoringLogDTO: monitoringLogData
-            }));
-        } else {
-            await dispatch(addMonitoringLog(monitoringLogData));
-        }
-        setShowAddEdit(false);
-        dispatch(fetchAllMonitoringLogs());
-    };
+    const isAnyPopupOpen = showAddEdit || showView;
 
     if (loading) {
         return <div>Loading...</div>;
     }
 
     return (
-        <div className={styles.monitoringContainer}>
+        <div className={`${styles.monitoringContainer} ${isAnyPopupOpen ? styles.blurBackground : ''}`}>
             <div className={styles.monitoringHeader}>
                 <h1 className={styles.pageTitle}>Monitoring Logs</h1>
                 {userRole !== 'ADMINISTRATIVE' && (
@@ -88,28 +76,31 @@ export const MonitoringPage = () => {
                 isAdministrative={userRole === 'ADMINISTRATIVE'}
             />
 
-            {showAddEdit && (
-                <AddEditMonitoringLogPopup
-                    isOpen={showAddEdit}
-                    onClose={() => setShowAddEdit(false)}
-                    onSave={handleSave}
-                    log={selectedLog || undefined}
-                    fields={fields}
-                    staff={staff}
-                    crops={crops}
-                />
-            )}
+            <Portal>
+                {showAddEdit && (
+                    <AddEditMonitoringLogPopup
+                        isOpen={showAddEdit}
+                        onClose={() => setShowAddEdit(false)}
+                        log={selectedLog || undefined}
+                        fields={fields}
+                        staff={staff}
+                        crops={crops}
+                    />
+                )}
+            </Portal>
 
-            {showView && selectedLog && (
-                <ViewMonitoringLogPopup
-                    isOpen={showView}
-                    onClose={() => setShowView(false)}
-                    log={selectedLog}
-                    fields={fields}
-                    staff={staff}
-                    crops={crops}
-                />
-            )}
+            <Portal>
+                {showView && selectedLog && (
+                    <ViewMonitoringLogPopup
+                        isOpen={showView}
+                        onClose={() => setShowView(false)}
+                        log={selectedLog}
+                        fields={fields}
+                        staff={staff}
+                        crops={crops}
+                    />
+                )}
+            </Portal>
         </div>
     );
 };

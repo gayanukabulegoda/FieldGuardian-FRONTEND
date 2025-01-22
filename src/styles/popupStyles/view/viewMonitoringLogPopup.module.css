@@ -1,7 +1,7 @@
 .viewMonitoringPopup {
     position: fixed;
-    top: 2%;
-    left: 15%;
+    top: 4%;
+    left: 25%;
     z-index: 1000;
     width: 100%;
     max-width: 900px;
@@ -90,7 +90,7 @@
 }
 
 .detailsRow span:hover::after {
-    content: attr(data-full-text);
+    content: attr(title);
     position: absolute;
     left: 0;
     bottom: 100%;

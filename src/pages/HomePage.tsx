@@ -8,12 +8,14 @@ import {UpdatePasswordPopup} from '../popups/UpdatePasswordPopup';
 import {validateToken} from '../store/slices/authSlice';
 import {setCurrentUser} from '../store/slices/userSlice';
 import userService from '../services/userService';
+import {AppDispatch} from "../store/store.ts";
+import {Portal} from "../components/portal/Portal.ts";
 import styles from '../styles/homePage.module.css';
 
 export const HomePage = () => {
     const [showProfileModal, setShowProfileModal] = useState(false);
     const [showPasswordModal, setShowPasswordModal] = useState(false);
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -66,22 +68,27 @@ export const HomePage = () => {
                 </main>
             </div>
 
-            {showProfileModal && (
-                <div className={styles.popupContainer}>
-                    <MyProfilePopup
-                        isOpen={showProfileModal}
-                        onClose={() => setShowProfileModal(false)}
-                    />
-                </div>
-            )}
-            {showPasswordModal && (
-                <div className={styles.popupContainer}>
-                    <UpdatePasswordPopup
-                        isOpen={showPasswordModal}
-                        onClose={() => setShowPasswordModal(false)}
-                    />
-                </div>
-            )}
+            <Portal>
+                {showProfileModal && (
+                    <div className={styles.popupContainer}>
+                        <MyProfilePopup
+                            isOpen={showProfileModal}
+                            onClose={() => setShowProfileModal(false)}
+                        />
+                    </div>
+                )}
+            </Portal>
+
+            <Portal>
+                {showPasswordModal && (
+                    <div className={styles.popupContainer}>
+                        <UpdatePasswordPopup
+                            isOpen={showPasswordModal}
+                            onClose={() => setShowPasswordModal(false)}
+                        />
+                    </div>
+                )}
+            </Portal>
         </div>
     );
 };
