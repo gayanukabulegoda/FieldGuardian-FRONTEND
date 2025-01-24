@@ -1,19 +1,20 @@
 import React from 'react';
 import Select, {SingleValue, StylesConfig} from 'react-select';
-import {Staff} from '../../types/staff';
 import styles from '../../styles/popupStyles/addEdit/addEditEquipmentPopup.module.css';
 
-interface StaffSelectProps {
-    value?: string;
-    onChange: (value: string) => void;
-    staff: Staff[];
-    error?: string;
-    isDisabled?: boolean;
-}
-
-interface OptionType {
+interface SelectOption {
     value: string;
     label: string;
+}
+
+interface CustomSelectProps {
+    value?: string;
+    onChange: (value: string) => void;
+    options: SelectOption[];
+    placeholder: string;
+    error?: string;
+    isDisabled?: boolean;
+    isClearable?: boolean;
 }
 
 const customStyles: StylesConfig = {
@@ -56,8 +57,7 @@ const customStyles: StylesConfig = {
             backgroundColor: 'var(--light-green)'
         }
     }),
-    indicatorSeparator: (provided) => ({
-        ...provided,
+    indicatorSeparator: () => ({
         display: 'none'
     }),
     valueContainer: (provided) => ({
@@ -81,30 +81,27 @@ const customStyles: StylesConfig = {
     }),
 };
 
-export const StaffSelect: React.FC<StaffSelectProps> = ({
-                                                            value,
-                                                            onChange,
-                                                            staff,
-                                                            error,
-                                                            isDisabled = false
-                                                        }) => {
-    const options = staff.map(member => ({
-        value: member.id,
-        label: `${member.firstName} ${member.lastName} - ${member.contactNo}`
-    }));
-
+export const CustomSelect: React.FC<CustomSelectProps> = ({
+                                                              value,
+                                                              onChange,
+                                                              options,
+                                                              placeholder,
+                                                              error,
+                                                              isDisabled = false,
+                                                              isClearable = false
+                                                          }) => {
     return (
         <div className={styles.formGroup}>
             <Select
                 value={options.find(option => option.value === value)}
-                onChange={(option: SingleValue<OptionType>) => onChange(option?.value || '')}
+                onChange={(option: SingleValue<SelectOption>) => onChange(option?.value || '')}
                 options={options}
                 isDisabled={isDisabled}
-                placeholder="Select Staff Member"
+                placeholder={placeholder}
                 className={`${styles.select} ${error ? styles.error : ''}`}
                 classNamePrefix="select"
                 styles={customStyles}
-                isClearable
+                isClearable={isClearable}
             />
             {error && <span className={styles.errorMessage}>{error}</span>}
         </div>

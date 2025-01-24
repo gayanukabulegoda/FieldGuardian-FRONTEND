@@ -1,7 +1,7 @@
 import {useSelector} from 'react-redux';
 import {RootState} from '../store/store.ts';
 import {CloseButton} from "../components/common/CloseButton.tsx";
-import {ProfileImage} from "../components/profile/ProfileImage.tsx";
+import {ProfileImage} from "../components/custom/ProfileImage.tsx";
 import styles from '../styles/popupStyles/myProfilePopup.module.css';
 
 interface ProfileModalProps {

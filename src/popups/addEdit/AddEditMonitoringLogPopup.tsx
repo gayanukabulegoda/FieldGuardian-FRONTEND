@@ -9,8 +9,8 @@ import {Crop} from '../../types/crop';
 import {Select} from '../../components/common/Select';
 import {ActionButton} from '../../components/common/ActionButton';
 import {PopupHeader} from '../../components/common/PopupHeader';
-import {MonitoringImageUpload} from '../../components/monitoringLog/MonitoringLogImageUpload.tsx';
-import {SelectionList} from '../../components/field/SelectionList';
+import {SelectionList} from '../../components/custom/SelectionList.tsx';
+import {ImageUpload} from "../../components/common/ImageUpload.tsx";
 import styles from '../../styles/popupStyles/addEdit/addEditMonitoringLogPopup.module.css';
 
 interface AddEditMonitoringLogPopupProps {
@@ -167,10 +167,12 @@ export const AddEditMonitoringLogPopup: React.FC<AddEditMonitoringLogPopupProps>
                                         <span className={styles.errorMessage}>{errors.details}</span>
                                     )}
                                 </div>
-                                <MonitoringImageUpload
+                                <ImageUpload
+                                    id="monitoringImage"
                                     onChange={handleImageChange}
                                     preview={previewImage}
                                     error={errors.observedImage}
+                                    variant="log"
                                 />
                             </div>
                             <div className={styles.selectionFields}>

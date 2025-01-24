@@ -2,7 +2,7 @@ import React from 'react';
 import {Field, FieldStaff, FieldEquipment} from '../../types/field.ts';
 import {ActionButton} from "../../components/common/ActionButton.tsx";
 import {PopupHeader} from '../../components/common/PopupHeader.tsx';
-import {SelectionList} from '../../components/field/SelectionList.tsx';
+import {SelectionList} from '../../components/custom/SelectionList.tsx';
 import {validateLocation} from "../../utils/validation.ts";
 import styles from '../../styles/popupStyles/view/viewFieldPopup.module.css';
 

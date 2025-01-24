@@ -1,6 +1,6 @@
 import {useSelector} from 'react-redux';
-import {RootState} from '../../store/store';
-import {truncateText} from '../../utils/textUtils';
+import {RootState} from '../../store/store.ts';
+import {truncateText} from '../../utils/textUtils.ts';
 import styles from '../../styles/homePage.module.css';
 
 export const UserProfileSection = () => {

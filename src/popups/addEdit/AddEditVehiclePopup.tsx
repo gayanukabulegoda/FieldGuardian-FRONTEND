@@ -4,8 +4,8 @@ import {Staff} from '../../types/staff';
 import {Input} from '../../components/common/Input.tsx';
 import {ActionButton} from '../../components/common/ActionButton.tsx';
 import {PopupHeader} from '../../components/common/PopupHeader.tsx';
-import {VehicleSelect} from '../../components/vehicle/VehicleSelect.tsx';
-import {StaffSelect} from '../../components/staff/StaffSelect.tsx';
+import {VehicleSelect} from '../../components/custom/select/VehicleSelect.tsx';
+import {StaffSelect} from '../../components/custom/select/StaffSelect.tsx';
 import styles from '../../styles/popupStyles/addEdit/addEditVehiclePopup.module.css';
 
 interface AddEditVehiclePopupProps {

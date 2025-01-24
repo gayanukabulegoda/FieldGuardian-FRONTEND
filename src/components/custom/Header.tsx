@@ -1,6 +1,6 @@
 import {useSelector} from 'react-redux';
-import {RootState} from '../../store/store';
-import {formatDate} from '../../utils/dateUtils';
+import {RootState} from '../../store/store.ts';
+import {formatDate} from '../../utils/dateUtils.ts';
 import styles from '../../styles/homePage.module.css';
 
 interface HeaderProps {

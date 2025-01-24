@@ -8,16 +8,16 @@ import {
     updateVehicle,
     deleteVehicle
 } from '../../store/slices/vehicleSlice';
-import {VehicleTable} from '../../components/vehicle/VehicleTable';
-import {VehicleFilters} from '../../components/vehicle/VehicleFilters';
 import {AddEditVehiclePopup} from '../../popups/addEdit/AddEditVehiclePopup.tsx';
 import {ViewVehiclePopup} from '../../popups/view/ViewVehiclePopup.tsx';
 import {DeleteConfirmationPopup} from '../../popups/DeleteConfirmationPopup';
 import {Vehicle, VehicleDTO} from '../../types/vehicle';
 import {Portal} from "../../components/portal/Portal.ts";
+import {DataFilter, FilterField} from "../../components/common/DataFilter.tsx";
+import {DataTable} from "../../components/common/DataTable.tsx";
 import styles from '../../styles/sectionStyles/vehicleSection.module.css';
 
-export const VehiclePage = () => {
+export const VehicleSection = () => {
     const dispatch = useDispatch<AppDispatch>();
     const {vehicles, loading} = useSelector((state: RootState) => state.vehicle);
     const {staff} = useSelector((state: RootState) => state.staff);
@@ -32,6 +32,39 @@ export const VehiclePage = () => {
     useEffect(() => {
         // dispatch(fetchAllVehicles());
     }, [dispatch]);
+
+    const columns = [
+        {key: 'licensePlateNumber', header: 'License Plate No', width: 2},
+        {key: 'category', header: 'Category', width: 1.8},
+        {key: 'status', header: 'Status', width: 1.4},
+        {key: 'fuelType', header: 'Fuel Type', width: 2}
+    ];
+
+    const filterFields: FilterField[] = [
+        {type: 'text', key: 'licensePlateNumber', placeholder: 'Search by license plate no'},
+        {
+            type: 'select',
+            key: 'category',
+            placeholder: 'Category',
+            options: [
+                {value: 'TRACTOR', label: 'Tractor'},
+                {value: 'COMBINE_HARVESTER', label: 'Combine Harvester'},
+                {value: 'TRUCK', label: 'Truck'},
+                {value: 'VAN', label: 'Van'},
+                {value: 'LORRY', label: 'Lorry'}
+            ]
+        },
+        {
+            type: 'select',
+            key: 'status',
+            placeholder: 'Status',
+            options: [
+                {value: 'AVAILABLE', label: 'Available'},
+                {value: 'IN_USE', label: 'In Use'},
+                {value: 'OUT_OF_SERVICE', label: 'Out of Service'}
+            ]
+        }
+    ];
 
     const handleSearch = (filters: any) => {
         dispatch(filterVehicles(filters));
@@ -75,6 +108,29 @@ export const VehiclePage = () => {
         }
     };
 
+    const actions = [
+        {
+            icon: '/icons/delete-icon-silver.svg',
+            activeIcon: '/icons/delete-icon-red.svg',
+            title: 'Delete',
+            onClick: (vehicle: Vehicle) => handleDelete(vehicle.code),
+            show: () => !userRole?.includes('SCIENTIST')
+        },
+        {
+            icon: '/icons/edit-icon-silver.svg',
+            activeIcon: '/icons/edit-icon-blue.svg',
+            title: 'Edit',
+            onClick: handleEdit,
+            show: () => !userRole?.includes('SCIENTIST')
+        },
+        {
+            icon: '/icons/view-icon-silver.svg',
+            activeIcon: '/icons/view-icon-green.svg',
+            title: 'View',
+            onClick: handleView
+        }
+    ];
+
     const isAnyPopupOpen = showDelete || showAddEdit || showView;
 
     if (loading) {
@@ -94,14 +150,17 @@ export const VehiclePage = () => {
                 )}
             </div>
 
-            <VehicleFilters onSearch={handleSearch}/>
+            <DataFilter
+                fields={filterFields}
+                onSearch={handleSearch}
+                variant="vehicle"
+            />
 
-            <VehicleTable
-                vehicles={vehicles}
-                onDelete={handleDelete}
-                onEdit={handleEdit}
-                onView={handleView}
-                isScientist={userRole === 'SCIENTIST'}
+            <DataTable
+                columns={columns}
+                data={vehicles}
+                actions={actions}
+                variant="vehicle"
             />
 
             <Portal>

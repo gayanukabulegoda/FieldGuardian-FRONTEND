@@ -3,8 +3,8 @@ import {Field, FieldDTO, FieldStaff, FieldEquipment} from '../../types/field.ts'
 import {Input} from '../../components/common/Input.tsx';
 import {ActionButton} from "../../components/common/ActionButton.tsx";
 import {PopupHeader} from '../../components/common/PopupHeader.tsx';
-import {FieldImageUpload} from '../../components/field/FieldImageUpload.tsx';
-import {SelectionList} from '../../components/field/SelectionList.tsx';
+import {SelectionList} from '../../components/custom/SelectionList.tsx';
+import {ImageUpload} from "../../components/common/ImageUpload.tsx";
 import styles from '../../styles/popupStyles/addEdit/addEditFieldPopup.module.css';
 
 interface AddEditFieldPopupProps {
@@ -120,15 +120,17 @@ export const AddEditFieldPopup: React.FC<AddEditFieldPopupProps> = ({
                                     />
                                 </div>
                                 <div className={styles.imageUploadSection}>
-                                    <FieldImageUpload
+                                    <ImageUpload
                                         id="fieldImage1"
                                         onChange={e => handleImageChange(e, 1)}
                                         preview={previewImage1}
+                                        variant="field"
                                     />
-                                    <FieldImageUpload
+                                    <ImageUpload
                                         id="fieldImage2"
                                         onChange={e => handleImageChange(e, 2)}
                                         preview={previewImage2}
+                                        variant="field"
                                     />
                                 </div>
                             </div>

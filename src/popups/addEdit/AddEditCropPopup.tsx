@@ -8,7 +8,7 @@ import {Input} from '../../components/common/Input.tsx';
 import {Select} from '../../components/common/Select.tsx';
 import {ActionButton} from '../../components/common/ActionButton.tsx';
 import {PopupHeader} from '../../components/common/PopupHeader.tsx';
-import {CropImageUpload} from '../../components/crop/CropImageUpload.tsx';
+import {ImageUpload} from "../../components/common/ImageUpload.tsx";
 import styles from '../../styles/popupStyles/addEdit/addEditCropPopup.module.css';
 
 interface AddEditCropPopupProps {
@@ -196,10 +196,12 @@ export const AddEditCropPopup: React.FC<AddEditCropPopupProps> = ({
                                     </Select>
                                 </div>
                             </div>
-                            <CropImageUpload
+                            <ImageUpload
                                 id="cropImage"
                                 onChange={handleImageChange}
                                 preview={previewImage}
+                                error={errors.cropImage}
+                                variant="crop"
                             />
                         </div>
                         <div className={styles.saveBtnContainer}>

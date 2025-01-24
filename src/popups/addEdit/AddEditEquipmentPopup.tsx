@@ -8,9 +8,9 @@ import {Input} from '../../components/common/Input';
 import {Select} from '../../components/common/Select';
 import {ActionButton} from '../../components/common/ActionButton';
 import {PopupHeader} from '../../components/common/PopupHeader';
-import {EquipmentSelect} from '../../components/equipment/EquipmentSelect';
+import {EquipmentSelect} from '../../components/custom/select/EquipmentSelect.tsx';
 import styles from '../../styles/popupStyles/addEdit/addEditEquipmentPopup.module.css';
-import {StaffSelect} from "../../components/staff/StaffSelect.tsx";
+import {StaffSelect} from "../../components/custom/select/StaffSelect.tsx";
 
 interface AddEditEquipmentPopupProps {
     isOpen: boolean;

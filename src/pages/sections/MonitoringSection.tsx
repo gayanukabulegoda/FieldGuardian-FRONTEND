@@ -5,15 +5,15 @@ import {
     fetchAllMonitoringLogs,
     filterMonitoringLogs,
 } from '../../store/slices/monitoringLogSlice';
-import {MonitoringLogTable} from '../../components/monitoringLog/MonitoringLogTable';
-import {MonitoringLogFilters} from '../../components/monitoringLog/MonitoringLogFilters';
 import {AddEditMonitoringLogPopup} from '../../popups/addEdit/AddEditMonitoringLogPopup.tsx';
 import {ViewMonitoringLogPopup} from '../../popups/view/ViewMonitoringLogPopup.tsx';
 import {MonitoringLog} from '../../types/monitoringLog';
 import {Portal} from "../../components/portal/Portal.ts";
+import {DataFilter, FilterField} from "../../components/common/DataFilter.tsx";
+import {DataTable} from "../../components/common/DataTable.tsx";
 import styles from '../../styles/sectionStyles/monitoringLogSection.module.css';
 
-export const MonitoringPage = () => {
+export const MonitoringSection = () => {
     const dispatch = useDispatch<AppDispatch>();
     const {logs, loading} = useSelector((state: RootState) => state.monitoringLog);
     const {fields} = useSelector((state: RootState) => state.field);
@@ -28,6 +28,34 @@ export const MonitoringPage = () => {
     useEffect(() => {
         // dispatch(fetchAllMonitoringLogs());
     }, [dispatch]);
+
+    const columns = [
+        {
+            key: 'observedImage',
+            header: 'Image',
+            width: 1,
+            render: (value: string) => (
+                <img
+                    src={value}
+                    alt="Field"
+                    className={styles.fieldImage}
+                />
+            )
+        },
+        {
+            key: 'date',
+            header: 'Date',
+            width: 1.5,
+            render: (value: string) => new Date(value).toLocaleDateString()
+        },
+        {key: 'fieldCode', header: 'Field', width: 2},
+        {key: 'staffCount', header: 'Staff Count', width: 1.5}
+    ];
+
+    const filterFields: FilterField[] = [
+        {type: 'text', key: 'field', placeholder: 'Search by field'},
+        {type: 'date', key: 'date'}
+    ];
 
     const handleSearch = (filters: any) => {
         dispatch(filterMonitoringLogs(filters));
@@ -48,6 +76,22 @@ export const MonitoringPage = () => {
         setShowView(true);
     };
 
+    const actions = [
+        {
+            icon: '/icons/edit-icon-silver.svg',
+            activeIcon: '/icons/edit-icon-blue.svg',
+            title: 'Edit',
+            onClick: handleEdit,
+            show: () => !userRole?.includes('ADMINISTRATIVE')
+        },
+        {
+            icon: '/icons/view-icon-silver.svg',
+            activeIcon: '/icons/view-icon-green.svg',
+            title: 'View',
+            onClick: handleView
+        }
+    ];
+
     const isAnyPopupOpen = showAddEdit || showView;
 
     if (loading) {
@@ -67,13 +111,17 @@ export const MonitoringPage = () => {
                 )}
             </div>
 
-            <MonitoringLogFilters onSearch={handleSearch}/>
+            <DataFilter
+                fields={filterFields}
+                onSearch={handleSearch}
+                variant="monitoring"
+            />
 
-            <MonitoringLogTable
-                logs={logs}
-                onEdit={handleEdit}
-                onView={handleView}
-                isAdministrative={userRole === 'ADMINISTRATIVE'}
+            <DataTable
+                columns={columns}
+                data={logs}
+                actions={actions}
+                variant="monitoring"
             />
 
             <Portal>

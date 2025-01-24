@@ -6,16 +6,16 @@ import {
     filterEquipment,
     deleteEquipment
 } from '../../store/slices/equipmentSlice';
-import {EquipmentTable} from '../../components/equipment/EquipmentTable';
-import {EquipmentFilters} from '../../components/equipment/EquipmentFilters';
 import {AddEditEquipmentPopup} from '../../popups/addEdit/AddEditEquipmentPopup.tsx';
 import {ViewEquipmentPopup} from '../../popups/view/ViewEquipmentPopup.tsx';
 import {DeleteConfirmationPopup} from '../../popups/DeleteConfirmationPopup';
 import {Equipment} from '../../types/equipment';
 import {Portal} from "../../components/portal/Portal.ts";
+import {DataTable} from "../../components/common/DataTable.tsx";
+import {DataFilter, FilterField} from "../../components/common/DataFilter.tsx";
 import styles from '../../styles/sectionStyles/equipmentSection.module.css';
 
-export const EquipmentPage = () => {
+export const EquipmentSection = () => {
     const dispatch = useDispatch<AppDispatch>();
     const {equipment, loading} = useSelector((state: RootState) => state.equipment);
     const {staff} = useSelector((state: RootState) => state.staff);
@@ -31,6 +31,32 @@ export const EquipmentPage = () => {
     useEffect(() => {
         // dispatch(fetchAllEquipment());
     }, [dispatch]);
+
+    const columns = [
+        {key: 'name', header: 'Name', width: 2},
+        {key: 'type', header: 'Type', width: 1.8},
+        {key: 'status', header: 'Status', width: 1.4},
+        {
+            key: 'assignedFieldCode',
+            header: 'Field',
+            width: 2,
+            render: (value: string) => value || 'N/A'
+        }
+    ];
+
+    const filterFields: FilterField[] = [
+        {type: 'text', key: 'name', placeholder: 'Search by name'},
+        {
+            type: 'select',
+            key: 'status',
+            placeholder: 'Status',
+            options: [
+                {value: 'AVAILABLE', label: 'Available'},
+                {value: 'IN_USE', label: 'In Use'},
+                {value: 'UNDER_MAINTENANCE', label: 'Under Maintenance'}
+            ]
+        }
+    ];
 
     const handleSearch = (filters: any) => {
         dispatch(filterEquipment(filters));
@@ -64,6 +90,29 @@ export const EquipmentPage = () => {
         }
     };
 
+    const actions = [
+        {
+            icon: '/icons/delete-icon-silver.svg',
+            activeIcon: '/icons/delete-icon-red.svg',
+            title: 'Delete',
+            onClick: (equipment: Equipment) => handleDelete(equipment.id),
+            show: () => !userRole?.includes('SCIENTIST')
+        },
+        {
+            icon: '/icons/edit-icon-silver.svg',
+            activeIcon: '/icons/edit-icon-blue.svg',
+            title: 'Edit',
+            onClick: handleEdit,
+            show: () => !userRole?.includes('SCIENTIST')
+        },
+        {
+            icon: '/icons/view-icon-silver.svg',
+            activeIcon: '/icons/view-icon-green.svg',
+            title: 'View',
+            onClick: handleView
+        }
+    ];
+
     const isAnyPopupOpen = showDelete || showAddEdit || showView;
 
     if (loading) {
@@ -83,14 +132,16 @@ export const EquipmentPage = () => {
                 )}
             </div>
 
-            <EquipmentFilters onSearch={handleSearch}/>
+            <DataFilter
+                fields={filterFields}
+                onSearch={handleSearch}
+            />
 
-            <EquipmentTable
-                equipment={equipment}
-                onDelete={handleDelete}
-                onEdit={handleEdit}
-                onView={handleView}
-                isScientist={userRole === 'SCIENTIST'}
+            <DataTable
+                columns={columns}
+                data={equipment}
+                actions={actions}
+                variant="equipment"
             />
 
             <Portal>

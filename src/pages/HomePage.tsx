@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import {Outlet, useNavigate, useLocation} from 'react-router-dom';
 import {Navigation} from '../components/navigation/Navigation';
-import {Header} from '../components/layout/Header';
+import {Header} from '../components/custom/Header.tsx';
 import {MyProfilePopup} from '../popups/MyProfilePopup';
 import {UpdatePasswordPopup} from '../popups/UpdatePasswordPopup';
 import {validateToken} from '../store/slices/authSlice';
