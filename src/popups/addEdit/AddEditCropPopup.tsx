@@ -163,7 +163,7 @@ export const AddEditCropPopup: React.FC<AddEditCropPopupProps> = ({
                                         options={CATEGORIES}
                                         error={errors.category}
                                     >
-                                        <option value="" disabled selected hidden>Select Category</option>
+                                        <option value="" disabled hidden>Select Category</option>
                                     </Select>
                                 </div>
                                 <div className={styles.formGroup}>
@@ -176,7 +176,7 @@ export const AddEditCropPopup: React.FC<AddEditCropPopupProps> = ({
                                         options={SEASONS}
                                         error={errors.season}
                                     >
-                                        <option value="" disabled selected hidden>Select Season</option>
+                                        <option value="" disabled hidden>Select Season</option>
                                     </Select>
                                 </div>
                                 <div className={styles.formGroup}>
@@ -192,7 +192,7 @@ export const AddEditCropPopup: React.FC<AddEditCropPopupProps> = ({
                                         }))}
                                         error={errors.fieldCode}
                                     >
-                                        <option value="" disabled selected hidden>Select Field</option>
+                                        <option value="" disabled hidden>Select Field</option>
                                     </Select>
                                 </div>
                             </div>

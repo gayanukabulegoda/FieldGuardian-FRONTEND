@@ -143,7 +143,7 @@ export const AddEditMonitoringLogPopup: React.FC<AddEditMonitoringLogPopupProps>
                                         }))}
                                         error={errors.fieldCode}
                                     >
-                                        <option value="" disabled selected hidden>Select Field</option>
+                                        <option value="" disabled hidden>Select Field</option>
                                     </Select>
                                 </div>
                                 <div className={styles.formGroup}>
