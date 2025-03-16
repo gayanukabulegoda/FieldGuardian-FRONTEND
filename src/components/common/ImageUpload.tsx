@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import styles from '../../styles/common/imageUpload.module.css';
 
 interface ImageUploadProps {
@@ -18,6 +18,8 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
                                                             maxSize = 10,
                                                             variant = 'primary'
                                                         }) => {
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
     const getUploadContainerClass = () => {
         switch (variant) {
             case 'primary':
@@ -53,6 +55,12 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         }
     }
 
+    const handlePreviewClick = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+        }
+    }
+
     return (
         <div className={`${getUploadContainerClass()}`}>
             <input
@@ -61,8 +69,9 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
                 accept=".png,.jpg,.jpeg"
                 className={styles.fileInput}
                 onChange={onChange}
+                ref={fileInputRef}
             />
-            <div className={`${getUploadAreaClass()} ${error ? styles.error : ''}`}>
+            <div className={`${getUploadAreaClass()} ${error ? styles.error : ''}`} onClick={handlePreviewClick}>
                 <div className={`${getUploadContentClass()}`}>
                     <img
                         src="/icons/add-image-icon.svg"

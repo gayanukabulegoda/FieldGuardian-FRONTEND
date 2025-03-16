@@ -94,7 +94,10 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
         <div className={styles.formGroup}>
             <Select
                 value={options.find(option => option.value === value)}
-                onChange={(option: SingleValue<SelectOption>) => onChange(option?.value || '')}
+                onChange={(newValue: unknown) => {
+                    const option = newValue as SingleValue<SelectOption>;
+                    onChange(option?.value || '');
+                }}
                 options={options}
                 isDisabled={isDisabled}
                 placeholder={placeholder}

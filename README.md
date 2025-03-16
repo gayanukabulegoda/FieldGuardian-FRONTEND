@@ -93,6 +93,10 @@ This project is developed using modern web technologies to ensure a dynamic and 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+## Security Policy
+
+For security guidelines and reporting vulnerabilities, please refer to our [Security Policy](SECURITY.md).
+
 <!-- GETTING STARTED -->
 
 ## Getting Started

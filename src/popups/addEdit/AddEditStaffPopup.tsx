@@ -208,7 +208,7 @@ export const AddEditStaffPopup: React.FC<AddEditStaffPopupProps> = ({
                                 ]}
                                 required
                             >
-                                <option value="" disabled selected hidden>Select Gender</option>
+                                <option value="" disabled hidden>Select Gender</option>
                             </Select>
                             <Select
                                 value={formData.designation}
@@ -219,7 +219,7 @@ export const AddEditStaffPopup: React.FC<AddEditStaffPopupProps> = ({
                                 options={designations.map(d => ({value: d, label: d}))}
                                 required
                             >
-                                <option value="" disabled selected hidden>Select Designation</option>
+                                <option value="" disabled hidden>Select Designation</option>
                             </Select>
                         </div>
                         <div className={styles.saveBtnContainer}>
