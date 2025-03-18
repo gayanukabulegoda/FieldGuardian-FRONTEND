@@ -42,9 +42,6 @@
       <a href="#api-documentation">API Documentation</a>
     </li>
     <li>
-      <a href="#screenshots">Screenshots</a>
-    </li>
-    <li>
       <a href="#figma-design">Figma Design</a>
     </li>
     <li>
@@ -55,7 +52,6 @@
 </details>
 
 <!-- ABOUT THE PROJECT -->
-
 ## About The Project
 
 Green Shadow (Pvt) Ltd. is a mid-scale farm specializing in root crops and cereals. The company operates at both national and international levels and is renowned for high-quality production. Due to recent growth, the management has decided to introduce a comprehensive system to manage their crops and other assets. The proposed project will focus on systemizing the following areas:
@@ -66,10 +62,6 @@ Green Shadow (Pvt) Ltd. is a mid-scale farm specializing in root crops and cerea
 - **Monitoring Log**: Records observations and activities related to fields and crops.
 - **Vehicle**: Manages vehicles assigned to staff for monitoring and supporting agricultural operations.
 - **Equipment**: Oversees the agricultural equipment used in various operations.
-
-## Screenshots
-
-Project UI screenshots are available [here](https://drive.google.com/drive/folders/1oZ4I9ftrmonxfzLR2avdwC0jfoCfX4jY?usp=sharing).
 
 ### User Interface
 <br>
@@ -98,7 +90,6 @@ This project is developed using modern web technologies to ensure a dynamic and 
 For security guidelines and reporting vulnerabilities, please refer to our [Security Policy](SECURITY.md).
 
 <!-- GETTING STARTED -->
-
 ## Getting Started
 
 Follow these steps to set up the project locally and get it running on your machine.
@@ -153,17 +144,11 @@ Access the backend repository on GitHub [here](https://github.com/gayanukabulego
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- LICENSE -->
-
 ## License
 
 Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
----
-
-### 🚧 Project Status: Under Conversion
-This project is currently being converted to React, Vite, TypeScript, Bootstrap, Redux, and Axios. Some features may be incomplete or undergoing updates.
 
 ---
 
@@ -173,7 +158,6 @@ This project is currently being converted to React, Vite, TypeScript, Bootstrap,
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-
 [React.com]: https://img.shields.io/badge/-React-61DAFB?style=for-the-badge&logo=react&logoColor=white
 [React-url]: https://reactjs.org/
 [Vite.com]: https://img.shields.io/badge/-Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white
