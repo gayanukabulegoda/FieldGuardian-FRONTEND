@@ -8,7 +8,7 @@ import {Input} from '../../components/common/Input.tsx';
 import {Select} from '../../components/common/Select.tsx';
 import {ActionButton} from '../../components/common/ActionButton.tsx';
 import {PopupHeader} from '../../components/common/PopupHeader.tsx';
-import {CropImageUpload} from '../../components/crop/CropImageUpload.tsx';
+import {ImageUpload} from "../../components/common/ImageUpload.tsx";
 import styles from '../../styles/popupStyles/addEdit/addEditCropPopup.module.css';
 
 interface AddEditCropPopupProps {
@@ -163,7 +163,7 @@ export const AddEditCropPopup: React.FC<AddEditCropPopupProps> = ({
                                         options={CATEGORIES}
                                         error={errors.category}
                                     >
-                                        <option value="" disabled selected hidden>Select Category</option>
+                                        <option value="" disabled hidden>Select Category</option>
                                     </Select>
                                 </div>
                                 <div className={styles.formGroup}>
@@ -176,7 +176,7 @@ export const AddEditCropPopup: React.FC<AddEditCropPopupProps> = ({
                                         options={SEASONS}
                                         error={errors.season}
                                     >
-                                        <option value="" disabled selected hidden>Select Season</option>
+                                        <option value="" disabled hidden>Select Season</option>
                                     </Select>
                                 </div>
                                 <div className={styles.formGroup}>
@@ -192,14 +192,16 @@ export const AddEditCropPopup: React.FC<AddEditCropPopupProps> = ({
                                         }))}
                                         error={errors.fieldCode}
                                     >
-                                        <option value="" disabled selected hidden>Select Field</option>
+                                        <option value="" disabled hidden>Select Field</option>
                                     </Select>
                                 </div>
                             </div>
-                            <CropImageUpload
+                            <ImageUpload
                                 id="cropImage"
                                 onChange={handleImageChange}
                                 preview={previewImage}
+                                error={errors.cropImage}
+                                variant="crop"
                             />
                         </div>
                         <div className={styles.saveBtnContainer}>

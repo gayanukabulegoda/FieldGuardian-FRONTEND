@@ -1,0 +1,163 @@
+.searchSection {
+    display: flex;
+    gap: 25px;
+    border-radius: 10px 10px 0 0;
+    padding: 25px 20px;
+    background: var(--white);
+}
+
+.searchInput {
+    position: relative;
+    flex: 1;
+    margin-right: 350px;
+}
+
+.searchInputStaffVehicle {
+    position: relative;
+    flex: 1;
+}
+
+.searchInput input,
+.searchInputStaffVehicle input {
+    width: 100%;
+    padding: 9px 20px 9px 54px;
+    background: var(--neutral-bg);
+    border: none;
+    border-radius: 20px;
+    font-size: 14px;
+    color: var(--text-gray);
+}
+
+.searchInput input:focus,
+.searchInputStaffVehicle input:focus {
+    outline: none;
+}
+
+.searchIcon {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 22px;
+    height: 22px;
+}
+
+.filterSelect {
+    min-width: 250px;
+}
+
+.filterSelect select {
+    width: 100%;
+    height: 42px;
+    padding: 0 20px;
+    background: var(--neutral-bg);
+    border: none;
+    border-radius: 20px;
+    font-size: 14px;
+    color: var(--text-gray);
+    appearance: none;
+    background-image: url("/public/icons/drop-down-icon.svg");
+    background-repeat: no-repeat;
+    background-position: right 20px center;
+    background-size: 16px;
+    cursor: pointer;
+}
+
+.filterSelect select:focus {
+    outline: none;
+}
+
+.dateInput {
+    position: relative;
+    min-width: 250px;
+}
+
+.dateInput input {
+    width: 100%;
+    height: 42px;
+    padding: 0 20px;
+    background: var(--neutral-bg);
+    border: none;
+    border-radius: 20px;
+    font-size: 14px;
+    color: var(--text-gray);
+    cursor: text;
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    appearance: none;
+}
+
+.dateInput input::-webkit-calendar-picker-indicator {
+    opacity: 0;
+}
+
+.dateInput input:focus {
+    outline: none;
+}
+
+.calendarIcon {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    pointer-events: none;
+}
+
+.searchBtn {
+    padding: 9px 40px;
+    background: var(--light-green);
+    border: none;
+    border-radius: 20px;
+    font-size: 15px;
+    color: var(--primary-green);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.searchBtn:hover {
+    background-color: #d5e6b5;
+}
+
+.searchBtn:focus,
+.clearBtn:focus {
+    outline: none;
+}
+
+.clearBtn {
+    padding: 9px 40px;
+    background: var(--neutral-bg);
+    border: none;
+    border-radius: 20px;
+    font-size: 15px;
+    color: var(--text-gray);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.clearBtn:hover {
+    background-color: #e0e0e0;
+}
+
+/* Variant specific styles */
+.staffFilter {
+    gap: 15px;
+}
+
+.monitoringFilter .searchInput {
+    margin-right: 350px;
+}
+
+/* Responsive design */
+@media (max-width: 800px) {
+    .searchSection {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .filterSelect,
+    .dateInput {
+        min-width: 100%;
+    }
+}

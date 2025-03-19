@@ -1,7 +1,7 @@
 .addVehiclePopup {
     position: fixed;
-    top: 7%;
-    left: 15%;
+    top: 15%;
+    left: 25%;
     z-index: 1000;
     width: 100%;
     max-width: 900px;

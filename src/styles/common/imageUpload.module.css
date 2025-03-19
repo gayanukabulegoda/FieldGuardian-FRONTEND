@@ -1,0 +1,105 @@
+.imageUploadContainer {
+    flex: 1;
+}
+
+.imageUploadContainerLog {
+    margin-top: 15px;
+}
+
+.fileInput {
+    display: none;
+}
+
+.uploadArea {
+    width: 100%;
+    height: 210px;
+    border: 1px dashed var(--primary-green);
+    border-radius: 8px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.uploadAreaField {
+    height: 270px;
+}
+
+.uploadAreaCrop {
+    height: 100%;
+    min-height: 276px;
+}
+
+.uploadArea.error {
+    border-color: var(--primary-red);
+}
+
+.uploadContent {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 1;
+    pointer-events: none;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 8px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.uploadContentField {
+    position: absolute;
+}
+
+.uploadArea:hover .uploadContent {
+    opacity: 1;
+}
+
+.uploadIcon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 10px;
+}
+
+.uploadText {
+    color: var(--primary-green);
+    font-size: 16px;
+    margin: 0 0 5px;
+}
+
+.uploadSubtext,
+.uploadSize {
+    color: var(--text-gray);
+    font-size: 12px;
+    margin: 0;
+}
+
+.previewContainer {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+}
+
+.previewContainer img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.errorMessage {
+    color: var(--primary-red);
+    font-size: 12px;
+    margin-top: 4px;
+    display: block;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .uploadArea {
+        min-height: 200px;
+    }
+}

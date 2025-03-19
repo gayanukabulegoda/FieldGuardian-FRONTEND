@@ -4,13 +4,13 @@ import {SignUpPage} from "./pages/auth/SignUpPage.tsx";
 import {ForgotPasswordPage} from "./pages/auth/ForgotPasswordPage.tsx";
 import {OtpVerificationPage} from "./pages/auth/OtpVerificationPage.tsx";
 import {HomePage} from "./pages/HomePage.tsx";
-import {DashboardPage} from "./pages/sections/DashboardPage.tsx";
-import {StaffPage} from "./pages/sections/StaffPage.tsx";
-import {FieldPage} from "./pages/sections/FieldPage.tsx";
-import {CropPage} from "./pages/sections/CropPage.tsx";
-import {EquipmentPage} from "./pages/sections/EquipmentPage.tsx";
-import {VehiclePage} from "./pages/sections/VehiclePage.tsx";
-import {MonitoringPage} from "./pages/sections/MonitoringPage.tsx";
+import {DashboardSection} from "./pages/sections/DashboardSection.tsx";
+import {StaffSection} from "./pages/sections/StaffSection.tsx";
+import {FieldSection} from "./pages/sections/FieldSection.tsx";
+import {CropSection} from "./pages/sections/CropSection.tsx";
+import {EquipmentSection} from "./pages/sections/EquipmentSection.tsx";
+import {VehicleSection} from "./pages/sections/VehicleSection.tsx";
+import {MonitoringSection} from "./pages/sections/MonitoringSection.tsx";
 
 function App() {
     const routes = createBrowserRouter([
@@ -18,13 +18,13 @@ function App() {
             path: '/',
             element: <HomePage/>,
             children: [
-                {path: 'dashboard', element: <DashboardPage/>},
-                {path: 'staff', element: <StaffPage/>},
-                {path: 'field', element: <FieldPage/>},
-                {path: 'crop', element: <CropPage/>},
-                {path: 'equipment', element: <EquipmentPage/>},
-                {path: 'vehicle', element: <VehiclePage/>},
-                {path: 'monitoring', element: <MonitoringPage/>},
+                {path: 'dashboard', element: <DashboardSection/>},
+                {path: 'staff', element: <StaffSection/>},
+                {path: 'field', element: <FieldSection/>},
+                {path: 'crop', element: <CropSection/>},
+                {path: 'equipment', element: <EquipmentSection/>},
+                {path: 'vehicle', element: <VehicleSection/>},
+                {path: 'monitoring', element: <MonitoringSection/>},
             ]
         },
         {path: '/signin', element: <SignInPage/>},

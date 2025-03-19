@@ -75,7 +75,7 @@
 }
 
 .detailsRow span:hover::after {
-    content: attr(data-full-text);
+    content: attr(title);
     position: absolute;
     left: 0;
     bottom: 100%;

@@ -78,7 +78,7 @@ const statSubtitles = {
     equipment: 'Total equipment available for agricultural tasks'
 };
 
-export const DashboardPage = () => {
+export const DashboardSection = () => {
     const [stats, setStats] = useState<DashboardStats>({
         systemUsers: 0,
         staffMembers: 0,
@@ -178,7 +178,7 @@ export const DashboardPage = () => {
                     <div className={styles.quoteSection}>
                         <div className={styles.quoteContainer}>
                             <img
-                                src="/public/images/fieldguardian-logo-green-mini.png"
+                                src="/images/fieldguardian-logo-green-mini.png"
                                 alt="FieldGuardian Logo"
                                 className={styles.quoteLogo}
                             />
@@ -244,7 +244,7 @@ export const DashboardPage = () => {
                     <div className={styles.quoteSection}>
                         <div className={styles.quoteContainer}>
                             <img
-                                src="/public/images/fieldguardian-logo-green-mini.png"
+                                src="/images/fieldguardian-logo-green-mini.png"
                                 alt="FieldGuardian Logo"
                                 className={styles.quoteLogo}
                             />

@@ -1,7 +1,7 @@
 .addMonitoringPopup {
     position: fixed;
-    top: 2%;
-    left: 15%;
+    top: 4%;
+    left: 25%;
     z-index: 1000;
     width: 100%;
     max-width: 900px;
@@ -92,77 +92,6 @@
     width: 18px;
     height: 18px;
     pointer-events: none;
-}
-
-.imageUploadContainer {
-    margin-top: 15px;
-}
-
-.fileInput {
-    display: none;
-}
-
-.uploadArea {
-    width: 100%;
-    height: 210px;
-    border: 1px dashed var(--primary-green);
-    border-radius: 8px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-}
-
-.uploadContent {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    z-index: 1;
-    pointer-events: none;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 20px;
-    border-radius: 8px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.uploadArea:hover .upload-content {
-    opacity: 1;
-}
-
-.uploadIcon {
-    width: 48px;
-    height: 48px;
-    margin-bottom: 10px;
-}
-
-.uploadText {
-    color: var(--primary-green);
-    font-size: 16px;
-    margin: 0 0 5px;
-}
-
-.uploadSubtext,
-.uploadSize {
-    color: var(--text-gray);
-    font-size: 12px;
-    margin: 0;
-}
-
-.previewContainer {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: none;
-}
-
-.previewContainer img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
 }
 
 .selectionFields {
@@ -278,10 +207,6 @@
     .formGroup select,
     .formGroup textarea {
         padding: 11px 14px;
-    }
-
-    .uploadArea {
-        height: 150px;
     }
 
     .selectionContainer {

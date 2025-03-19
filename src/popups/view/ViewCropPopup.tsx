@@ -53,11 +53,11 @@ export const ViewCropPopup: React.FC<ViewCropPopupProps> = ({
                                 </div>
                                 <div className={styles.detailsRow}>
                                     <label>Category:</label>
-                                    <span>{crop.category}</span>
+                                    <span title={crop.category}>{crop.category}</span>
                                 </div>
                                 <div className={styles.detailsRow}>
                                     <label>Season:</label>
-                                    <span>{crop.season}</span>
+                                    <span title={crop.season}>{crop.season}</span>
                                 </div>
                                 <div className={styles.detailsRow}>
                                     <label>Assigned Field:</label>

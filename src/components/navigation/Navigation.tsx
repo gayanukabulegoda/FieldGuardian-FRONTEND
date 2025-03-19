@@ -2,7 +2,7 @@ import {useNavigate, useLocation} from 'react-router-dom';
 import {useDispatch} from 'react-redux';
 import {logout} from '../../store/slices/authSlice';
 import {Settings, LogOut} from 'lucide-react';
-import {UserProfileSection} from "./UserProfileSection";
+import {UserProfileSection} from "../custom/UserProfileSection.tsx";
 import styles from '../../styles/homePage.module.css';
 
 interface NavigationProps {

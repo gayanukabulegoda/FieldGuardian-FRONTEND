@@ -10,8 +10,6 @@ import {
     deleteStaff
 } from '../../store/slices/staffSlice';
 import {deleteUser} from '../../store/slices/userSlice';
-import {StaffTable} from '../../components/staff/StaffTable';
-import {StaffFilters} from '../../components/staff/StaffFilters';
 import {AddEditStaffPopup} from '../../popups/addEdit/AddEditStaffPopup.tsx';
 import {ViewStaffPopup} from '../../popups/view/ViewStaffPopup.tsx';
 import {SystemUsersPopup} from '../../popups/SystemUsersPopup.tsx';
@@ -19,8 +17,10 @@ import {DeleteConfirmationPopup} from '../../popups/DeleteConfirmationPopup';
 import {Staff, StaffDTO} from '../../types/staff';
 import {Portal} from "../../components/portal/Portal.ts";
 import styles from '../../styles/sectionStyles/staffSection.module.css';
+import {DataFilter, FilterField} from "../../components/common/DataFilter.tsx";
+import {DataTable} from "../../components/common/DataTable.tsx";
 
-export const StaffPage = () => {
+export const StaffSection = () => {
     const dispatch = useDispatch<AppDispatch>();
     const {staff, designations, loading} = useSelector((state: RootState) => state.staff);
     const userRole = useSelector((state: RootState) => state.user.currentUser?.role);
@@ -39,6 +39,37 @@ export const StaffPage = () => {
         // dispatch(fetchAllStaff());
         // dispatch(fetchDesignations());
     }, [dispatch]);
+
+    const columns = [
+        {
+            key: 'name',
+            header: 'Name',
+            render: (_, row: Staff) => `${row.firstName} ${row.lastName}`
+        },
+        {key: 'designation', header: 'Designation'},
+        {key: 'contactNo', header: 'Contact No'},
+        {key: 'email', header: 'Email'}
+    ];
+
+    const filterFields: FilterField[] = [
+        {type: 'text', key: 'name', placeholder: 'Search by name'},
+        {
+            type: 'select',
+            key: 'designation',
+            placeholder: 'Filter by Designation',
+            options: designations.map(d => ({value: d, label: d}))
+        },
+        {
+            type: 'select',
+            key: 'gender',
+            placeholder: 'Filter by Gender',
+            options: [
+                {value: 'MALE', label: 'Male'},
+                {value: 'FEMALE', label: 'Female'},
+                {value: 'OTHER', label: 'Other'}
+            ]
+        }
+    ];
 
     const handleSearch = (filters: any) => {
         dispatch(filterStaff(filters));
@@ -111,6 +142,29 @@ export const StaffPage = () => {
         }
     };
 
+    const actions = [
+        {
+            icon: '/icons/delete-icon-silver.svg',
+            activeIcon: '/icons/delete-icon-red.svg',
+            title: 'Delete',
+            onClick: (staff: Staff) => handleDelete(staff.id),
+            show: () => !userRole?.includes('SCIENTIST')
+        },
+        {
+            icon: '/icons/edit-icon-silver.svg',
+            activeIcon: '/icons/edit-icon-blue.svg',
+            title: 'Edit',
+            onClick: handleEdit,
+            show: () => !userRole?.includes('SCIENTIST')
+        },
+        {
+            icon: '/icons/view-icon-silver.svg',
+            activeIcon: '/icons/view-icon-green.svg',
+            title: 'View',
+            onClick: handleView
+        }
+    ];
+
     const isAnyPopupOpen = showUsers || showDelete || showAddEdit || showView || showUserDelete;
 
     if (loading) {
@@ -133,17 +187,17 @@ export const StaffPage = () => {
                 )}
             </div>
 
-            <StaffFilters
-                designations={designations}
+            <DataFilter
+                fields={filterFields}
                 onSearch={handleSearch}
+                variant="staff"
             />
 
-            <StaffTable
-                staff={staff}
-                onDelete={handleDelete}
-                onEdit={handleEdit}
-                onView={handleView}
-                isScientist={userRole === 'SCIENTIST'}
+            <DataTable
+                columns={columns}
+                data={staff}
+                actions={actions}
+                variant="staff"
             />
 
             <Portal>

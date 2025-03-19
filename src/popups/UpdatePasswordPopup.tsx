@@ -7,7 +7,7 @@ import userService from '../services/userService';
 import {PopupHeader} from '../components/common/PopupHeader';
 import {ActionButton} from '../components/common/ActionButton';
 import {Input} from '../components/common/Input';
-import {ProfileImage} from '../components/profile/ProfileImage';
+import {ProfileImage} from '../components/custom/ProfileImage.tsx';
 import styles from '../styles/popupStyles/updatePasswordPopup.module.css';
 
 interface PasswordModalProps {

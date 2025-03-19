@@ -7,16 +7,16 @@ import {
     updateField,
     deleteField
 } from '../../store/slices/fieldSlice';
-import {FieldTable} from '../../components/field/FieldTable';
-import {FieldFilters} from '../../components/field/FieldFilters';
 import {AddEditFieldPopup} from '../../popups/addEdit/AddEditFieldPopup.tsx';
 import {ViewFieldPopup} from '../../popups/view/ViewFieldPopup.tsx';
 import {DeleteConfirmationPopup} from '../../popups/DeleteConfirmationPopup';
 import {Field, FieldDTO} from '../../types/field';
 import {Portal} from "../../components/portal/Portal.ts";
+import {DataFilter, FilterField} from "../../components/common/DataFilter.tsx";
+import {DataTable} from "../../components/common/DataTable.tsx";
 import styles from '../../styles/sectionStyles/fieldSection.module.css';
 
-export const FieldPage = () => {
+export const FieldSection = () => {
     const dispatch = useDispatch<AppDispatch>();
     const {fields, loading} = useSelector((state: RootState) => state.field);
     const userRole = useSelector((state: RootState) => state.user.currentUser?.role);
@@ -30,6 +30,52 @@ export const FieldPage = () => {
     useEffect(() => {
         // dispatch(fetchAllFields());
     }, [dispatch]);
+
+    const columns = [
+        {
+            key: 'fieldImage1',
+            header: 'Image',
+            width: 1,
+            render: (value: string) => (
+                <img
+                    src={value || '/images/default_no_pic_image.png'}
+                    alt="field"
+                    className={styles.fieldImage}
+                />
+            )
+        },
+        {key: 'name', header: 'Name', width: 1},
+        {
+            key: 'location',
+            header: 'Location',
+            width: 1,
+            render: (value: string) => (
+                <a
+                    href={`https://www.google.com/maps?q=${value}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.locationLink}
+                >
+                    View Location
+                </a>
+            )
+        },
+        {key: 'extentSize', header: 'Extent size (sq. m)', width: 1}
+    ];
+
+    const filterFields: FilterField[] = [
+        {type: 'text', key: 'name', placeholder: 'Search by name'},
+        {
+            type: 'select',
+            key: 'landSize',
+            placeholder: 'Land Size',
+            options: [
+                {value: 'SMALL', label: 'Small (< 50 sq. m)'},
+                {value: 'MEDIUM', label: 'Medium (50-150 sq. m)'},
+                {value: 'LARGE', label: 'Large (> 150 sq. m)'}
+            ]
+        }
+    ];
 
     const handleSearch = (filters: any) => {
         // Implement field filtering logic here
@@ -85,6 +131,29 @@ export const FieldPage = () => {
         }
     };
 
+    const actions = [
+        {
+            icon: '/icons/delete-icon-silver.svg',
+            activeIcon: '/icons/delete-icon-red.svg',
+            title: 'Delete',
+            onClick: (field: Field) => handleDelete(field.code),
+            show: () => !userRole?.includes('ADMINISTRATIVE')
+        },
+        {
+            icon: '/icons/edit-icon-silver.svg',
+            activeIcon: '/icons/edit-icon-blue.svg',
+            title: 'Edit',
+            onClick: handleEdit,
+            show: () => !userRole?.includes('ADMINISTRATIVE')
+        },
+        {
+            icon: '/icons/view-icon-silver.svg',
+            activeIcon: '/icons/view-icon-green.svg',
+            title: 'View',
+            onClick: handleView
+        }
+    ];
+
     const isAnyPopupOpen = showDelete || showAddEdit || showView;
 
     if (loading) {
@@ -104,14 +173,17 @@ export const FieldPage = () => {
                 )}
             </div>
 
-            <FieldFilters onSearch={handleSearch}/>
+            <DataFilter
+                fields={filterFields}
+                onSearch={handleSearch}
+                variant="field"
+            />
 
-            <FieldTable
-                fields={fields}
-                onDelete={handleDelete}
-                onEdit={handleEdit}
-                onView={handleView}
-                isAdministrative={userRole === 'ADMINISTRATIVE'}
+            <DataTable
+                columns={columns}
+                data={fields}
+                actions={actions}
+                variant="field"
             />
 
             <Portal>
